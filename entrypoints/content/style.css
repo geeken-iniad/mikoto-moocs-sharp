@@ -1,0 +1,128 @@
+body {
+  .btn {
+    border: 2px solid #a5a6a8;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .btn:hover {
+    filter: brightness(95%);
+  }
+
+  .btn-primary {
+    background-color: #3471eb;
+    border-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    filter: none;
+  }
+
+  .btn-success {
+    background-color: #00a65a;
+    border-color: #008d4c;
+    color: white;
+  }
+
+  .pager li > a {
+    border-radius: 7px;
+  }
+
+  .well {
+    border: 1.3px solid #46484d;
+    border-radius: 7px;
+  }
+
+  .media-left {
+    padding-right: 25px;
+  }
+
+  .media-heading {
+    margin-bottom: 10px;
+  }
+
+  .treeview-menu > li {
+    border: 1.3px solid #46484d;
+  }
+
+  .panel {
+    border-radius: 10px;
+  }
+
+  /* .form-group { */
+  /*   display: flex; */
+  /*   flex-direction: column; */
+  /*   gap: 8px; */
+  /*   max-width: 400px; */
+  /*   width: 100%; */
+  /* } */
+
+  .form-label {
+    color: #333;
+    font-weight: 500;
+  }
+
+  .form-control {
+    background-color: #ffffff;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #333333;
+    font-family: inherit;
+    font-size: 16px;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+    width: 100%;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+  }
+
+  .sidebar-menu > li > a {
+    border: 1.5px solid #426dc2;
+    padding: 22px 20px 22px 15px;
+  }
+
+  .sidebar-menu-text {
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .treeview-menu > li > a {
+    padding: 15px 5px 15px 15px;
+  }
+
+  .content-wrapper li.active {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+  }
+
+  #mikoto-react-root {
+    display: none;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+  }
+}
