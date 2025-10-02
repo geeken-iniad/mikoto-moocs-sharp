@@ -15,7 +15,7 @@ export const TextareaEnhancer: React.FC = () => {
 
     const counterContainer = document.createElement("div");
     counterContainer.className = "mikoto-counter-container";
-    
+
     if (textarea.nextSibling) {
       wrapper.insertBefore(counterContainer, textarea.nextSibling);
     } else {
