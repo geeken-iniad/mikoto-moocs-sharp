@@ -1,6 +1,6 @@
-import React, { createElement } from "react";
-import type { CharacterCounterProps } from "./types";
-import { utils } from "./utils";
+import React from "react";
+import type { CharacterCounterProps } from "../../utils";
+import { utils } from "../../utils";
 
 export const CharacterCounter: React.FC<CharacterCounterProps> = ({
   value,
@@ -49,73 +49,41 @@ export const CharacterCounter: React.FC<CharacterCounterProps> = ({
     color: "#2563eb",
   };
 
-  return createElement(
-    "div",
-    { className: "mikoto-character-counter", style: containerStyle },
-    createElement(
-      "table",
-      { style: tableStyle },
-      createElement(
-        "tbody",
-        null,
-        createElement(
-          "tr",
-          null,
-          createElement(
-            "td",
-            { style: labelCellStyle },
-            createElement(
-              "div",
-              { style: labelTextStyle },
-              createElement("span", null, "文字数"),
-              createElement("span", null, ":"),
-            ),
-          ),
-          createElement(
-            "td",
-            { style: { ...cellStyle, ...numberStyle } },
-            normalCount,
-          ),
-        ),
-        createElement(
-          "tr",
-          null,
-          createElement(
-            "td",
-            { style: labelCellStyle },
-            createElement(
-              "div",
-              { style: labelTextStyle },
-              createElement("span", null, "文字数 (改行除く)"),
-              createElement("span", null, ":"),
-            ),
-          ),
-          createElement(
-            "td",
-            { style: { ...cellStyle, ...numberStyle } },
-            noNewlinesCount,
-          ),
-        ),
-        createElement(
-          "tr",
-          null,
-          createElement(
-            "td",
-            { style: labelCellStyle },
-            createElement(
-              "div",
-              { style: labelTextStyle },
-              createElement("span", null, "文字数 (改行・空白除く)"),
-              createElement("span", null, ":"),
-            ),
-          ),
-          createElement(
-            "td",
-            { style: { ...cellStyle, ...numberStyle } },
-            noWhitespaceCount,
-          ),
-        ),
-      ),
-    ),
+  return (
+    <div className="mikoto-character-counter" style={containerStyle}>
+      <table style={tableStyle}>
+        <tbody>
+          <tr>
+            <td style={labelCellStyle}>
+              <div style={labelTextStyle}>
+                <span>文字数</span>
+                <span>:</span>
+              </div>
+            </td>
+            <td style={{ ...cellStyle, ...numberStyle }}>{normalCount}</td>
+          </tr>
+          <tr>
+            <td style={labelCellStyle}>
+              <div style={labelTextStyle}>
+                <span>文字数 (改行除く)</span>
+                <span>:</span>
+              </div>
+            </td>
+            <td style={{ ...cellStyle, ...numberStyle }}>{noNewlinesCount}</td>
+          </tr>
+          <tr>
+            <td style={labelCellStyle}>
+              <div style={labelTextStyle}>
+                <span>文字数 (改行・空白除く)</span>
+                <span>:</span>
+              </div>
+            </td>
+            <td style={{ ...cellStyle, ...numberStyle }}>
+              {noWhitespaceCount}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   );
 };

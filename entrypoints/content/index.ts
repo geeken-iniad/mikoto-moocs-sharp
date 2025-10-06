@@ -1,25 +1,47 @@
 import { createElement } from "react";
-import { createRoot } from "react-dom/client";
+import { createRoot, type Root } from "react-dom/client";
 import { MikotoApp } from "./components";
 import "./style.css";
 
+const ROOT_CONTAINER_ID = "mikoto-react-root";
+const TARGET_URL_PATTERN = "https://moocs.iniad.org/*";
+
+/**
+ * Reactアプリケーション用のコンテナ要素を作成
+ */
+const createAppContainer = (): HTMLDivElement => {
+  const container = document.createElement("div");
+  container.id = ROOT_CONTAINER_ID;
+  container.style.display = "none";
+  return container;
+};
+
+/**
+ * Reactルートをマウント
+ */
+const mountApp = (container: HTMLDivElement): Root => {
+  document.body.appendChild(container);
+  const root = createRoot(container);
+  root.render(createElement(MikotoApp));
+  return root;
+};
+
+/**
+ * クリーンアップ処理を登録
+ */
+const registerCleanup = (root: Root, container: HTMLDivElement): void => {
+  window.addEventListener("beforeunload", () => {
+    root.unmount();
+    container.remove();
+  });
+};
+
 export default defineContentScript({
-  matches: ["https://moocs.iniad.org/*"],
+  matches: [TARGET_URL_PATTERN],
 
   main() {
-    const appContainer = document.createElement("div");
-    appContainer.id = "mikoto-react-root";
-    appContainer.style.display = "none";
-    document.body.appendChild(appContainer);
-
-    const root = createRoot(appContainer);
-    root.render(createElement(MikotoApp));
-
-    window.addEventListener("beforeunload", () => {
-      root.unmount();
-      if (appContainer.parentNode) {
-        appContainer.parentNode.removeChild(appContainer);
-      }
-    });
+    const appContainer = createAppContainer();
+    const root = mountApp(appContainer);
+    registerCleanup(root, appContainer);
   },
 });

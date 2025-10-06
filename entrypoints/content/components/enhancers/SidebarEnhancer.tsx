@@ -1,39 +1,60 @@
 import React, { useCallback } from "react";
-import { CONFIG } from "./config";
-import { useElementObserver } from "./hooks";
-import { utils } from "./utils";
+import { CONFIG, utils } from "../../utils";
+import { useElementObserver } from "../../hooks";
+
+const SIDEBAR_MENU_TEXT_SELECTOR = "span.sidebar-menu-text";
+
+type ContentType = "attendance" | "assignment";
+
+interface ContentTypeStyle {
+  color: string;
+  backgroundColor: string;
+}
+
+const getContentType = (textContent: string): ContentType | null => {
+  if (utils.containsKeywords(textContent, CONFIG.WORDS.attendances)) {
+    return "attendance";
+  }
+  if (utils.containsKeywords(textContent, CONFIG.WORDS.assignments)) {
+    return "assignment";
+  }
+  return null;
+};
+
+const getStyleForContentType = (type: ContentType): ContentTypeStyle => {
+  return CONFIG.STYLES[type];
+};
+
+const applyContentTypeStyles = (
+  span: HTMLElement,
+  parentLi: HTMLElement | null,
+  style: ContentTypeStyle,
+): void => {
+  utils.applyStyles(span, { color: style.color });
+
+  if (parentLi) {
+    utils.applyStyles(parentLi, { backgroundColor: style.backgroundColor });
+  }
+};
+
+const processSidebarElement = (element: Element): void => {
+  const span = element as HTMLElement;
+  const textContent = span.textContent || "";
+  const parentLi = span.closest("li") as HTMLElement | null;
+
+  const contentType = getContentType(textContent);
+  if (!contentType) return;
+
+  const style = getStyleForContentType(contentType);
+  applyContentTypeStyles(span, parentLi, style);
+};
 
 export const SidebarEnhancer: React.FC = () => {
   const handleSidebarElements = useCallback((elements: NodeListOf<Element>) => {
-    elements.forEach((span) => {
-      const textContent = span.textContent || "";
-      const parentLi = span.closest("li") as HTMLElement;
-
-      if (utils.containsKeywords(textContent, CONFIG.WORDS.attendances)) {
-        utils.applyStyles(span as HTMLElement, {
-          color: CONFIG.STYLES.attendance.color,
-        });
-        if (parentLi) {
-          utils.applyStyles(parentLi, {
-            backgroundColor: CONFIG.STYLES.attendance.backgroundColor,
-          });
-        }
-      } else if (
-        utils.containsKeywords(textContent, CONFIG.WORDS.assignments)
-      ) {
-        utils.applyStyles(span as HTMLElement, {
-          color: CONFIG.STYLES.assignment.color,
-        });
-        if (parentLi) {
-          utils.applyStyles(parentLi, {
-            backgroundColor: CONFIG.STYLES.assignment.backgroundColor,
-          });
-        }
-      }
-    });
+    elements.forEach(processSidebarElement);
   }, []);
 
-  useElementObserver("span.sidebar-menu-text", handleSidebarElements);
+  useElementObserver(SIDEBAR_MENU_TEXT_SELECTOR, handleSidebarElements);
 
   return null;
 };

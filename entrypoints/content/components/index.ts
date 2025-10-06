@@ -1,9 +1,6 @@
-export { CharacterCounter } from "./CharacterCounter";
-export { ContentEnhancer } from "./ContentEnhancer";
-export { CONFIG } from "./config";
-export * from "./hooks";
+export { CharacterCounter } from "./ui/CharacterCounter";
+export { ContentEnhancer } from "./enhancers/ContentEnhancer";
 export { MikotoApp } from "./MikotoApp";
-export { SidebarEnhancer } from "./SidebarEnhancer";
-export { TextareaEnhancer } from "./TextareaEnhancer";
-export * from "./types";
-export { utils } from "./utils";
+export { SidebarEnhancer } from "./enhancers/SidebarEnhancer";
+export { TextareaEnhancer } from "./enhancers/TextareaEnhancer";
+export { TimeDashboard } from "./ui/TimeDashboard";

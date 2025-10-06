@@ -1,44 +1,76 @@
 import React, { useCallback } from "react";
-import { CONFIG } from "./config";
-import { useElementObserver } from "./hooks";
-import { utils } from "./utils";
+import { CONFIG, utils } from "../../utils";
+import { useElementObserver } from "../../hooks";
+
+const CONTENT_WRAPPER_SELECTOR = ".content-wrapper";
+const CONTENT_WRAPPER_LI_SELECTOR = ".content-wrapper li";
+const PAGINATION_SYMBOLS = ["«", "»"] as const;
+const ACTIVE_CLASS = "active";
+
+const getFirstChildElement = (element: Element): HTMLElement | null => {
+  return element.children[0] as HTMLElement | null;
+};
+
+const isPaginationButton = (textContent: string | null): boolean => {
+  return PAGINATION_SYMBOLS.includes(
+    textContent as (typeof PAGINATION_SYMBOLS)[number],
+  );
+};
+
+const applyActiveStyle = (element: HTMLElement): void => {
+  utils.applyStyles(element, {
+    border: CONFIG.STYLES.activeBorder,
+  });
+};
+
+const applyContentTypeStyle = (element: HTMLElement, title: string): void => {
+  if (utils.containsKeywords(title, CONFIG.WORDS.attendances)) {
+    utils.applyStyles(element, CONFIG.STYLES.attendance);
+  } else if (utils.containsKeywords(title, CONFIG.WORDS.assignments)) {
+    utils.applyStyles(element, CONFIG.STYLES.assignment);
+  }
+};
+
+const processListItem = (li: HTMLLIElement): void => {
+  const firstChild = getFirstChildElement(li);
+  if (!firstChild) return;
+
+  // アクティブな要素にスタイルを適用
+  if (li.className === ACTIVE_CLASS) {
+    applyActiveStyle(firstChild);
+  }
+
+  const { textContent, title } = firstChild;
+
+  // ページネーションボタンはスキップ
+  if (isPaginationButton(textContent)) return;
+
+  // コンテンツタイプに応じたスタイルを適用
+  applyContentTypeStyle(firstChild, title);
+};
+
+const findContentWrapper = (): Element | null => {
+  const wrapper = document.querySelector(CONTENT_WRAPPER_SELECTOR);
+  if (!wrapper) {
+    console.error(
+      "[Mikoto (MOOCs #)]: .content-wrapper element was not found.",
+    );
+  }
+  return wrapper;
+};
 
 export const ContentEnhancer: React.FC = () => {
   const handleContentItems = useCallback(() => {
-    const main = document.querySelector(".content-wrapper");
-    if (!main) {
-      console.error(
-        "[Mikoto (MOOCs #)]: .content-wrapper element was not found.",
-      );
-      return;
-    }
+    const main = findContentWrapper();
+    if (!main) return;
 
-    const listItems = Array.from(main.getElementsByTagName("li"));
-
-    listItems.forEach((li) => {
-      if (li.className === "active" && li.children[0]) {
-        utils.applyStyles(li.children[0] as HTMLElement, {
-          border: CONFIG.STYLES.activeBorder,
-        });
-      }
-
-      const firstChild = li.children[0] as HTMLElement;
-      if (!firstChild) return;
-
-      const { textContent, title } = firstChild;
-
-      // ページ送りボタンの場合はスキップ
-      if (textContent === "«" || textContent === "»") return;
-
-      if (utils.containsKeywords(title, [...CONFIG.WORDS.attendances])) {
-        utils.applyStyles(firstChild, CONFIG.STYLES.attendance);
-      } else if (utils.containsKeywords(title, CONFIG.WORDS.assignments)) {
-        utils.applyStyles(firstChild, CONFIG.STYLES.assignment);
-      }
-    });
+    const listItems = Array.from(
+      main.getElementsByTagName("li"),
+    ) as HTMLLIElement[];
+    listItems.forEach(processListItem);
   }, []);
 
-  useElementObserver(".content-wrapper li", handleContentItems);
+  useElementObserver(CONTENT_WRAPPER_LI_SELECTOR, handleContentItems);
 
   return null;
 };

@@ -1,51 +1,70 @@
-import React, { createElement, useCallback, useState } from "react";
-import { createRoot } from "react-dom/client";
-import { CharacterCounter } from "./CharacterCounter";
-import { useTextareaObserver } from "./hooks";
-import type { ExtendedHTMLTextAreaElement } from "./types";
+import React, { useCallback, useRef } from "react";
+import { createRoot, type Root } from "react-dom/client";
+import type { ExtendedHTMLTextAreaElement } from "../../utils";
+import { useTextareaObserver } from "../../hooks";
+import { CharacterCounter } from "../ui/CharacterCounter";
+
+const COUNTER_CONTAINER_CLASS = "mikoto-counter-container";
+
+const createCounterContainer = (): HTMLDivElement => {
+  const container = document.createElement("div");
+  container.className = COUNTER_CONTAINER_CLASS;
+  return container;
+};
+
+const insertCounterContainer = (
+  textarea: HTMLTextAreaElement,
+  container: HTMLDivElement,
+): boolean => {
+  const wrapper = textarea.closest("div");
+  if (!wrapper) return false;
+
+  if (textarea.nextSibling) {
+    wrapper.insertBefore(container, textarea.nextSibling);
+  } else {
+    wrapper.appendChild(container);
+  }
+  return true;
+};
+
+const renderCounter = (root: Root, value: string): void => {
+  root.render(<CharacterCounter value={value} />);
+};
+
+const cleanupCounter = (
+  textarea: HTMLTextAreaElement,
+  container: HTMLDivElement,
+  root: Root,
+  handleInput: () => void,
+): void => {
+  textarea.removeEventListener("input", handleInput);
+  root.unmount();
+  container.remove();
+};
 
 export const TextareaEnhancer: React.FC = () => {
-  const [, setTextareaCounters] = useState<Map<HTMLTextAreaElement, string>>(
-    new Map(),
-  );
+  const rootsRef = useRef<Map<HTMLTextAreaElement, Root>>(new Map());
 
   const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
-    const wrapper = textarea.closest("div");
-    if (!wrapper) return;
+    const counterContainer = createCounterContainer();
 
-    const counterContainer = document.createElement("div");
-    counterContainer.className = "mikoto-counter-container";
-
-    if (textarea.nextSibling) {
-      wrapper.insertBefore(counterContainer, textarea.nextSibling);
-    } else {
-      wrapper.appendChild(counterContainer);
+    if (!insertCounterContainer(textarea, counterContainer)) {
+      return;
     }
 
     const root = createRoot(counterContainer);
+    rootsRef.current.set(textarea, root);
 
-    const handleInput = () => {
-      setTextareaCounters(
-        (prev) => new Map(prev.set(textarea, textarea.value)),
-      );
-      root.render(createElement(CharacterCounter, { value: textarea.value }));
+    const handleInput = (): void => {
+      renderCounter(root, textarea.value);
     };
 
     textarea.addEventListener("input", handleInput);
+    renderCounter(root, textarea.value);
 
-    root.render(createElement(CharacterCounter, { value: textarea.value }));
-
-    const cleanup = () => {
-      textarea.removeEventListener("input", handleInput);
-      root.unmount();
-      if (counterContainer.parentNode) {
-        counterContainer.parentNode.removeChild(counterContainer);
-      }
-      setTextareaCounters((prev) => {
-        const newMap = new Map(prev);
-        newMap.delete(textarea);
-        return newMap;
-      });
+    const cleanup = (): void => {
+      cleanupCounter(textarea, counterContainer, root, handleInput);
+      rootsRef.current.delete(textarea);
     };
 
     (textarea as ExtendedHTMLTextAreaElement).__mikotoCleanup = cleanup;
