@@ -5,7 +5,10 @@ import { MikotoApp } from "./components";
 import "./style.css";
 
 const ROOT_CONTAINER_ID = "mikoto-react-root";
-const TARGET_URL_PATTERN = "https://moocs.iniad.org/*";
+const TARGET_URL_PATTERNS = [
+  "https://moocs.iniad.org/*",
+  "https://docs.google.com/presentation/*",
+];
 
 /**
  * Reactアプリケーション用のコンテナ要素を作成
@@ -38,7 +41,8 @@ const registerCleanup = (root: Root, container: HTMLDivElement): void => {
 };
 
 export default defineContentScript({
-  matches: [TARGET_URL_PATTERN],
+  matches: TARGET_URL_PATTERNS,
+  allFrames: true,
 
   main() {
     const appContainer = createAppContainer();
