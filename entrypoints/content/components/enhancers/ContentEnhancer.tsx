@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
-import { CONFIG } from "../../utils";
-import { containsKeywords, applyStyles } from "../../utils/utils";
+
 import { useElementObserver } from "../../hooks";
+import { CONFIG, applyStyles, containsKeywords } from "../../utils";
 
 const CONTENT_WRAPPER_SELECTOR = ".content-wrapper";
 const CONTENT_WRAPPER_LI_SELECTOR = ".content-wrapper li";
