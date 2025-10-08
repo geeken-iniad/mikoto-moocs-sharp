@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
-import { CONFIG } from "../../utils";
-import { containsKeywords, applyStyles } from "../../utils/utils";
+
 import { useElementObserver } from "../../hooks";
+import { CONFIG, applyStyles, containsKeywords } from "../../utils";
 
 const SIDEBAR_MENU_TEXT_SELECTOR = "span.sidebar-menu-text";
 

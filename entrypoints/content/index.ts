@@ -1,5 +1,6 @@
 import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
+
 import { MikotoApp } from "./components";
 import "./style.css";
 

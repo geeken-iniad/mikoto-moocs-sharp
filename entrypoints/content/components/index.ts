@@ -1,7 +1,8 @@
-export { CharacterCounter } from "./ui/CharacterCounter";
-export { ContentEnhancer } from "./enhancers/ContentEnhancer";
+export {
+  ContentEnhancer,
+  CourseListEnhancer,
+  SidebarEnhancer,
+  TextareaEnhancer,
+} from "./enhancers";
 export { MikotoApp } from "./MikotoApp";
-export { CourseListEnhancer } from "./enhancers/CourseListEnhancer";
-export { SidebarEnhancer } from "./enhancers/SidebarEnhancer";
-export { TextareaEnhancer } from "./enhancers/TextareaEnhancer";
-export { TimeDashboard } from "./ui/TimeDashboard";
+export { CharacterCounter, TimeDashboard } from "./ui";

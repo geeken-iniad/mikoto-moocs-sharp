@@ -1,8 +1,9 @@
 import React, { useCallback, useRef } from "react";
 import { createRoot, type Root } from "react-dom/client";
-import type { ExtendedHTMLTextAreaElement } from "../../utils";
+
 import { useTextareaObserver } from "../../hooks";
-import { CharacterCounter } from "../ui/CharacterCounter";
+import type { ExtendedHTMLTextAreaElement } from "../../utils";
+import { CharacterCounter } from "../ui";
 
 const COUNTER_CONTAINER_CLASS = "mikoto-counter-container";
 

@@ -9,6 +9,8 @@
   },
   "javascript": {
     "formatter": {
+      "indentWidth": 2,
+      "indentStyle": "space",
       "quoteStyle": "double",
       "jsxQuoteStyle": "double"
     },

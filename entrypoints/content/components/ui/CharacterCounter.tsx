@@ -1,6 +1,7 @@
 import React from "react";
-import type { CharacterCounterProps } from "../../utils/types";
-import { countCharacters } from "../../utils/utils";
+
+import type { CharacterCounterProps } from "../../utils";
+import { countCharacters } from "../../utils";
 
 export const CharacterCounter: React.FC<CharacterCounterProps> = ({
   value,
