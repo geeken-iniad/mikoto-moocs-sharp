@@ -14,7 +14,7 @@ const setupWellClickHandler = (well: HTMLElement): void => {
     }
 
     // well内のリンクを探してクリック
-    const link = well.querySelector("a.btn") as HTMLAnchorElement;
+    const link = well.querySelector("a.btn-primary") as HTMLAnchorElement;
     if (link) {
       link.click();
     } else {
@@ -65,7 +65,7 @@ export const CourseListEnhancer: React.FC = () => {
     window.addEventListener("pageshow", handlePageShow);
 
     // MutationObserverで要素の追加・変更を監視
-    const observer = new MutationObserver((mutations) => {
+    const observer = new MutationObserver((_) => {
       processWells();
     });
 
