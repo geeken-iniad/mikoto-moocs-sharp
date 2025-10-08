@@ -7,3 +7,27 @@ export interface CharacterCounterProps {
 export interface ExtendedHTMLTextAreaElement extends HTMLTextAreaElement {
   __mikotoCleanup?: () => void;
 }
+
+export type DayOfWeek =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday";
+
+export interface Period {
+  start: string;
+  end: string;
+}
+
+export interface Class {
+  subject: string;
+  teacher?: string;
+  room?: string;
+  period: Period;
+}
+
+export type Schedule = {
+  [key in DayOfWeek]?: Class[];
+};

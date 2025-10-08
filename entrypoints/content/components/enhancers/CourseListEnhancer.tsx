@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 
+import { extractAndSaveSubjects } from "../../utils/subjectExtractor";
+
 interface ExtendedHTMLElement extends HTMLElement {
   __mikotoCleanup?: boolean;
   __mikotoHandler?: (e: Event) => void;
@@ -44,6 +46,9 @@ export const CourseListEnhancer: React.FC = () => {
           setupWellClickHandler(well as HTMLElement);
         }
       });
+
+      // 科目名を抽出して保存
+      extractAndSaveSubjects();
     };
 
     // 初回処理
