@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
-import { CONFIG, utils } from "../../utils";
+import { CONFIG } from "../../utils";
+import { containsKeywords, applyStyles } from "../../utils/utils";
 import { useElementObserver } from "../../hooks";
 
 const CONTENT_WRAPPER_SELECTOR = ".content-wrapper";
@@ -18,16 +19,16 @@ const isPaginationButton = (textContent: string | null): boolean => {
 };
 
 const applyActiveStyle = (element: HTMLElement): void => {
-  utils.applyStyles(element, {
+  applyStyles(element, {
     border: CONFIG.STYLES.activeBorder,
   });
 };
 
 const applyContentTypeStyle = (element: HTMLElement, title: string): void => {
-  if (utils.containsKeywords(title, CONFIG.WORDS.attendances)) {
-    utils.applyStyles(element, CONFIG.STYLES.attendance);
-  } else if (utils.containsKeywords(title, CONFIG.WORDS.assignments)) {
-    utils.applyStyles(element, CONFIG.STYLES.assignment);
+  if (containsKeywords(title, CONFIG.WORDS.attendances)) {
+    applyStyles(element, CONFIG.STYLES.attendance);
+  } else if (containsKeywords(title, CONFIG.WORDS.assignments)) {
+    applyStyles(element, CONFIG.STYLES.assignment);
   }
 };
 

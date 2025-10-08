@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
-import { CONFIG, utils } from "../../utils";
+import { CONFIG } from "../../utils";
+import { containsKeywords, applyStyles } from "../../utils/utils";
 import { useElementObserver } from "../../hooks";
 
 const SIDEBAR_MENU_TEXT_SELECTOR = "span.sidebar-menu-text";
@@ -12,10 +13,10 @@ interface ContentTypeStyle {
 }
 
 const getContentType = (textContent: string): ContentType | null => {
-  if (utils.containsKeywords(textContent, CONFIG.WORDS.attendances)) {
+  if (containsKeywords(textContent, CONFIG.WORDS.attendances)) {
     return "attendance";
   }
-  if (utils.containsKeywords(textContent, CONFIG.WORDS.assignments)) {
+  if (containsKeywords(textContent, CONFIG.WORDS.assignments)) {
     return "assignment";
   }
   return null;
@@ -30,10 +31,10 @@ const applyContentTypeStyles = (
   parentLi: HTMLElement | null,
   style: ContentTypeStyle,
 ): void => {
-  utils.applyStyles(span, { color: style.color });
+  applyStyles(span, { color: style.color });
 
   if (parentLi) {
-    utils.applyStyles(parentLi, { backgroundColor: style.backgroundColor });
+    applyStyles(parentLi, { backgroundColor: style.backgroundColor });
   }
 };
 

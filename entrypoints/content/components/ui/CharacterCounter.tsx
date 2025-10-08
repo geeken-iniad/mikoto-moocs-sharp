@@ -1,14 +1,14 @@
 import React from "react";
-import type { CharacterCounterProps } from "../../utils";
-import { utils } from "../../utils";
+import type { CharacterCounterProps } from "../../utils/types";
+import { countCharacters } from "../../utils/utils";
 
 export const CharacterCounter: React.FC<CharacterCounterProps> = ({
   value,
 }) => {
   const [normalCount, noNewlinesCount, noWhitespaceCount] = [
-    utils.countCharacters(value, "normal"),
-    utils.countCharacters(value, "no-newlines"),
-    utils.countCharacters(value, "no-whitespace"),
+    countCharacters(value, "normal"),
+    countCharacters(value, "no-newlines"),
+    countCharacters(value, "no-whitespace"),
   ];
 
   const containerStyle = {
