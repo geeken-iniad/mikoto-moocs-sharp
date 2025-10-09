@@ -1,7 +1,7 @@
 {
   "name": "mikoto-moocs-sharp",
   "description": "manifest.json description",
-  "private": true,
+  "license": "MIT",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
