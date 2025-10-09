@@ -1,0 +1,336 @@
+/* --- デスクトップ向けスタイル (900px以上) --- */
+@media (min-width: 900px) {
+  .ms-style-enabled .content {
+    max-width: 98%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ms-layout-enabled .vertical {
+    display: flex;
+  }
+
+  .ms-style-enabled div.panel.pad-form.problem-container {
+    max-height: 65vh;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box;
+  }
+}
+
+/* --- 共通スタイル --- */
+.ms-layout-enabled div.vertical {
+  border: 1px solid #ddd;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1px;
+}
+.ms-layout-enabled div.problem-contentpage {
+  position: relative;
+}
+
+@keyframes bg-color {
+  0% {
+    background-color: #e74c3c;
+  }
+  20% {
+    background-color: #f1c40f;
+  }
+  40% {
+    background-color: #1abc9c;
+  }
+  60% {
+    background-color: #3498db;
+  }
+  80% {
+    background-color: #9b59b6;
+  }
+  100% {
+    background-color: #e74c3c;
+  }
+}
+
+.ms-rainbow-enabled button.btn-success.submit-answer {
+  position: fixed;
+  bottom: 70px;
+  display: block;
+  margin-left: auto;
+  margin-bottom: 10px;
+  z-index: 1000;
+  animation: bg-color 20s infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.ms-rainbow-enabled nav.navbar.navbar-static-top,
+.ms-rainbow-enabled a.logo,
+.ms-rainbow-enabled a.btn.btn-primary {
+  animation: bg-color 20s infinite;
+}
+.ms-rainbow-enabled aside.main-sidebar {
+  animation: bg-color 20s infinite;
+}
+.ms-rainbow-enabled footer.main-footer {
+  animation: bg-color 20s infinite;
+}
+.ms-rainbow-enabled a.btn.btn-success.drive-search {
+  animation: bg-color 20s infinite;
+}
+.ms-rainbow-enabled a.btn.btn-success {
+  animation: bg-color 20s infinite;
+}
+.ms-rainbow-enabled span.logo-mini {
+  animation: rotation 5s infinite;
+}
+
+.ms-style-enabled div.pad-block {
+  overflow: auto;
+}
+
+.ms-style-enabled ul.pagination.pagination-lg {
+  margin: 10px;
+}
+
+.ms-style-enabled h2.clearfix {
+  margin: 10px;
+}
+
+.ms-style-enabled section.content.container-fluid {
+  padding-top: 5px;
+  max-height: 70vh;
+}
+
+.ms-layout-enabled ul.pager {
+  margin: 0px;
+}
+
+footer.main-footer {
+  display: none !important;
+}
+
+ul.pager {
+  position: fixed !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 10px !important;
+  background-color: #f8f9fa !important;
+  border-top: 1px solid #dee2e6 !important;
+  z-index: 1000 !important;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ms-layout-enabled .flex-divider {
+  flex: 0 0 10px;
+  background-color: #e0e0e0;
+  cursor: col-resize;
+  transition: background-color 0.2s;
+}
+
+.ms-layout-enabled .flex-divider:hover {
+  background-color: #c0c0c0;
+}
+
+.ms-layout-enabled .container-resize-handle {
+  position: absolute;
+  width: 10px;
+  height: 100%;
+  top: 0;
+  cursor: col-resize;
+  z-index: 10;
+  background-color: rgba(0, 100, 255, 0.2);
+  transition: background-color 0.2s;
+}
+
+.ms-layout-enabled .container-resize-handle:hover {
+  background-color: rgba(0, 100, 255, 0.5);
+}
+
+.ms-layout-enabled .container-resize-handle.right {
+  right: 0;
+}
+
+/* --- スマートフォン向けスタイル (767px以下) --- */
+@media (max-width: 767px) {
+  .ms-style-enabled .content {
+    max-width: 100% !important;
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .ms-layout-enabled .vertical {
+    display: block !important;
+    width: 100% !important;
+    border: none !important;
+    padding: 0 !important;
+  }
+
+  .ms-layout-enabled .vertical > .pad-block {
+    flex: none !important;
+    width: 100% !important;
+    margin-bottom: 15px;
+  }
+
+  .ms-layout-enabled .vertical > .pad-block:last-child {
+    margin-bottom: 0;
+  }
+
+  .ms-layout-enabled .flex-divider,
+  .ms-layout-enabled .container-resize-handle {
+    display: none !important;
+  }
+}
+
+/* --- Settings UI --- */
+.ms-settings-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  z-index: 10000;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+.ms-settings-button:hover {
+  transform: scale(1.1);
+}
+.ms-settings-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10001;
+  display: flex; /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+}
+.ms-settings-modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  color: #333;
+}
+.ms-settings-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #dee2e6;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+.ms-settings-modal-title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 0;
+}
+.ms-settings-close-button {
+  border: none;
+  background: transparent;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 5px;
+  line-height: 1;
+}
+.ms-settings-modal-body {
+  margin-bottom: 20px;
+}
+
+.ms-settings-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 15px;
+  border-top: 1px solid #dee2e6;
+}
+
+.ms-settings-apply-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.ms-settings-apply-button:hover {
+  background-color: #218838;
+}
+
+/* --- Settings UI Toggle Switch --- */
+.ms-settings-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+.ms-settings-row:last-child {
+  border-bottom: none;
+}
+.ms-settings-label {
+  font-size: 1rem;
+}
+.ms-toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 28px;
+  flex-shrink: 0;
+}
+.ms-toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.ms-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 28px;
+}
+.ms-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+input:checked + .ms-toggle-slider {
+  background-color: #28a745;
+}
+input:checked + .ms-toggle-slider:before {
+  transform: translateX(22px);
+}

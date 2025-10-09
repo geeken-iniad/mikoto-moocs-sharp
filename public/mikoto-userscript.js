@@ -5,7 +5,10 @@
 // @author     monkey
 // @icon       https://vitejs.dev/logo.svg
 // @match      https://moocs.iniad.org/*
+// @grant      GM_addStyle
 // ==/UserScript==
+
+(o=>{if(typeof GM_addStyle=="function"){GM_addStyle(o);return}const t=document.createElement("style");t.textContent=o,document.head.append(t)})(' @media (min-width: 900px){.ms-style-enabled .content{max-width:98%;margin-left:auto;margin-right:auto}.ms-layout-enabled .vertical{display:flex}.ms-style-enabled div.panel.pad-form.problem-container{max-height:65vh;overflow:auto;-webkit-overflow-scrolling:touch;box-sizing:border-box}}.ms-layout-enabled div.vertical{border:1px solid #ddd;position:relative;margin-left:auto;margin-right:auto;padding:1px}.ms-layout-enabled div.problem-contentpage{position:relative}@keyframes bg-color{0%{background-color:#e74c3c}20%{background-color:#f1c40f}40%{background-color:#1abc9c}60%{background-color:#3498db}80%{background-color:#9b59b6}to{background-color:#e74c3c}}.ms-rainbow-enabled button.btn-success.submit-answer{position:fixed;bottom:70px;display:block;margin-left:auto;margin-bottom:10px;z-index:1000;animation:bg-color 20s infinite}@keyframes rotation{0%{transform:rotate(0)}to{transform:rotate(360deg)}}.ms-rainbow-enabled nav.navbar.navbar-static-top,.ms-rainbow-enabled a.logo,.ms-rainbow-enabled a.btn.btn-primary{animation:bg-color 20s infinite}.ms-rainbow-enabled aside.main-sidebar{animation:bg-color 20s infinite}.ms-rainbow-enabled footer.main-footer{animation:bg-color 20s infinite}.ms-rainbow-enabled a.btn.btn-success.drive-search,.ms-rainbow-enabled a.btn.btn-success{animation:bg-color 20s infinite}.ms-rainbow-enabled span.logo-mini{animation:rotation 5s infinite}.ms-style-enabled div.pad-block{overflow:auto}.ms-style-enabled ul.pagination.pagination-lg,.ms-style-enabled h2.clearfix{margin:10px}.ms-style-enabled section.content.container-fluid{padding-top:5px;max-height:70vh}.ms-layout-enabled ul.pager{margin:0}footer.main-footer{display:none!important}ul.pager{position:fixed!important;bottom:0!important;width:100%!important;margin:0!important;padding:10px!important;background-color:#f8f9fa!important;border-top:1px solid #dee2e6!important;z-index:1000!important;display:flex;justify-content:space-between}.ms-layout-enabled .flex-divider{flex:0 0 10px;background-color:#e0e0e0;cursor:col-resize;transition:background-color .2s}.ms-layout-enabled .flex-divider:hover{background-color:silver}.ms-layout-enabled .container-resize-handle{position:absolute;width:10px;height:100%;top:0;cursor:col-resize;z-index:10;background-color:#0064ff33;transition:background-color .2s}.ms-layout-enabled .container-resize-handle:hover{background-color:#0064ff80}.ms-layout-enabled .container-resize-handle.right{right:0}@media (max-width: 767px){.ms-style-enabled .content{max-width:100%!important;padding-left:10px!important;padding-right:10px!important}.ms-layout-enabled .vertical{display:block!important;width:100%!important;border:none!important;padding:0!important}.ms-layout-enabled .vertical>.pad-block{flex:none!important;width:100%!important;margin-bottom:15px}.ms-layout-enabled .vertical>.pad-block:last-child{margin-bottom:0}.ms-layout-enabled .flex-divider,.ms-layout-enabled .container-resize-handle{display:none!important}}.ms-settings-button{position:fixed;bottom:20px;left:20px;width:50px;height:50px;background-color:#007bff;color:#fff;border-radius:50%;border:none;cursor:pointer;display:flex;justify-content:center;align-items:center;font-size:24px;z-index:10000;box-shadow:0 2px 10px #0003;transition:transform .2s}.ms-settings-button:hover{transform:scale(1.1)}.ms-settings-modal-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background-color:#00000080;z-index:10001;display:flex;justify-content:center;align-items:center}.ms-settings-modal{background-color:#fff;padding:20px;border-radius:8px;width:90%;max-width:500px;box-shadow:0 5px 15px #0000004d;color:#333}.ms-settings-modal-header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #dee2e6;padding-bottom:10px;margin-bottom:20px}.ms-settings-modal-title{font-size:1.25rem;font-weight:500;margin:0}.ms-settings-close-button{border:none;background:transparent;font-size:1.5rem;cursor:pointer;padding:0 5px;line-height:1}.ms-settings-modal-body{margin-bottom:20px}.ms-settings-modal-footer{display:flex;justify-content:flex-end;padding-top:15px;border-top:1px solid #dee2e6}.ms-settings-apply-button{background-color:#28a745;color:#fff;border:none;padding:10px 20px;border-radius:5px;cursor:pointer;font-size:1rem;transition:background-color .2s}.ms-settings-apply-button:hover{background-color:#218838}.ms-settings-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0}.ms-settings-row:last-child{border-bottom:none}.ms-settings-label{font-size:1rem}.ms-toggle-switch{position:relative;display:inline-block;width:50px;height:28px;flex-shrink:0}.ms-toggle-switch input{opacity:0;width:0;height:0}.ms-toggle-slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:#ccc;transition:.4s;border-radius:28px}.ms-toggle-slider:before{position:absolute;content:"";height:20px;width:20px;left:4px;bottom:4px;background-color:#fff;transition:.4s;border-radius:50%}input:checked+.ms-toggle-slider{background-color:#28a745}input:checked+.ms-toggle-slider:before{transform:translate(22px)} ');
 
 (function () {
   'use strict';
@@ -6978,8 +6981,447 @@
     client.createRoot = m.createRoot;
     client.hydrateRoot = m.hydrateRoot;
   }
-  client.createRoot(document.createElement("div")).render(
-    /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { children: "Hello from userscript!" }) })
+  const SETTINGS_KEY = "moocsSharpSettings";
+  const DEFAULT_SETTINGS = {
+    enableRainbowAnimation: true,
+    enableLayoutEnhancements: true,
+    enableCustomAlerts: true,
+    enableStyleImprovements: true
+  };
+  const useSettings = () => {
+    const [settings, setSettings] = reactExports.useState(DEFAULT_SETTINGS);
+    reactExports.useEffect(() => {
+      try {
+        const savedSettings = localStorage.getItem(SETTINGS_KEY);
+        if (savedSettings) {
+          setSettings({ ...DEFAULT_SETTINGS, ...JSON.parse(savedSettings) });
+        }
+      } catch (e) {
+        console.error("Moocs Sharp: Failed to load settings.", e);
+      }
+    }, []);
+    const saveSettings = (newSettings) => {
+      const updatedSettings = { ...settings, ...newSettings };
+      setSettings(updatedSettings);
+      try {
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(updatedSettings));
+      } catch (e) {
+        console.error("Moocs Sharp: Failed to save settings.", e);
+      }
+    };
+    return { settings, saveSettings };
+  };
+  const SettingsContext = reactExports.createContext(
+    void 0
+  );
+  const SettingsProvider = ({ children }) => {
+    const { settings, saveSettings } = useSettings();
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsContext.Provider, { value: { settings, saveSettings }, children });
+  };
+  const useSettingsContext = () => {
+    const context = reactExports.useContext(SettingsContext);
+    if (context === void 0) {
+      throw new Error("useSettingsContext must be used within a SettingsProvider");
+    }
+    return context;
+  };
+  const ToggleSwitch = ({ checked, onChange }) => {
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "ms-toggle-switch", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "input",
+        {
+          type: "checkbox",
+          checked,
+          onChange: (e) => onChange(e.target.checked)
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ms-toggle-slider" })
+    ] });
+  };
+  const SETTINGS_CONFIG = [
+    { key: "enableRainbowAnimation", label: "レインボーアニメーション" },
+    { key: "enableLayoutEnhancements", label: "レイアウト調整機能" },
+    { key: "enableCustomAlerts", label: "カスタムアラート機能" },
+    { key: "enableStyleImprovements", label: "その他スタイル改善" }
+  ];
+  const SettingsModal = ({ isOpen, onClose }) => {
+    const { settings, saveSettings } = useSettingsContext();
+    if (!isOpen) {
+      return null;
+    }
+    const handleApply = () => {
+      saveSettings(settings);
+      window.location.reload();
+    };
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "ms-settings-modal-overlay", onClick: onClose, children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "ms-settings-modal", onClick: (e) => e.stopPropagation(), children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "ms-settings-modal-header", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h5", { className: "ms-settings-modal-title", children: "Moocs Sharp 設定" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "button",
+          {
+            className: "ms-settings-close-button",
+            "aria-label": "閉じる",
+            onClick: onClose,
+            children: "×"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "ms-settings-modal-body", children: SETTINGS_CONFIG.map(({ key, label }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "ms-settings-row", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ms-settings-label", children: label }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          ToggleSwitch,
+          {
+            checked: settings[key],
+            onChange: (checked) => saveSettings({ [key]: checked })
+          }
+        )
+      ] }, key)) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "ms-settings-modal-footer", children: /* @__PURE__ */ jsxRuntimeExports.jsx("button", { className: "ms-settings-apply-button", onClick: handleApply, children: "適用" }) })
+    ] }) });
+  };
+  const SettingsButton = ({ onClick }) => {
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "button",
+      {
+        className: "ms-settings-button",
+        "aria-label": "Moocs Sharp 設定",
+        onClick,
+        children: "⚙"
+      }
+    );
+  };
+  const BANNER_AUTO_HIDE_MS = 5e3;
+  const BANNER_TRANSITION_MS = 500;
+  const ALERT_DEFAULT_THEME = { background: "#007bff", color: "#ffffff" };
+  const ALERT_THEME_RULES = [
+    {
+      keywords: ["保存しました", "have been saved"],
+      background: "#28a745",
+      color: "#ffffff"
+    },
+    {
+      keywords: ["失敗しました", "Failed to"],
+      background: "#dc3545",
+      color: "#ffffff"
+    },
+    {
+      keywords: ["できません", "非公開です"],
+      background: "#ffc107",
+      color: "#212529"
+    }
+  ];
+  const resolveAlertTheme = (message) => {
+    const matchedTheme = ALERT_THEME_RULES.find(
+      (theme) => theme.keywords.some((keyword) => message.includes(keyword))
+    );
+    return matchedTheme ? { background: matchedTheme.background, color: matchedTheme.color } : ALERT_DEFAULT_THEME;
+  };
+  const AlertBanner = ({ id: id2, message, onClose }) => {
+    const [isVisible, setIsVisible] = reactExports.useState(false);
+    const theme = resolveAlertTheme(message);
+    reactExports.useEffect(() => {
+      setIsVisible(true);
+      const timeoutId = setTimeout(() => {
+        handleClose();
+      }, BANNER_AUTO_HIDE_MS);
+      return () => clearTimeout(timeoutId);
+    }, []);
+    const handleClose = () => {
+      setIsVisible(false);
+      setTimeout(() => {
+        onClose(id2);
+      }, BANNER_TRANSITION_MS);
+    };
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        id: id2,
+        role: "alert",
+        style: {
+          position: "fixed",
+          top: "100px",
+          right: isVisible ? "20px" : "-400px",
+          maxWidth: "350px",
+          backgroundColor: theme.background,
+          color: theme.color,
+          padding: "15px 25px",
+          borderRadius: "8px",
+          boxShadow: "0 4px 8px rgba(0,0,0,0.2)",
+          zIndex: "99999",
+          display: "flex",
+          alignItems: "center",
+          gap: "20px",
+          fontSize: "16px",
+          fontFamily: "sans-serif",
+          opacity: isVisible ? "1" : "0",
+          transition: `opacity ${BANNER_TRANSITION_MS}ms, right ${BANNER_TRANSITION_MS}ms`
+        },
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { dangerouslySetInnerHTML: { __html: message.replace(/\n/g, "<br>") } }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              "aria-label": "閉じる",
+              onClick: handleClose,
+              style: {
+                background: "none",
+                border: "none",
+                color: "inherit",
+                fontSize: "24px",
+                cursor: "pointer",
+                opacity: "0.7",
+                padding: "0 5px"
+              },
+              children: "×"
+            }
+          )
+        ]
+      }
+    );
+  };
+  let originalAlert = null;
+  const CustomAlertsManager = () => {
+    const { settings } = useSettingsContext();
+    const [alerts, setAlerts] = reactExports.useState([]);
+    reactExports.useEffect(() => {
+      if (settings.enableCustomAlerts) {
+        if (!originalAlert) {
+          originalAlert = window.alert;
+        }
+        window.alert = (message) => {
+          const id2 = `alert-${Date.now()}-${Math.random()}`;
+          setAlerts((prevAlerts) => [...prevAlerts, { id: id2, message }]);
+        };
+      } else {
+        if (originalAlert) {
+          window.alert = originalAlert;
+          originalAlert = null;
+        }
+      }
+      return () => {
+        if (originalAlert) {
+          window.alert = originalAlert;
+          originalAlert = null;
+        }
+      };
+    }, [settings.enableCustomAlerts]);
+    const handleClose = (id2) => {
+      setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id2));
+    };
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: alerts.map(({ id: id2, message }) => /* @__PURE__ */ jsxRuntimeExports.jsx(AlertBanner, { id: id2, message, onClose: handleClose }, id2)) });
+  };
+  const BodyClassManager = () => {
+    const { settings } = useSettingsContext();
+    reactExports.useEffect(() => {
+      const classMap = {
+        "ms-rainbow-enabled": settings.enableRainbowAnimation,
+        "ms-layout-enabled": settings.enableLayoutEnhancements,
+        "ms-style-enabled": settings.enableStyleImprovements
+      };
+      for (const [className, isEnabled] of Object.entries(classMap)) {
+        document.body.classList.toggle(className, isEnabled);
+      }
+    }, [settings]);
+    return null;
+  };
+  const SELECTORS = {
+    content: "section.content.container-fluid",
+    padBlock: "div.pad-block",
+    pager: "ul.pager"
+  };
+  const POLL_TIMEOUT_MS = 1e4;
+  const POLL_INTERVAL_MS = 100;
+  const CONTAINER_MIN_WIDTH = 100;
+  const FLEX_MIN_WIDTH = 50;
+  const getWidthStorageKey = (padCount) => `verticalContainerWidth_${padCount}pads`;
+  const getFlexStorageKey = (padCount) => `verticalFlexRatios_${padCount}pads`;
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const waitForLayoutElements = async () => {
+    const deadline = performance.now() + POLL_TIMEOUT_MS;
+    while (performance.now() < deadline) {
+      const content = document.querySelector(SELECTORS.content);
+      const padBlocks = Array.from(
+        document.querySelectorAll(SELECTORS.padBlock)
+      );
+      const pager = document.querySelector(SELECTORS.pager);
+      if (content && padBlocks.length && pager) {
+        return { content, padBlocks, pager };
+      }
+      await delay(POLL_INTERVAL_MS);
+    }
+    throw new Error("Timeout waiting for layout elements.");
+  };
+  const LayoutManager = () => {
+    const { settings } = useSettingsContext();
+    reactExports.useEffect(() => {
+      if (!settings.enableLayoutEnhancements) {
+        return;
+      }
+      let isCleanedUp = false;
+      let originalParents = [];
+      let originalNextSiblings = [];
+      let verticalContainer = null;
+      let padBlocks = [];
+      const init = async () => {
+        try {
+          const elements = await waitForLayoutElements();
+          if (isCleanedUp || !elements) return;
+          const { content, pager } = elements;
+          padBlocks = elements.padBlocks;
+          if (content.querySelector(".vertical")) {
+            return;
+          }
+          originalParents = padBlocks.map((el2) => el2.parentNode);
+          originalNextSiblings = padBlocks.map((el2) => el2.nextSibling);
+          const padCount = padBlocks.length;
+          const widthStorageKey = getWidthStorageKey(padCount);
+          const flexStorageKey = getFlexStorageKey(padCount);
+          verticalContainer = document.createElement("div");
+          verticalContainer.className = "vertical";
+          const savedWidth = localStorage.getItem(widthStorageKey);
+          verticalContainer.style.width = savedWidth || "100%";
+          padBlocks.forEach((padBlock) => {
+            verticalContainer == null ? void 0 : verticalContainer.appendChild(padBlock);
+          });
+          content.append(verticalContainer);
+          content.append(pager);
+          makeFlexContainerResizable(verticalContainer, flexStorageKey);
+          makeContainerResizable(verticalContainer, widthStorageKey);
+        } catch (error) {
+          console.error("Moocs Sharp: Layout initialization failed.", error);
+        }
+      };
+      init();
+      return () => {
+        isCleanedUp = true;
+        if (verticalContainer) {
+          padBlocks.forEach((padBlock, index) => {
+            const originalParent = originalParents[index];
+            const originalNextSibling = originalNextSiblings[index];
+            if (originalParent) {
+              originalParent.insertBefore(padBlock, originalNextSibling);
+            }
+          });
+          verticalContainer.remove();
+        }
+      };
+    }, [settings.enableLayoutEnhancements]);
+    return null;
+  };
+  const makeContainerResizable = (container, storageKey) => {
+    const handle = document.createElement("div");
+    handle.className = "container-resize-handle right";
+    container.appendChild(handle);
+    handle.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      const startX = e.clientX;
+      const startWidth = container.offsetWidth;
+      const onMouseMove = (moveEvent) => {
+        const newWidth = startWidth + (moveEvent.clientX - startX) * 2;
+        container.style.width = `${Math.max(CONTAINER_MIN_WIDTH, newWidth)}px`;
+      };
+      const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        storeWidthAsPercent(container, storageKey);
+      };
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+  };
+  const makeFlexContainerResizable = (container, storageKey) => {
+    const padBlocks = Array.from(
+      container.children
+    ).filter((el2) => el2.matches("div.pad-block"));
+    if (padBlocks.length < 2) return;
+    const [leftPane, rightPane] = padBlocks;
+    applySavedFlexRatios(leftPane, rightPane, storageKey);
+    const divider = document.createElement("div");
+    divider.className = "flex-divider";
+    leftPane.after(divider);
+    divider.addEventListener("mousedown", (e) => {
+      e.preventDefault();
+      const startX = e.clientX;
+      const leftStartWidth = leftPane.offsetWidth;
+      const rightStartWidth = rightPane.offsetWidth;
+      const onMouseMove = (moveEvent) => {
+        const deltaX = moveEvent.clientX - startX;
+        const newLeftWidth = leftStartWidth + deltaX;
+        const newRightWidth = rightStartWidth - deltaX;
+        if (newLeftWidth < FLEX_MIN_WIDTH || newRightWidth < FLEX_MIN_WIDTH) {
+          return;
+        }
+        const totalWidth = newLeftWidth + newRightWidth;
+        leftPane.style.flex = `0 1 ${newLeftWidth / totalWidth * 100}%`;
+        rightPane.style.flex = `0 1 ${newRightWidth / totalWidth * 100}%`;
+      };
+      const onMouseUp = () => {
+        document.removeEventListener("mousemove", onMouseMove);
+        document.removeEventListener("mouseup", onMouseUp);
+        storeFlexRatios(leftPane, rightPane, storageKey);
+      };
+      document.addEventListener("mousemove", onMouseMove);
+      document.addEventListener("mouseup", onMouseUp);
+    });
+  };
+  const applySavedFlexRatios = (leftPane, rightPane, storageKey) => {
+    const saved = localStorage.getItem(storageKey);
+    if (!saved) {
+      leftPane.style.flex = "1 1 0%";
+      rightPane.style.flex = "1 1 0%";
+      return;
+    }
+    const [left, right] = saved.split(":").map(parseFloat);
+    if (!isNaN(left) && !isNaN(right)) {
+      leftPane.style.flex = `0 1 ${left}%`;
+      rightPane.style.flex = `0 1 ${right}%`;
+    }
+  };
+  const storeFlexRatios = (leftPane, rightPane, storageKey) => {
+    const totalWidth = leftPane.offsetWidth + rightPane.offsetWidth;
+    if (totalWidth === 0) return;
+    const leftPercent = leftPane.offsetWidth / totalWidth * 100;
+    const rightPercent = rightPane.offsetWidth / totalWidth * 100;
+    localStorage.setItem(
+      storageKey,
+      `${leftPercent.toFixed(2)}:${rightPercent.toFixed(2)}`
+    );
+  };
+  const storeWidthAsPercent = (container, storageKey) => {
+    const parent = container.parentElement;
+    if (!parent) return;
+    const parentWidth = parent.clientWidth;
+    const widthPx = parseFloat(container.style.width);
+    if (!parentWidth || isNaN(widthPx)) return;
+    const percent = widthPx / parentWidth * 100;
+    localStorage.setItem(storageKey, `${percent.toFixed(2)}%`);
+  };
+  const App = () => {
+    const [isModalOpen, setIsModalOpen] = reactExports.useState(false);
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(SettingsProvider, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(BodyClassManager, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(LayoutManager, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CustomAlertsManager, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(SettingsButton, { onClick: () => setIsModalOpen(true) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        SettingsModal,
+        {
+          isOpen: isModalOpen,
+          onClose: () => setIsModalOpen(false)
+        }
+      )
+    ] });
+  };
+  const rootId = "mikoto-userscript-root";
+  let rootContainer = document.getElementById(rootId);
+  if (!rootContainer) {
+    rootContainer = document.createElement("div");
+    rootContainer.id = rootId;
+    document.body.appendChild(rootContainer);
+  }
+  client.createRoot(rootContainer).render(
+    /* @__PURE__ */ jsxRuntimeExports.jsx(React.StrictMode, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) })
   );
 
 })();
