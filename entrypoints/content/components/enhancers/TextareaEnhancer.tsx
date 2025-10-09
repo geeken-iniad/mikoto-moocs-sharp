@@ -1,71 +1,116 @@
-import React, { useCallback, useRef } from "react";
-import { createRoot, type Root } from "react-dom/client";
+import React, { useCallback, useRef, useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+import { Maximize2 } from "lucide-react";
 
 import { useTextareaObserver } from "../../hooks";
 import type { ExtendedHTMLTextAreaElement } from "../../utils";
 import { CharacterCounter } from "../ui";
 
-const COUNTER_CONTAINER_CLASS = "mikoto-counter-container";
+const ResizeToggle: React.FC<{ textarea: HTMLTextAreaElement }> = ({
+  textarea,
+}) => {
+  const [isHorizontalResizable, setIsHorizontalResizable] = useState(false);
 
-const createCounterContainer = (): HTMLDivElement => {
-  const container = document.createElement("div");
-  container.className = COUNTER_CONTAINER_CLASS;
-  return container;
+  const handleToggle = () => {
+    const newState = !isHorizontalResizable;
+    setIsHorizontalResizable(newState);
+    textarea.style.resize = newState ? "both" : "vertical";
+  };
+
+  return (
+    <button
+      onClick={handleToggle}
+      style={{
+        alignItems: "center",
+        backgroundColor: isHorizontalResizable ? "#3471eb" : "#f0f0f0",
+        border: "1px solid #ddd",
+        borderRadius: "4px",
+        color: isHorizontalResizable ? "white" : "#333",
+        cursor: "pointer",
+        display: "flex",
+        fontSize: "12px",
+        fontWeight: "500",
+        gap: "6px",
+        padding: "6px 12px",
+      }}
+      title="横方向のサイズ変更を切り替え"
+    >
+      <Maximize2 size={14} />
+      横方向サイズ変更: {isHorizontalResizable ? "ON" : "OFF"}
+    </button>
+  );
 };
 
-const insertCounterContainer = (
-  textarea: HTMLTextAreaElement,
-  container: HTMLDivElement,
-): boolean => {
-  const wrapper = textarea.closest("div");
-  if (!wrapper) return false;
+const TextareaEnhancerContent: React.FC<{
+  textarea: HTMLTextAreaElement;
+}> = ({ textarea }) => {
+  const [value, setValue] = useState(textarea.value);
+  const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
-  if (textarea.nextSibling) {
-    wrapper.insertBefore(container, textarea.nextSibling);
-  } else {
-    wrapper.appendChild(container);
-  }
-  return true;
-};
+  useEffect(() => {
+    const wrapper = textarea.closest("div");
+    if (!wrapper) return;
 
-const renderCounter = (root: Root, value: string): void => {
-  root.render(<CharacterCounter value={value} />);
-};
+    const tempDiv = document.createElement("div");
 
-const cleanupCounter = (
-  textarea: HTMLTextAreaElement,
-  container: HTMLDivElement,
-  root: Root,
-  handleInput: () => void,
-): void => {
-  textarea.removeEventListener("input", handleInput);
-  root.unmount();
-  container.remove();
-};
-
-export const TextareaEnhancer: React.FC = () => {
-  const rootsRef = useRef<Map<HTMLTextAreaElement, Root>>(new Map());
-
-  const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
-    const counterContainer = createCounterContainer();
-
-    if (!insertCounterContainer(textarea, counterContainer)) {
-      return;
+    if (textarea.nextSibling) {
+      wrapper.insertBefore(tempDiv, textarea.nextSibling);
+    } else {
+      wrapper.appendChild(tempDiv);
     }
 
-    const root = createRoot(counterContainer);
-    rootsRef.current.set(textarea, root);
+    setContainer(tempDiv);
 
-    const handleInput = (): void => {
-      renderCounter(root, textarea.value);
+    return () => {
+      tempDiv.remove();
+    };
+  }, [textarea]);
+
+  useEffect(() => {
+    const handleInput = () => {
+      setValue(textarea.value);
     };
 
     textarea.addEventListener("input", handleInput);
-    renderCounter(root, textarea.value);
+    return () => {
+      textarea.removeEventListener("input", handleInput);
+    };
+  }, [textarea]);
+
+  if (!container) return null;
+
+  return createPortal(
+    <div className="mikoto-textarea-enhancer-container">
+      <div
+        className="mikoto-button-group"
+        style={{
+          display: "flex",
+          gap: "8px",
+          justifyContent: "flex-end",
+          marginTop: "8px",
+        }}
+      >
+        <ResizeToggle textarea={textarea} />
+      </div>
+      <div className="mikoto-counter-container">
+        <CharacterCounter value={value} />
+      </div>
+    </div>,
+    container,
+  );
+};
+
+export const TextareaEnhancer: React.FC = () => {
+  const [textareas, setTextareas] = useState<HTMLTextAreaElement[]>([]);
+
+  const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
+    setTextareas((prev) => {
+      if (prev.includes(textarea)) return prev;
+      return [...prev, textarea];
+    });
 
     const cleanup = (): void => {
-      cleanupCounter(textarea, counterContainer, root, handleInput);
-      rootsRef.current.delete(textarea);
+      setTextareas((prev) => prev.filter((t) => t !== textarea));
     };
 
     (textarea as ExtendedHTMLTextAreaElement).__mikotoCleanup = cleanup;
@@ -73,5 +118,14 @@ export const TextareaEnhancer: React.FC = () => {
 
   useTextareaObserver(handleTextareaFound);
 
-  return null;
+  return (
+    <>
+      {textareas.map((textarea) => (
+        <TextareaEnhancerContent
+          key={textarea.toString()}
+          textarea={textarea}
+        />
+      ))}
+    </>
+  );
 };
