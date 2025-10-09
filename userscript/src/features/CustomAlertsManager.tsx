@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createRoot } from "react-dom/client";
+import { createPortal } from "react-dom";
 import { AlertBanner } from "../components/AlertBanner";
 import { useSettingsContext } from "../hooks/useSettingsContext";
 
@@ -43,11 +43,12 @@ export const CustomAlertsManager = () => {
     setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id));
   };
 
-  return (
+  return createPortal(
     <>
       {alerts.map(({ id, message }) => (
         <AlertBanner key={id} id={id} message={message} onClose={handleClose} />
       ))}
-    </>
+    </>,
+    document.body
   );
 };

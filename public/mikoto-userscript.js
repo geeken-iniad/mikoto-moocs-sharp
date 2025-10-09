@@ -7209,7 +7209,10 @@
     const handleClose = (id2) => {
       setAlerts((prevAlerts) => prevAlerts.filter((alert) => alert.id !== id2));
     };
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: alerts.map(({ id: id2, message }) => /* @__PURE__ */ jsxRuntimeExports.jsx(AlertBanner, { id: id2, message, onClose: handleClose }, id2)) });
+    return reactDomExports.createPortal(
+      /* @__PURE__ */ jsxRuntimeExports.jsx(jsxRuntimeExports.Fragment, { children: alerts.map(({ id: id2, message }) => /* @__PURE__ */ jsxRuntimeExports.jsx(AlertBanner, { id: id2, message, onClose: handleClose }, id2)) }),
+      document.body
+    );
   };
   const BodyClassManager = () => {
     const { settings } = useSettingsContext();
