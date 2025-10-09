@@ -1,0 +1,282 @@
+body {
+  .btn {
+    border: 2px solid #a5a6a8;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color 0.2s,
+      color 0.2s,
+      border-color 0.2s;
+    -webkit-appearance: none;
+  }
+
+  .btn:hover {
+    filter: brightness(95%);
+  }
+
+  .btn-primary {
+    background-color: #3471eb;
+    border-color: #007bff;
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    filter: none;
+  }
+
+  .btn-success {
+    background-color: #00a65a;
+    border-color: #008d4c;
+    color: white;
+  }
+
+  .pager li > a {
+    border-radius: 7px;
+  }
+
+  .content-header > .breadcrumb {
+    border-radius: 5px;
+  }
+
+  .well {
+    border: 1.3px solid #46484d;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .well:hover {
+    background-color: #e0e0e0;
+  }
+
+  .media-left {
+    padding-right: 25px;
+  }
+
+  .media-heading {
+    margin-bottom: 10px;
+  }
+
+  .treeview-menu > li {
+    border: 1.3px solid #46484d;
+  }
+
+  .panel {
+    border-radius: 10px;
+  }
+
+  .form-label {
+    color: #333;
+    font-weight: 500;
+  }
+
+  .form-control {
+    background-color: #ffffff;
+    border: 1px solid #dcdfe6;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: #333333;
+    font-family: inherit;
+    font-size: 16px;
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s;
+    width: 100%;
+  }
+
+  .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+  }
+
+  textarea.form-control {
+    resize: vertical;
+  }
+
+  .sidebar-menu > li > a {
+    border: 1.5px solid #426dc2;
+    padding: 22px 20px 22px 15px;
+  }
+
+  .sidebar-menu-text {
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .treeview-menu > li > a {
+    padding: 15px 5px 15px 15px;
+  }
+
+  .content-wrapper li.active {
+    transform: scale(1.02);
+    transition: transform 0.2s ease;
+  }
+
+  #mikoto-react-root {
+    display: none;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+  }
+}
+
+/* ダークテーマ */
+body.mikoto-dark-theme {
+  background-color: #1a1a1a;
+  color: #e0e0e0;
+
+  .content-wrapper,
+  .main-sidebar,
+  .main-header,
+  .navbar {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+  }
+
+  .box,
+  .panel {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+
+  .box-header,
+  .panel-heading {
+    background-color: #2a2a2a;
+    border-bottom-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+
+  .well {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+
+  .well:hover {
+    background-color: #333333;
+  }
+
+  .form-control {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+
+  .form-control:focus {
+    border-color: #4a7bc8;
+    box-shadow: 0 0 0 3px rgba(74, 123, 200, 0.25);
+  }
+
+  .form-label {
+    color: #e0e0e0;
+  }
+
+  .sidebar-menu > li > a {
+    background-color: #2a2a2a;
+    border-color: #4a7bc8;
+    color: #e0e0e0;
+  }
+
+  .sidebar-menu > li > a:hover {
+    background-color: #333333;
+  }
+
+  .treeview-menu > li {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+
+  .treeview-menu > li > a {
+    color: #e0e0e0;
+  }
+
+  .treeview-menu > li > a:hover {
+    background-color: #333333;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  a,
+  label {
+    color: #e0e0e0;
+  }
+
+  .breadcrumb {
+    background-color: #2a2a2a;
+  }
+
+  .breadcrumb > li + li:before {
+    color: #e0e0e0;
+  }
+
+  .btn {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+
+  .btn:hover {
+    background-color: #333333;
+  }
+
+  .btn-primary {
+    background-color: #4a7bc8;
+    border-color: #4a7bc8;
+    color: #ffffff;
+  }
+
+  .btn-primary:hover {
+    background-color: #3a5fa8;
+    border-color: #3a5fa8;
+  }
+
+  .btn-success {
+    background-color: #00a65a;
+    border-color: #008d4c;
+  }
+
+  table {
+    color: #e0e0e0;
+  }
+
+  .table > thead > tr > th,
+  .table > tbody > tr > th,
+  .table > tfoot > tr > th,
+  .table > thead > tr > td,
+  .table > tbody > tr > td,
+  .table > tfoot > tr > td {
+    border-color: #3a3a3a;
+  }
+
+  .pager li > a,
+  .pager li > span {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+    color: #e0e0e0;
+  }
+
+  .pager li > a:hover {
+    background-color: #333333;
+  }
+
+  .pagination > li > a {
+    background-color: #2a2a2a;
+    border-color: #3a3a3a;
+  }
+}
