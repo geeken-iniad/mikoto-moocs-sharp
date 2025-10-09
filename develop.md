@@ -1,20 +1,6 @@
-# Mikoto (MOOCs Sharp): MOOCsを便利に
+# Development Guide
 
-Mikotoは、MOOCsをより便利に利用するためのブラウザ拡張機能です。
-
-## 機能
-
-- [ ]
-
-## インストール
-
-### Google Chrome
-
-開発者モード
-
-### Mozilla Firefox
-
-### Microsoft Edge
+This guide provides instructions for setting up the development environment and building the project.
 
 ## Project Structure
 
@@ -40,3 +26,9 @@ To build the projects for production, you can use the following scripts:
 
 - `pnpm build`: Builds both the userscript and the browser extension.
 - `pnpm build:userscript`: Builds only the userscript.
+- `pnpm build:firefox`: Builds the userscript and the browser extension for Firefox.
+
+To create a zip file for distribution, use the following commands:
+
+- `pnpm zip`: Creates a zip file for Chrome.
+- `pnpm zip:firefox`: Creates a zip file for Firefox.

@@ -7,12 +7,13 @@
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
-    "build": "wxt build",
-    "build:firefox": "wxt build -b firefox",
-    "zip": "wxt zip",
-    "zip:firefox": "wxt zip -b firefox",
+    "build": "pnpm run build:userscript && wxt build",
+    "build:firefox": "pnpm run build:userscript && wxt build -b firefox",
+    "zip": "pnpm run build && wxt zip",
+    "zip:firefox": "pnpm run build:firefox && wxt zip -b firefox",
     "compile": "tsc --noEmit",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare && pnpm --dir userscript install",
+    "build:userscript": "pnpm --dir userscript build"
   },
   "dependencies": {
     "lucide-react": "^0.545.0",
