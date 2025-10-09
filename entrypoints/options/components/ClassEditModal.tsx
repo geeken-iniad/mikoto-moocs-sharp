@@ -1,3 +1,4 @@
+import { Save, Trash2, X } from "lucide-react";
 import type { Class } from "../../content/utils/types";
 import type { EditingCell } from "../hooks/useSchedule";
 import type { ScheduleHistory } from "../hooks/useScheduleHistory";
@@ -177,8 +178,13 @@ export const ClassEditModal = ({
                 cursor: "pointer",
                 fontSize: "14px",
                 fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
               }}
             >
+              <Save size={18} />
               保存
             </button>
             {hasExistingClass && (
@@ -193,8 +199,12 @@ export const ClassEditModal = ({
                   cursor: "pointer",
                   fontSize: "14px",
                   fontWeight: "bold",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
                 }}
               >
+                <Trash2 size={18} />
                 削除
               </button>
             )}
@@ -209,8 +219,12 @@ export const ClassEditModal = ({
                 cursor: "pointer",
                 fontSize: "14px",
                 fontWeight: "bold",
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
               }}
             >
+              <X size={18} />
               キャンセル
             </button>
           </div>

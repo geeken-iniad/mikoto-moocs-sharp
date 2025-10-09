@@ -9,6 +9,9 @@ const TARGET_URL_PATTERNS = [
   "https://moocs.iniad.org/*",
   "https://docs.google.com/presentation/*",
 ];
+const THEME_STORAGE_KEY = "mikoto-theme";
+
+export type Theme = "light" | "dark";
 
 /**
  * Reactアプリケーション用のコンテナ要素を作成
@@ -18,6 +21,32 @@ const createAppContainer = (): HTMLDivElement => {
   container.id = ROOT_CONTAINER_ID;
   container.style.display = "none";
   return container;
+};
+
+/**
+ * テーマをDOMに適用
+ */
+const applyTheme = async () => {
+  const theme = (await storage.getItem<Theme>(`local:${THEME_STORAGE_KEY}`)) || "light";
+
+  if (theme === "dark") {
+    document.body.classList.add("mikoto-dark-theme");
+  } else {
+    document.body.classList.remove("mikoto-dark-theme");
+  }
+};
+
+/**
+ * テーマ変更を監視
+ */
+const watchThemeChanges = () => {
+  storage.watch<Theme>(`local:${THEME_STORAGE_KEY}`, (newTheme) => {
+    if (newTheme === "dark") {
+      document.body.classList.add("mikoto-dark-theme");
+    } else {
+      document.body.classList.remove("mikoto-dark-theme");
+    }
+  });
 };
 
 /**
@@ -45,6 +74,9 @@ export default defineContentScript({
   allFrames: true,
 
   main() {
+    applyTheme();
+    watchThemeChanges();
+
     const appContainer = createAppContainer();
     const root = mountApp(appContainer);
     registerCleanup(root, appContainer);
