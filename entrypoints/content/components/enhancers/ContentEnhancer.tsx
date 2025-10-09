@@ -75,6 +75,37 @@ const isInputElement = (target: HTMLElement): boolean => {
   );
 };
 
+const handleSubmitShortcut = (e: KeyEventData): void => {
+  // Enterキーのチェック
+  if (e.key !== "Enter") return;
+
+  // Mac, iPhone, iPad, iPodではCmd+Enter、それ以外ではCtrl+Enterのみ
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const keyEvent = e as KeyboardEvent;
+  const hasCorrectModifier = isMac ? keyEvent.metaKey : keyEvent.ctrlKey;
+  const hasWrongModifier = isMac ? keyEvent.ctrlKey : keyEvent.metaKey;
+
+  if (!hasCorrectModifier || hasWrongModifier) return;
+
+  // 入力要素にフォーカスがある場合のみ処理
+  if (!e.target) return;
+  const target = e.target as HTMLElement;
+  if (!isInputElement(target)) return;
+
+  // problem-container内の要素かチェック
+  const problemContainer = target.closest(".problem-container");
+  if (!problemContainer) return;
+
+  // 同じproblem-container内のsubmit-answerボタンを探す
+  const submitButton = problemContainer.querySelector(
+    "button.submit-answer",
+  ) as HTMLButtonElement;
+  if (submitButton) {
+    e.preventDefault?.();
+    submitButton.click();
+  }
+};
+
 const handleNumberKeyPress = (e: KeyEventData): void => {
   // 入力要素にフォーカスがある場合は何もしない
   if (e.target) {
@@ -118,6 +149,9 @@ export const ContentEnhancer: React.FC = () => {
 
   useEffect(() => {
     const keydownHandler = (e: KeyboardEvent): void => {
+      // Ctrl/Cmd+Enterのショートカットを処理
+      handleSubmitShortcut(e);
+
       if (window !== window.top) {
         // iframeの場合、親フレームにメッセージを送信
         window.top?.postMessage(
