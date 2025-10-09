@@ -17,9 +17,8 @@ Mikotoは、MOOCsをより便利に利用するためのブラウザ拡張機能
 ### Microsoft Edge
 
 ## Development
-To run the development server:
 
-```sh
-pnpm i
-pnpm dev
-```
+Please see the following guides for development instructions:
+
+- [Development Guide (English)](./develop.md)
+- [開発ガイド (Japanese)](./develop-ja.md)

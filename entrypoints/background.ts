@@ -1,3 +1,13 @@
 export default defineBackground(() => {
-  console.log("Hello background!", { id: browser.runtime.id });
+  browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (
+      changeInfo.status === "complete" &&
+      tab.url?.startsWith("https://moocs.iniad.org/")
+    ) {
+      browser.scripting.executeScript({
+        target: { tabId },
+        files: ["/mikoto-userscript.js"],
+      });
+    }
+  });
 });
