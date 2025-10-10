@@ -1,5 +1,7 @@
 import { type CSSProperties, useEffect, useState } from "react";
 import { Clock as ClockIcon, Calendar, BookOpen } from "lucide-react";
+import type { Schedule, DayOfWeek, Class } from "../../utils/types";
+import { PERIODS, STORAGE_KEY, DAY_LABELS } from "../../../options/components/constants";
 
 const styles: Record<string, CSSProperties> = {
   dashboardContainer: {
@@ -9,13 +11,15 @@ const styles: Record<string, CSSProperties> = {
     alignItems: "center",
     justifyContent: "center",
     padding: "1rem",
+    position: "relative",
+    zIndex: 1,
   },
   mainCard: {
     width: "100%",
-    maxWidth: "42rem",
+    maxWidth: "80rem",
     margin: "0 auto",
     backgroundColor: "#f5f5f4",
-    padding: "1.5rem",
+    padding: "3rem",
     borderRadius: "1rem",
     boxShadow:
       "0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)",
@@ -24,55 +28,60 @@ const styles: Record<string, CSSProperties> = {
   clock: {
     textAlign: "center",
     color: "#1f2937",
-    marginBottom: "1.5rem",
+    marginBottom: "2rem",
   },
   clockDate: {
-    fontSize: "1.25rem",
+    fontSize: "1.5rem",
     fontWeight: 700,
   },
   clockTime: {
-    fontSize: "2.25rem",
+    fontSize: "3rem",
     fontWeight: 700,
     letterSpacing: "0.05em",
   },
   gridContainer: {
     display: "grid",
-    gridTemplateColumns: "repeat(1, minmax(0, 1fr))",
+    gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+    gap: "2rem",
+  },
+  columnContainer: {
+    display: "flex",
+    flexDirection: "column",
     gap: "1rem",
-    marginBottom: "1rem",
   },
   gridHeader: {
-    fontSize: "1.25rem",
+    fontSize: "1.5rem",
     fontWeight: 700,
     textAlign: "center",
     color: "#4b5563",
+    marginBottom: "0.5rem",
   },
   card: {
     backgroundColor: "#ffffff",
-    padding: "1rem",
-    borderRadius: "0.5rem",
+    padding: "2rem",
+    borderRadius: "0.75rem",
     border: "1px solid #d1d5db",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
-    height: "100%",
+    minHeight: "180px",
   },
   infoCardTitle: {
-    fontSize: "1.125rem",
+    fontSize: "1.25rem",
     fontWeight: 700,
     color: "#374151",
   },
   infoCardPeriod: {
-    fontSize: "0.875rem",
+    fontSize: "1rem",
     color: "#6b7280",
     marginBottom: "0.5rem",
   },
   infoCardCountdown: {
     fontFamily:
       'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-    fontSize: "1.5rem",
+    fontSize: "1.75rem",
     color: "#4f46e5",
   },
   infoCardCountdownLabel: {
@@ -82,11 +91,12 @@ const styles: Record<string, CSSProperties> = {
     marginLeft: "0.5rem",
   },
   subjectCardTitle: {
-    fontSize: "1.25rem",
+    fontSize: "1.5rem",
     fontWeight: 700,
     color: "#1f2937",
   },
   subjectCardDetails: {
+    fontSize: "1.125rem",
     color: "#4b5563",
   },
 };
@@ -187,30 +197,134 @@ const SubjectCard = ({
   </div>
 );
 
+const getDayOfWeek = (date: Date): DayOfWeek | null => {
+  const day = date.getDay();
+  const dayMap: Record<number, DayOfWeek> = {
+    1: "monday",
+    2: "tuesday",
+    3: "wednesday",
+    4: "thursday",
+    5: "friday",
+    6: "saturday",
+  };
+  return dayMap[day] || null;
+};
+
+const findCurrentAndNextClass = (
+  schedule: Schedule,
+  currentTime: Date,
+): { current: Class | null; next: Class | null; currentDay: DayOfWeek | null; nextDay: DayOfWeek | null } => {
+  const today = getDayOfWeek(currentTime);
+
+  if (!today) {
+    return { current: null, next: null, currentDay: null, nextDay: null };
+  }
+
+  const currentHour = currentTime.getHours();
+  const currentMinute = currentTime.getMinutes();
+  const currentTimeString = `${String(currentHour).padStart(2, "0")}:${String(currentMinute).padStart(2, "0")}`;
+
+  const todayClasses = schedule[today] || [];
+
+  let current: Class | null = null;
+  let next: Class | null = null;
+  let currentDay: DayOfWeek | null = null;
+  let nextDay: DayOfWeek | null = null;
+
+  // Find current class
+  for (const cls of todayClasses) {
+    if (currentTimeString >= cls.period.start && currentTimeString < cls.period.end) {
+      current = cls;
+      currentDay = today;
+      break;
+    }
+  }
+
+  // Find next class
+  const allDays: DayOfWeek[] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+  const todayIndex = allDays.indexOf(today);
+
+  // First, look for next class today
+  for (const cls of todayClasses) {
+    if (currentTimeString < cls.period.start) {
+      if (!next || cls.period.start < next.period.start) {
+        next = cls;
+        nextDay = today;
+      }
+    }
+  }
+
+  // If no next class today, look for first class in following days
+  if (!next) {
+    for (let i = 1; i <= 7; i++) {
+      const dayIndex = (todayIndex + i) % allDays.length;
+      const day = allDays[dayIndex];
+      const classes = schedule[day] || [];
+
+      if (classes.length > 0) {
+        // Find earliest class for this day
+        const sortedClasses = [...classes].sort((a, b) =>
+          a.period.start.localeCompare(b.period.start)
+        );
+        next = sortedClasses[0];
+        nextDay = day;
+        break;
+      }
+    }
+  }
+
+  return { current, next, currentDay, nextDay };
+};
+
+const getPeriodLabel = (start: string, end: string): string => {
+  const period = PERIODS.find(p => p.start === start && p.end === end);
+  return period ? period.label : "";
+};
+
 export const TimeDashboard = () => {
   const currentTime = useCurrentTime();
+  const [schedule, setSchedule] = useState<Schedule>({});
 
-  const today19 = new Date(
-    currentTime.getFullYear(),
-    currentTime.getMonth(),
-    currentTime.getDate(),
-    19,
-    0,
-    0,
-  );
-  const tomorrow9 = new Date(
-    currentTime.getFullYear(),
-    currentTime.getMonth(),
-    currentTime.getDate() + 1,
-    9,
-    0,
-    0,
-  );
+  useEffect(() => {
+    const loadSchedule = async () => {
+      const result = await storage.getItem<Schedule>(`local:${STORAGE_KEY}`);
+      if (result) {
+        setSchedule(result);
+      }
+    };
+    loadSchedule();
+  }, []);
 
-  const currentLessonEndTime =
-    currentTime > today19
-      ? new Date(today19.getTime() + 24 * 60 * 60 * 1000)
-      : today19;
+  const { current, next, currentDay, nextDay } = findCurrentAndNextClass(schedule, currentTime);
+
+  const getTargetTime = (cls: Class | null, isNext: boolean): Date => {
+    if (!cls) {
+      return new Date(currentTime.getTime() + 60 * 60 * 1000);
+    }
+
+    const [hours, minutes] = (isNext ? cls.period.start : cls.period.end).split(":").map(Number);
+    const targetDate = new Date(currentTime);
+    targetDate.setHours(hours, minutes, 0, 0);
+
+    // If next class is on a different day
+    if (isNext && nextDay && currentDay !== nextDay) {
+      const allDays: DayOfWeek[] = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+      const currentDayIndex = getDayOfWeek(currentTime) ? allDays.indexOf(getDayOfWeek(currentTime)!) : -1;
+      const nextDayIndex = allDays.indexOf(nextDay);
+
+      if (currentDayIndex !== -1 && nextDayIndex !== -1) {
+        const dayDiff = nextDayIndex > currentDayIndex
+          ? nextDayIndex - currentDayIndex
+          : 7 - currentDayIndex + nextDayIndex;
+        targetDate.setDate(targetDate.getDate() + dayDiff);
+      }
+    }
+
+    return targetDate;
+  };
+
+  const currentTargetTime = getTargetTime(current, false);
+  const nextTargetTime = getTargetTime(next, true);
 
   return (
     <div style={styles.dashboardContainer}>
@@ -218,25 +332,33 @@ export const TimeDashboard = () => {
         <Clock currentTime={currentTime} />
 
         <div style={styles.gridContainer}>
-          <h2 style={styles.gridHeader}>今</h2>
-          <h2 style={styles.gridHeader}>次</h2>
-          <InfoCard
-            title="今日 6限"
-            period="18:00 - 19:00"
-            type="end"
-            targetTime={currentLessonEndTime}
-          />
-          <InfoCard
-            title="明日 1限"
-            period="9:00 - 10:30"
-            type="start"
-            targetTime={tomorrow9}
-          />
-        </div>
+          <div style={styles.columnContainer}>
+            <h2 style={styles.gridHeader}>今</h2>
+            <InfoCard
+              title={current ? `${currentDay ? DAY_LABELS[currentDay] + "曜日" : ""} ${getPeriodLabel(current.period.start, current.period.end)}` : "授業なし"}
+              period={current ? `${current.period.start} - ${current.period.end}` : ""}
+              type="end"
+              targetTime={currentTargetTime}
+            />
+            <SubjectCard
+              subject={current?.subject || "ー"}
+              details={current ? `${current.room || ""}・${current.teacher || ""}` : ""}
+            />
+          </div>
 
-        <div style={styles.gridContainer}>
-          <SubjectCard subject="英語" details="Foo・Foo" />
-          <SubjectCard subject="数学" details="Bar・Bar" />
+          <div style={styles.columnContainer}>
+            <h2 style={styles.gridHeader}>次</h2>
+            <InfoCard
+              title={next ? `${nextDay ? DAY_LABELS[nextDay] + "曜日" : ""} ${getPeriodLabel(next.period.start, next.period.end)}` : "授業なし"}
+              period={next ? `${next.period.start} - ${next.period.end}` : ""}
+              type="start"
+              targetTime={nextTargetTime}
+            />
+            <SubjectCard
+              subject={next?.subject || "ー"}
+              details={next ? `${next.room || ""}・${next.teacher || ""}` : ""}
+            />
+          </div>
         </div>
       </div>
     </div>
