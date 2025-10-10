@@ -1,8 +1,10 @@
 {
+
   "name": "Mikoto (MOOCs #)",
   "description": "MOOCsをより便利に",
-  "private": true,
+  "license": "MIT",
   "version": "0.1.0",
+
   "type": "module",
   "scripts": {
     "dev": "wxt",
