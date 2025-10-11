@@ -134,6 +134,9 @@ const handleNumberKeyPress = (e: KeyEventData): void => {
   }
 };
 
+const DUAL_VIEW_STORAGE_KEY = "mikoto-dual-view";
+const DUAL_VIEW_CLASS = "mikoto-dual-view-enabled";
+
 export const ContentEnhancer: React.FC = () => {
   const handleContentItems = useCallback(() => {
     const main = findContentWrapper();
@@ -146,6 +149,38 @@ export const ContentEnhancer: React.FC = () => {
   }, []);
 
   useElementObserver(CONTENT_WRAPPER_LI_SELECTOR, handleContentItems);
+
+  // dual-view設定の適用
+  useEffect(() => {
+    const applyDualView = async () => {
+      const enabled = await storage.getItem<boolean>(
+        `local:${DUAL_VIEW_STORAGE_KEY}`,
+      );
+      if (enabled) {
+        document.body.classList.add(DUAL_VIEW_CLASS);
+      } else {
+        document.body.classList.remove(DUAL_VIEW_CLASS);
+      }
+    };
+
+    applyDualView();
+
+    // 設定変更の監視
+    const unwatch = storage.watch<boolean>(
+      `local:${DUAL_VIEW_STORAGE_KEY}`,
+      (enabled) => {
+        if (enabled) {
+          document.body.classList.add(DUAL_VIEW_CLASS);
+        } else {
+          document.body.classList.remove(DUAL_VIEW_CLASS);
+        }
+      },
+    );
+
+    return () => {
+      unwatch();
+    };
+  }, []);
 
   useEffect(() => {
     const keydownHandler = (e: KeyboardEvent): void => {
