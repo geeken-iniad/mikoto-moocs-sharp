@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import type { Class, DayOfWeek, Schedule } from "../../content/utils/types";
+import type { Class, DayOfWeek, Schedule } from "@mikoto-moocs/shared";
 import { PERIODS, STORAGE_KEY } from "../components/constants";
 import { useScheduleHistory } from "./useScheduleHistory";
 

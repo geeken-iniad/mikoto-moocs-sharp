@@ -1,9 +1,3 @@
-// Shared utility functions
-
-export function isMoocsPage(): boolean {
-  return window.location.hostname === 'moocs.iniad.org';
-}
-
-export function log(message: string, ...args: unknown[]): void {
-  console.log(`[Mikoto MOOCs #] ${message}`, ...args);
-}
+// This file is kept for backward compatibility
+// Please import from specific utility modules instead
+export * from "./utils";

@@ -10,7 +10,6 @@ const TARGET_URL_PATTERNS = [
   "https://docs.google.com/presentation/*",
 ];
 const THEME_STORAGE_KEY = "mikoto-theme";
-const DUAL_VIEW_STORAGE_KEY = "mikoto-dual-view";
 
 export type Theme = "light" | "dark";
 

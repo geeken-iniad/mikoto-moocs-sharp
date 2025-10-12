@@ -1,9 +1,10 @@
-import React, { useCallback, useRef, useState, useEffect } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { Maximize2 } from "lucide-react";
 
+import type { ExtendedHTMLTextAreaElement } from "@mikoto-moocs/shared";
+
 import { useTextareaObserver } from "../../hooks";
-import type { ExtendedHTMLTextAreaElement } from "../../utils";
 import { CharacterCounter } from "../ui";
 
 const ResizeToggle: React.FC<{ textarea: HTMLTextAreaElement }> = ({

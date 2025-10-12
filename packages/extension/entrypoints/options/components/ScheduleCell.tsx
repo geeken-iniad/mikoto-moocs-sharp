@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import type { Class } from "../../content/utils/types";
+import type { Class } from "@mikoto-moocs/shared";
 
 interface ScheduleCellProps {
   classData: Class | null;

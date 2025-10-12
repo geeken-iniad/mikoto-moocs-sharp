@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 
 import { useElementObserver } from "../../hooks";
-import { CONFIG, applyStyles, containsKeywords } from "../../utils";
+import { CONFIG, applyStyles, containsKeywords } from "@mikoto-moocs/shared";
 
 const SIDEBAR_MENU_TEXT_SELECTOR = "span.sidebar-menu-text";
 

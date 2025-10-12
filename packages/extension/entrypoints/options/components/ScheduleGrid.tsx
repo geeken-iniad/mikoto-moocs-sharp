@@ -1,4 +1,4 @@
-import type { DayOfWeek } from "../../content/utils/types";
+import type { DayOfWeek } from "@mikoto-moocs/shared";
 import { DAY_LABELS, DAYS, PERIODS } from "./constants";
 import { ScheduleCell } from "./ScheduleCell";
 

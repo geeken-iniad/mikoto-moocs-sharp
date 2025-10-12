@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 
 import { useElementObserver } from "../../hooks";
-import { CONFIG, applyStyles, containsKeywords } from "../../utils";
+import { CONFIG, applyStyles, containsKeywords } from "@mikoto-moocs/shared";
 import { DualViewToggle } from "../ui";
 
 const CONTENT_WRAPPER_SELECTOR = ".content-wrapper";

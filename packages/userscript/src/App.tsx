@@ -1,23 +1,34 @@
+import { CharacterCounter, log, isMoocsPage } from "@mikoto-moocs/shared";
 import { useState } from "react";
 import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [text, setText] = useState("Sample text\nテストテキスト");
+
+  // Example usage of shared utilities
+  if (isMoocsPage()) {
+    log("Running on MOOCs page");
+  }
 
   return (
-    <div className="App">
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+    <div className="App" style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+      <h1>Mikoto MOOCs # - Userscript</h1>
+      <p>UserScript version powered by vite-plugin-monkey</p>
+
+      <div style={{ marginTop: "20px" }}>
+        <h2>Character Counter Demo</h2>
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          style={{
+            width: "100%",
+            minHeight: "150px",
+            padding: "10px",
+            fontFamily: "monospace",
+          }}
+        />
+        <CharacterCounter value={text} />
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   );
 }

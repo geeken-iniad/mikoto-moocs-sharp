@@ -1,5 +1,5 @@
 import { Save, Trash2, X } from "lucide-react";
-import type { Class } from "../../content/utils/types";
+import type { Class } from "@mikoto-moocs/shared";
 import type { EditingCell } from "../hooks/useSchedule";
 import type { ScheduleHistory } from "../hooks/useScheduleHistory";
 import { DAY_LABELS, PERIODS } from "./constants";
