@@ -143,6 +143,10 @@ const insertDualViewToggle = () => {
   const content = document.querySelector(".content");
   if (!content) return;
 
+  // .problem-containerが存在しない場合は表示しない
+  const problemContainer = content.querySelector(".problem-container");
+  if (!problemContainer) return;
+
   const clearfix = content.querySelector(".clearfix");
   if (!clearfix) return;
 
