@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect } from "react";
+import { createRoot } from "react-dom/client";
 
 import { useElementObserver } from "../../hooks";
 import { CONFIG, applyStyles, containsKeywords } from "../../utils";
+import { DualViewToggle } from "../ui";
 
 const CONTENT_WRAPPER_SELECTOR = ".content-wrapper";
 const CONTENT_WRAPPER_LI_SELECTOR = ".content-wrapper li";
@@ -134,6 +136,34 @@ const handleNumberKeyPress = (e: KeyEventData): void => {
   }
 };
 
+const DUAL_VIEW_STORAGE_KEY = "mikoto-dual-view";
+const DUAL_VIEW_CLASS = "mikoto-dual-view-enabled";
+
+const insertDualViewToggle = () => {
+  const content = document.querySelector(".content");
+  if (!content) return;
+
+  // .problem-containerが存在しない場合は表示しない
+  const problemContainer = content.querySelector(".problem-container");
+  if (!problemContainer) return;
+
+  const clearfix = content.querySelector(".clearfix");
+  if (!clearfix) return;
+
+  const pullRight = clearfix.querySelector(".pull-right");
+  if (!pullRight) return;
+
+  // 既存のトグルボタンを削除
+  const existingToggle = pullRight.querySelector(".mikoto-dual-view-toggle");
+  if (existingToggle) return;
+
+  const container = document.createElement("span");
+  pullRight.appendChild(container);
+
+  const root = createRoot(container);
+  root.render(React.createElement(DualViewToggle));
+};
+
 export const ContentEnhancer: React.FC = () => {
   const handleContentItems = useCallback(() => {
     const main = findContentWrapper();
@@ -146,6 +176,39 @@ export const ContentEnhancer: React.FC = () => {
   }, []);
 
   useElementObserver(CONTENT_WRAPPER_LI_SELECTOR, handleContentItems);
+
+  // dual-view設定の適用
+  useEffect(() => {
+    const applyDualView = async () => {
+      const enabled = await storage.getItem<boolean>(
+        `local:${DUAL_VIEW_STORAGE_KEY}`,
+      );
+      if (enabled) {
+        document.body.classList.add(DUAL_VIEW_CLASS);
+      } else {
+        document.body.classList.remove(DUAL_VIEW_CLASS);
+      }
+    };
+
+    applyDualView();
+    insertDualViewToggle();
+
+    // 設定変更の監視
+    const unwatch = storage.watch<boolean>(
+      `local:${DUAL_VIEW_STORAGE_KEY}`,
+      (enabled) => {
+        if (enabled) {
+          document.body.classList.add(DUAL_VIEW_CLASS);
+        } else {
+          document.body.classList.remove(DUAL_VIEW_CLASS);
+        }
+      },
+    );
+
+    return () => {
+      unwatch();
+    };
+  }, []);
 
   useEffect(() => {
     const keydownHandler = (e: KeyboardEvent): void => {
