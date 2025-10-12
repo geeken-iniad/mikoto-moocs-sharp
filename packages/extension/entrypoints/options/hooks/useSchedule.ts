@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 
-import type { Class, DayOfWeek, Schedule } from "@mikoto-moocs/shared";
-import { PERIODS, STORAGE_KEY } from "../components/constants";
+import type { Class, DayOfWeek, Schedule } from "@mikoto-moocs-sharp/shared";
+import { PERIODS } from "../components/constants";
+import { StorageManager } from "../../utils/storage";
 import { useScheduleHistory } from "./useScheduleHistory";
 
 export interface EditingCell {
@@ -17,17 +18,15 @@ export const useSchedule = () => {
 
   useEffect(() => {
     const loadSchedule = async () => {
-      const result = await storage.getItem<Schedule>(`local:${STORAGE_KEY}`);
-      if (result) {
-        setSchedule(result);
-      }
+      const result = await StorageManager.getSchedule();
+      setSchedule(result);
     };
     loadSchedule();
   }, []);
 
   const saveSchedule = async (newSchedule: Schedule) => {
     setSchedule(newSchedule);
-    await storage.setItem(`local:${STORAGE_KEY}`, newSchedule);
+    await StorageManager.saveSchedule(newSchedule);
   };
 
   const getClassForCell = (

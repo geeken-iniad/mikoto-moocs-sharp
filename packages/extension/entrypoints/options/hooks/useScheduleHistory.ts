@@ -1,15 +1,6 @@
 import { useEffect, useState } from "react";
 
-import {
-  HISTORY_STORAGE_KEY,
-  SUBJECTS_STORAGE_KEY,
-} from "../components/constants";
-
-export interface ScheduleHistory {
-  subjects: string[];
-  teachers: string[];
-  rooms: string[];
-}
+import { StorageManager, type ScheduleHistory } from "../../utils/storage";
 
 export const useScheduleHistory = () => {
   const [history, setHistory] = useState<ScheduleHistory>({
@@ -20,49 +11,32 @@ export const useScheduleHistory = () => {
 
   useEffect(() => {
     const loadHistory = async () => {
-      const savedHistory = await storage.getItem<ScheduleHistory>(
-        `local:${HISTORY_STORAGE_KEY}`,
-      );
-      const extractedSubjects = await storage.getItem<string[]>(
-        `local:${SUBJECTS_STORAGE_KEY}`,
-      );
-
-      const historyData = savedHistory || {
-        subjects: [],
-        teachers: [],
-        rooms: [],
-      };
-      const subjectsData = extractedSubjects || [];
+      const savedHistory = await StorageManager.getHistory();
+      const extractedSubjects = await StorageManager.getExtractedSubjects();
 
       // 抽出された科目と保存された履歴をマージ
       const mergedSubjects = [
-        ...new Set([...historyData.subjects, ...subjectsData]),
+        ...new Set([...savedHistory.subjects, ...extractedSubjects]),
       ].sort();
 
       setHistory({
-        ...historyData,
+        ...savedHistory,
         subjects: mergedSubjects,
       });
     };
     loadHistory();
 
     // ストレージの変更を監視
-    const unwatch = storage.watch<string[]>(
-      `local:${SUBJECTS_STORAGE_KEY}`,
-      () => {
-        loadHistory();
-      },
-    );
+    const unwatchSubjects = StorageManager.watchExtractedSubjects(() => {
+      loadHistory();
+    });
 
-    const unwatchHistory = storage.watch<ScheduleHistory>(
-      `local:${HISTORY_STORAGE_KEY}`,
-      () => {
-        loadHistory();
-      },
-    );
+    const unwatchHistory = StorageManager.watchHistory(() => {
+      loadHistory();
+    });
 
     return () => {
-      unwatch();
+      unwatchSubjects();
       unwatchHistory();
     };
   }, []);
@@ -72,20 +46,19 @@ export const useScheduleHistory = () => {
     teacher?: string,
     room?: string,
   ) => {
-    const newHistory = { ...history };
+    await StorageManager.addToHistory(subject, teacher, room);
 
-    if (subject && subject.trim() && !newHistory.subjects.includes(subject)) {
-      newHistory.subjects = [...newHistory.subjects, subject];
-    }
-    if (teacher && teacher.trim() && !newHistory.teachers.includes(teacher)) {
-      newHistory.teachers = [...newHistory.teachers, teacher];
-    }
-    if (room && room.trim() && !newHistory.rooms.includes(room)) {
-      newHistory.rooms = [...newHistory.rooms, room];
-    }
+    // ローカルステートを更新
+    const updatedHistory = await StorageManager.getHistory();
+    const extractedSubjects = await StorageManager.getExtractedSubjects();
+    const mergedSubjects = [
+      ...new Set([...updatedHistory.subjects, ...extractedSubjects]),
+    ].sort();
 
-    setHistory(newHistory);
-    await storage.setItem(`local:${HISTORY_STORAGE_KEY}`, newHistory);
+    setHistory({
+      ...updatedHistory,
+      subjects: mergedSubjects,
+    });
   };
 
   return {

@@ -1,4 +1,4 @@
-const SUBJECTS_STORAGE_KEY = "mikoto-extracted-subjects";
+import { StorageManager } from "../../utils/storage";
 
 export const extractAndSaveSubjects = async () => {
   const wells = document.querySelectorAll(".well");
@@ -17,18 +17,7 @@ export const extractAndSaveSubjects = async () => {
   });
 
   if (subjects.length > 0) {
-    // 既存の科目リストを取得
-    const result = await browser.storage.local.get(SUBJECTS_STORAGE_KEY);
-    const existingSubjects = result[SUBJECTS_STORAGE_KEY] || [];
-
-    // 重複を除いてマージ
-    const mergedSubjects = [
-      ...new Set([...existingSubjects, ...subjects]),
-    ].sort();
-
-    // 保存
-    await browser.storage.local.set({
-      [SUBJECTS_STORAGE_KEY]: mergedSubjects,
-    });
+    // StorageManagerを使って科目を追加
+    await StorageManager.addExtractedSubjects(subjects);
   }
 };
