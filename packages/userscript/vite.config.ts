@@ -1,6 +1,7 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import monkey from "vite-plugin-monkey";
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,10 +10,25 @@ export default defineConfig({
     monkey({
       entry: "src/main.tsx",
       userscript: {
-        icon: "https://vitejs.dev/logo.svg",
-        namespace: "npm/vite-plugin-monkey",
+        name: "Mikoto (MOOCs #)",
+        description: "INIAD MOOCs の利便性を向上させるユーザースクリプト",
+        author: "Mikoto Team",
+        icon: "https://moocs.iniad.org/favicon.ico",
+        namespace: "org.iniad.moocs.mikoto-sharp",
         match: ["https://moocs.iniad.org/*"],
+        grant: [
+          "GM_getValue",
+          "GM_setValue",
+          "GM_deleteValue",
+          "GM_addValueChangeListener",
+          "GM_removeValueChangeListener",
+        ],
       },
     }),
   ],
+  resolve: {
+    alias: {
+      "@mikoto-moocs-sharp/shared": path.resolve(__dirname, "../shared/src/index.ts"),
+    },
+  },
 });

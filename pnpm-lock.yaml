@@ -14,7 +14,7 @@ importers:
 
   packages/extension:
     dependencies:
-      '@mikoto-moocs/shared':
+      '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
         version: link:../shared
       lucide-react:
@@ -54,17 +54,23 @@ importers:
       react:
         specifier: ^19.1.1
         version: 19.2.0
+      react-dom:
+        specifier: ^19.1.1
+        version: 19.2.0(react@19.2.0)
     devDependencies:
       '@types/react':
         specifier: ^19.1.12
         version: 19.2.2
+      '@types/react-dom':
+        specifier: ^19.1.7
+        version: 19.2.1(@types/react@19.2.2)
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
 
   packages/userscript:
     dependencies:
-      '@mikoto-moocs/shared':
+      '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
         version: link:../shared
       react:
