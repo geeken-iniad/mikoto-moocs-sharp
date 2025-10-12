@@ -1,7 +1,9 @@
 import React, { useCallback, useEffect } from "react";
+import { createRoot } from "react-dom/client";
 
 import { useElementObserver } from "../../hooks";
 import { CONFIG, applyStyles, containsKeywords } from "../../utils";
+import { DualViewToggle } from "../ui";
 
 const CONTENT_WRAPPER_SELECTOR = ".content-wrapper";
 const CONTENT_WRAPPER_LI_SELECTOR = ".content-wrapper li";
@@ -137,6 +139,27 @@ const handleNumberKeyPress = (e: KeyEventData): void => {
 const DUAL_VIEW_STORAGE_KEY = "mikoto-dual-view";
 const DUAL_VIEW_CLASS = "mikoto-dual-view-enabled";
 
+const insertDualViewToggle = () => {
+  const content = document.querySelector(".content");
+  if (!content) return;
+
+  const clearfix = content.querySelector(".clearfix");
+  if (!clearfix) return;
+
+  const pullRight = clearfix.querySelector(".pull-right");
+  if (!pullRight) return;
+
+  // 既存のトグルボタンを削除
+  const existingToggle = pullRight.querySelector(".mikoto-dual-view-toggle");
+  if (existingToggle) return;
+
+  const container = document.createElement("span");
+  pullRight.appendChild(container);
+
+  const root = createRoot(container);
+  root.render(React.createElement(DualViewToggle));
+};
+
 export const ContentEnhancer: React.FC = () => {
   const handleContentItems = useCallback(() => {
     const main = findContentWrapper();
@@ -164,6 +187,7 @@ export const ContentEnhancer: React.FC = () => {
     };
 
     applyDualView();
+    insertDualViewToggle();
 
     // 設定変更の監視
     const unwatch = storage.watch<boolean>(
