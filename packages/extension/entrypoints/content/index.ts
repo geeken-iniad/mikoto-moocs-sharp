@@ -3,15 +3,15 @@ import { createRoot, type Root } from "react-dom/client";
 
 import { MikotoApp } from "./components";
 import "./style.css";
+import { storageManager } from "../utils/storage";
 
 const ROOT_CONTAINER_ID = "mikoto-react-root";
 const TARGET_URL_PATTERNS = [
   "https://moocs.iniad.org/*",
   "https://docs.google.com/presentation/*",
 ];
-const THEME_STORAGE_KEY = "mikoto-theme";
 
-export type Theme = "light" | "dark";
+export type { Theme } from "@mikoto-moocs-sharp/shared";
 
 /**
  * Reactアプリケーション用のコンテナ要素を作成
@@ -27,7 +27,7 @@ const createAppContainer = (): HTMLDivElement => {
  * テーマをDOMに適用
  */
 const applyTheme = async () => {
-  const theme = (await storage.getItem<Theme>(`local:${THEME_STORAGE_KEY}`)) || "light";
+  const theme = await storageManager.getTheme();
 
   if (theme === "dark") {
     document.body.classList.add("mikoto-dark-theme");
@@ -40,7 +40,7 @@ const applyTheme = async () => {
  * テーマ変更を監視
  */
 const watchThemeChanges = () => {
-  storage.watch<Theme>(`local:${THEME_STORAGE_KEY}`, (newTheme) => {
+  storageManager.watchTheme((newTheme) => {
     if (newTheme === "dark") {
       document.body.classList.add("mikoto-dark-theme");
     } else {

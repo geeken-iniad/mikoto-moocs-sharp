@@ -1,4 +1,5 @@
 import { defineConfig } from "wxt";
+import path from "path";
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
@@ -6,4 +7,11 @@ export default defineConfig({
   manifest: {
     permissions: ["storage"],
   },
+  vite: () => ({
+    resolve: {
+      alias: {
+        "@mikoto-moocs-sharp/shared": path.resolve(__dirname, "../shared/src/index.ts"),
+      },
+    },
+  }),
 });

@@ -1,3 +1,3 @@
-import { CharacterCounter } from "@mikoto-moocs/shared";
+import { CharacterCounter } from "@mikoto-moocs-sharp/shared";
 
 export { CharacterCounter };

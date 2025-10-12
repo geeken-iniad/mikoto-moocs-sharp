@@ -1,23 +1,18 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-
-const DUAL_VIEW_STORAGE_KEY = "mikoto-dual-view";
-const THEME_STORAGE_KEY = "mikoto-theme";
+import type { Theme } from "@mikoto-moocs-sharp/shared";
+import { storageManager } from "../utils/storage";
 
 function App() {
   const [dualViewEnabled, setDualViewEnabled] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">("light");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const loadSettings = async () => {
-      const dualView = await storage.getItem<boolean>(
-        `local:${DUAL_VIEW_STORAGE_KEY}`,
-      );
-      const currentTheme = await storage.getItem<"light" | "dark">(
-        `local:${THEME_STORAGE_KEY}`,
-      );
-      setDualViewEnabled(dualView || false);
-      setTheme(currentTheme || "light");
+      const dualView = await storageManager.getDualView();
+      const currentTheme = await storageManager.getTheme();
+      setDualViewEnabled(dualView);
+      setTheme(currentTheme);
     };
     loadSettings();
   }, []);
@@ -25,13 +20,13 @@ function App() {
   const handleDualViewToggle = async () => {
     const newValue = !dualViewEnabled;
     setDualViewEnabled(newValue);
-    await storage.setItem(`local:${DUAL_VIEW_STORAGE_KEY}`, newValue);
+    await storageManager.setDualView(newValue);
   };
 
   const handleThemeToggle = async () => {
-    const newTheme = theme === "light" ? "dark" : "light";
+    const newTheme: Theme = theme === "light" ? "dark" : "light";
     setTheme(newTheme);
-    await storage.setItem(`local:${THEME_STORAGE_KEY}`, newTheme);
+    await storageManager.setTheme(newTheme);
   };
 
   return (

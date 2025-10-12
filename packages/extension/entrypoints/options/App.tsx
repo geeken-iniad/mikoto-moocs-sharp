@@ -1,26 +1,23 @@
 import { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
 import { ScheduleEditor } from "./components/ScheduleEditor";
-import type { Theme } from "../content/index";
-
-const THEME_STORAGE_KEY = "mikoto-theme";
+import type { Theme } from "@mikoto-moocs-sharp/shared";
+import { storageManager } from "../utils/storage";
 
 function App() {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const loadTheme = async () => {
-      const savedTheme = await storage.getItem<Theme>(`local:${THEME_STORAGE_KEY}`);
-      if (savedTheme) {
-        setTheme(savedTheme);
-      }
+      const savedTheme = await storageManager.getTheme();
+      setTheme(savedTheme);
     };
     loadTheme();
   }, []);
 
   const handleThemeChange = async (newTheme: Theme) => {
     setTheme(newTheme);
-    await storage.setItem(`local:${THEME_STORAGE_KEY}`, newTheme);
+    await storageManager.setTheme(newTheme);
   };
 
   return (

@@ -5,3 +5,4 @@ export * from "./utils/dom";
 export * from "./utils/text";
 export * from "./hooks";
 export * from "./components";
+export * from "./storage";

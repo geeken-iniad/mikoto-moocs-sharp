@@ -1,3 +1,3 @@
-export { CONFIG } from "./config";
-export * from "./types";
-export { applyStyles, containsKeywords, countCharacters, utils } from "./utils";
+// Re-export from shared
+export * from "@mikoto-moocs-sharp/shared";
+export * from "./subjectExtractor";

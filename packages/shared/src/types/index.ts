@@ -33,3 +33,12 @@ export interface Class {
 export type Schedule = {
   [key in DayOfWeek]?: Class[];
 };
+
+// Schedule Editor Types
+export interface EditingCell {
+  day: DayOfWeek;
+  periodIndex: number;
+}
+
+// Theme Types
+export type Theme = "light" | "dark";

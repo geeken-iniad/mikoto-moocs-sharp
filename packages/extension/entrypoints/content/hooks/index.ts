@@ -1,2 +1,1 @@
-export { useElementObserver } from "./useElementObserver";
-export { useTextareaObserver } from "./useTextareaObserver";
+export { useElementObserver, useTextareaObserver } from "@mikoto-moocs-sharp/shared";
