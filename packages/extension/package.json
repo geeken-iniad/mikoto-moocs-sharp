@@ -1,5 +1,5 @@
 {
-  "name": "@mikoto-moocs/extension",
+  "name": "@mikoto-moocs-sharp/extension",
   "description": "MOOCsをより便利に - Browser Extension",
   "license": "MIT",
   "version": "0.1.0",
@@ -16,7 +16,7 @@
     "postinstall": "wxt prepare"
   },
   "dependencies": {
-    "@mikoto-moocs/shared": "workspace:*",
+    "@mikoto-moocs-sharp/shared": "workspace:*",
     "lucide-react": "^0.545.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"

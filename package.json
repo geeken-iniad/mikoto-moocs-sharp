@@ -6,11 +6,11 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev:extension": "pnpm --filter @mikoto-moocs/extension dev",
-    "dev:userscript": "pnpm --filter @mikoto-moocs/userscript dev",
-    "dev:extension:firefox": "pnpm --filter @mikoto-moocs/extension dev:firefox",
-    "build:extension": "pnpm --filter @mikoto-moocs/extension build",
-    "build:userscript": "pnpm --filter @mikoto-moocs/userscript build",
+    "dev:extension": "pnpm --filter @mikoto-moocs-sharp/extension dev",
+    "dev:userscript": "pnpm --filter @mikoto-moocs-sharp/userscript dev",
+    "dev:extension:firefox": "pnpm --filter @mikoto-moocs-sharp/extension dev:firefox",
+    "build:extension": "pnpm --filter @mikoto-moocs-sharp/extension build",
+    "build:userscript": "pnpm --filter @mikoto-moocs-sharp/userscript build",
     "build:all": "pnpm -r build",
     "compile": "pnpm -r compile"
   },

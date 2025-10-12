@@ -1,5 +1,5 @@
 {
-  "name": "@mikoto-moocs/userscript",
+  "name": "@mikoto-moocs-sharp/userscript",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mikoto-moocs/shared": "workspace:*",
+    "@mikoto-moocs-sharp/shared": "workspace:*",
     "react": "^19.1.1",
     "react-dom": "^19.1.1"
   },
