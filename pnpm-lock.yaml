@@ -68,7 +68,7 @@ importers:
         specifier: ^5.9.2
         version: 5.9.3
 
-  packages/userscript-light:
+  packages/userscript-lite:
     dependencies:
       '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
