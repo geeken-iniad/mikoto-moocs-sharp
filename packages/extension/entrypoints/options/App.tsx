@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { Sun, Moon } from "lucide-react";
-import { ScheduleEditor } from "./components/ScheduleEditor";
+import { createScheduleEditor } from "@mikoto-moocs-sharp/shared";
 import type { Theme } from "@mikoto-moocs-sharp/shared";
 import { storageManager } from "../utils/storage";
+
+const ScheduleEditor = createScheduleEditor(storageManager);
 
 function App() {
   const [theme, setTheme] = useState<Theme>("light");

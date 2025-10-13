@@ -5,7 +5,9 @@ export const applyStyles = (
   element: HTMLElement,
   styles: Partial<CSSStyleDeclaration> | Record<string, string>,
 ): void => {
+  console.log("[Mikoto (MOOCs #)]: Applying styles to element:", element, "styles:", styles);
   Object.assign(element.style, styles);
+  console.log("[Mikoto (MOOCs #)]: Element style after applying:", element.style.cssText);
 };
 
 /**

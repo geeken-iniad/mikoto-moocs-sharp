@@ -1,11 +1,15 @@
 import React from "react";
-
 import {
-  ContentEnhancer,
-  CourseListEnhancer,
+  createContentEnhancer,
+  createCourseListEnhancer,
   SidebarEnhancer,
   TextareaEnhancer,
-} from "./enhancers";
+} from "@mikoto-moocs-sharp/shared";
+import { storageManager } from "../../utils/storage";
+
+// storageManagerに依存するコンポーネントはファクトリーから生成
+const ContentEnhancer = createContentEnhancer(storageManager);
+const CourseListEnhancer = createCourseListEnhancer(storageManager);
 
 export const MikotoApp: React.FC = () => (
   <>

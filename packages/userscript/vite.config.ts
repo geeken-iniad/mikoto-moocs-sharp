@@ -16,6 +16,7 @@ export default defineConfig({
         icon: "https://moocs.iniad.org/favicon.ico",
         namespace: "org.iniad.moocs.mikoto-sharp",
         match: ["https://moocs.iniad.org/*"],
+        "run-at": "document-idle",
         grant: [
           "GM_getValue",
           "GM_setValue",

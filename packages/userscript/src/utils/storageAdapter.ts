@@ -3,6 +3,13 @@ import type {
   StorageWatchCallback,
   StorageUnwatchFunction,
 } from "@mikoto-moocs-sharp/shared";
+import {
+  GM_getValue,
+  GM_setValue,
+  GM_deleteValue,
+  GM_addValueChangeListener,
+  GM_removeValueChangeListener,
+} from "$";
 
 /**
  * Greasemonkey/Tampermonkey Storage APIアダプター

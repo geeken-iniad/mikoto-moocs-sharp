@@ -38,20 +38,35 @@ const applyContentTypeStyle = (element: HTMLElement, title: string): void => {
 };
 
 const processListItem = (li: HTMLLIElement): void => {
+  console.log("[Mikoto (MOOCs #)]: Processing li element:", li);
+  console.log("[Mikoto (MOOCs #)]: li.innerHTML:", li.innerHTML);
+  console.log("[Mikoto (MOOCs #)]: li.className:", li.className);
+
   const firstChild = getFirstChildElement(li);
-  if (!firstChild) return;
+  if (!firstChild) {
+    console.log("[Mikoto (MOOCs #)]: No firstChild found in li");
+    return;
+  }
+
+  console.log("[Mikoto (MOOCs #)]: firstChild:", firstChild);
+  console.log("[Mikoto (MOOCs #)]: firstChild.tagName:", firstChild.tagName);
 
   // アクティブな要素にスタイルを適用
   if (li.className === ACTIVE_CLASS) {
-    applyActiveStyle(firstChild);
+    console.log("[Mikoto (MOOCs #)]: Applying active style to li itself");
+    applyActiveStyle(li);
   }
 
   const { textContent, title } = firstChild;
 
   // ページネーションボタンはスキップ
-  if (isPaginationButton(textContent)) return;
+  if (isPaginationButton(textContent)) {
+    console.log("[Mikoto (MOOCs #)]: Skipping pagination button");
+    return;
+  }
 
   // コンテンツタイプに応じたスタイルを適用
+  console.log(`[Mikoto (MOOCs #)]: Processing item with title: ${title}`);
   applyContentTypeStyle(firstChild, title);
 };
 
@@ -170,13 +185,8 @@ export const createContentEnhancer = (storageManager: StorageManager) => {
   };
 
   return () => {
-  const handleContentItems = useCallback(() => {
-    const main = findContentWrapper();
-    if (!main) return;
-
-    const listItems = Array.from(
-      main.getElementsByTagName("li"),
-    ) as HTMLLIElement[];
+  const handleContentItems = useCallback((elements: NodeListOf<Element>) => {
+    const listItems = Array.from(elements) as HTMLLIElement[];
     listItems.forEach(processListItem);
   }, []);
 
