@@ -68,7 +68,38 @@ importers:
         specifier: ^5.9.2
         version: 5.9.3
 
-  packages/userscript:
+  packages/userscript-light:
+    dependencies:
+      '@mikoto-moocs-sharp/shared':
+        specifier: workspace:*
+        version: link:../shared
+      react:
+        specifier: ^19.1.1
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.1.1
+        version: 19.2.0(react@19.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.11
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: ^19.1.7
+        version: 19.2.1(@types/react@19.2.2)
+      '@vitejs/plugin-react-swc':
+        specifier: ^3.0.0
+        version: 3.11.0(vite@7.1.9(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2))
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+      vite:
+        specifier: ^7.1.3
+        version: 7.1.9(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2)
+      vite-plugin-monkey:
+        specifier: ^7.1.1
+        version: 7.1.4(postcss@8.5.6)(vite@7.1.9(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.2)(sass@1.93.2))
+
+  packages/userscript-pro:
     dependencies:
       '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
