@@ -11,8 +11,8 @@ export default defineConfig({
       entry: "src/main.tsx",
       userscript: {
         name: "Mikoto (MOOCs #)",
-        description: "INIAD MOOCs の利便性を向上させるユーザースクリプト",
-        author: "Mikoto Team",
+        description: "MOOCsをより便利に",
+        author: "INIAD MDX",
         icon: "https://moocs.iniad.org/favicon.ico",
         namespace: "org.iniad.moocs.mikoto-sharp",
         match: ["https://moocs.iniad.org/*"],

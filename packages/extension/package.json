@@ -1,6 +1,6 @@
 {
   "name": "@mikoto-moocs-sharp/extension",
-  "description": "MOOCsをより便利に - Browser Extension",
+  "description": "MOOCsをより便利に",
   "license": "MIT",
   "version": "0.1.0",
   "private": true,
