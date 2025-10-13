@@ -1,4 +1,4 @@
-import { CharacterCounter, log, isMoocsPage } from "@mikoto-moocs/shared";
+import { CharacterCounter, log, isMoocsPage } from "@mikoto-moocs-sharp/shared";
 import { useState } from "react";
 
 function App() {
@@ -10,7 +10,10 @@ function App() {
   }
 
   return (
-    <div className="App" style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}>
+    <div
+      className="App"
+      style={{ padding: "20px", maxWidth: "800px", margin: "0 auto" }}
+    >
       <h1>Mikoto MOOCs # - Userscript</h1>
       <p>UserScript version powered by vite-plugin-monkey</p>
 

@@ -1,4 +1,4 @@
-import { CharacterCounter, log, isMoocsPage } from "@mikoto-moocs/shared";
+import { CharacterCounter, log, isMoocsPage } from "@mikoto-moocs-sharp/shared";
 import { useState } from "react";
 
 function App() {
