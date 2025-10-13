@@ -1,6 +1,5 @@
 import { CharacterCounter, log, isMoocsPage } from "@mikoto-moocs/shared";
 import { useState } from "react";
-import "./App.css";
 
 function App() {
   const [text, setText] = useState("Sample text\nテストテキスト");

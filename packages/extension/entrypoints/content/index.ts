@@ -2,7 +2,7 @@ import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 
 import { MikotoApp } from "./components";
-import "./style.css";
+import "@mikoto-moocs-sharp/shared/styles/content.css";
 import { storageManager } from "../utils/storage";
 
 const ROOT_CONTAINER_ID = "mikoto-react-root";
