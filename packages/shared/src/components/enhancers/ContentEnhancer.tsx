@@ -38,22 +38,13 @@ const applyContentTypeStyle = (element: HTMLElement, title: string): void => {
 };
 
 const processListItem = (li: HTMLLIElement): void => {
-  console.log("[Mikoto (MOOCs #)]: Processing li element:", li);
-  console.log("[Mikoto (MOOCs #)]: li.innerHTML:", li.innerHTML);
-  console.log("[Mikoto (MOOCs #)]: li.className:", li.className);
-
   const firstChild = getFirstChildElement(li);
   if (!firstChild) {
-    console.log("[Mikoto (MOOCs #)]: No firstChild found in li");
     return;
   }
 
-  console.log("[Mikoto (MOOCs #)]: firstChild:", firstChild);
-  console.log("[Mikoto (MOOCs #)]: firstChild.tagName:", firstChild.tagName);
-
   // アクティブな要素にスタイルを適用
   if (li.className === ACTIVE_CLASS) {
-    console.log("[Mikoto (MOOCs #)]: Applying active style to li itself");
     applyActiveStyle(li);
   }
 
@@ -61,22 +52,15 @@ const processListItem = (li: HTMLLIElement): void => {
 
   // ページネーションボタンはスキップ
   if (isPaginationButton(textContent)) {
-    console.log("[Mikoto (MOOCs #)]: Skipping pagination button");
     return;
   }
 
   // コンテンツタイプに応じたスタイルを適用
-  console.log(`[Mikoto (MOOCs #)]: Processing item with title: ${title}`);
   applyContentTypeStyle(firstChild, title);
 };
 
 const findContentWrapper = (): Element | null => {
   const wrapper = document.querySelector(CONTENT_WRAPPER_SELECTOR);
-  if (!wrapper) {
-    console.error(
-      "[Mikoto (MOOCs #)]: .content-wrapper element was not found.",
-    );
-  }
   return wrapper;
 };
 

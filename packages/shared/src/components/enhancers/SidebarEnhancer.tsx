@@ -45,15 +45,11 @@ const processSidebarElement = (element: Element): void => {
   const textContent = span.textContent || "";
   const parentLi = span.closest("li") as HTMLElement | null;
 
-  console.log(`[Mikoto (MOOCs #)]: Processing sidebar element with text: ${textContent}`);
-
   const contentType = getContentType(textContent);
   if (!contentType) {
-    console.log("[Mikoto (MOOCs #)]: No content type matched");
     return;
   }
 
-  console.log(`[Mikoto (MOOCs #)]: Applying ${contentType} style to sidebar element`);
   const style = getStyleForContentType(contentType);
   applyContentTypeStyles(span, parentLi, style);
 };
