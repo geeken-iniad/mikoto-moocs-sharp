@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
-import type { StorageManager } from "../../storage/manager";
+import { useEffect } from "react";
+
+import { useStorageManager } from "../../storage/context";
 import { createSubjectExtractor } from "../../utils/subjectExtractor";
 
 interface ExtendedHTMLElement extends HTMLElement {
@@ -35,58 +36,58 @@ const setupWellClickHandler = (well: HTMLElement): void => {
   extendedWell.__mikotoCleanup = true;
 };
 
-export const createCourseListEnhancer = (storageManager: StorageManager) => {
-  const extractAndSaveSubjects = createSubjectExtractor(storageManager);
+export const CourseListEnhancer = () => {
+  const storageManager = useStorageManager();
 
-  return () => {
-    useEffect(() => {
-      const processWells = () => {
+  useEffect(() => {
+    const extractAndSaveSubjects = createSubjectExtractor(storageManager);
+
+    const processWells = () => {
+      const wells = document.querySelectorAll(".well");
+      wells.forEach((well) => {
+        const extendedWell = well as ExtendedHTMLElement;
+        if (!extendedWell.__mikotoCleanup) {
+          setupWellClickHandler(well as HTMLElement);
+        }
+      });
+
+      // 科目名を抽出して保存
+      extractAndSaveSubjects();
+    };
+
+    // 初回処理
+    processWells();
+
+    // ブラウザの戻る/進むボタンでページが復元された時の処理
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        // ページがキャッシュから復元された場合、すべてのwellのマークをリセットして再処理
         const wells = document.querySelectorAll(".well");
         wells.forEach((well) => {
           const extendedWell = well as ExtendedHTMLElement;
-          if (!extendedWell.__mikotoCleanup) {
-            setupWellClickHandler(well as HTMLElement);
-          }
+          extendedWell.__mikotoCleanup = false;
         });
-
-        // 科目名を抽出して保存
-        extractAndSaveSubjects();
-      };
-
-      // 初回処理
-      processWells();
-
-      // ブラウザの戻る/進むボタンでページが復元された時の処理
-      const handlePageShow = (event: PageTransitionEvent) => {
-        if (event.persisted) {
-          // ページがキャッシュから復元された場合、すべてのwellのマークをリセットして再処理
-          const wells = document.querySelectorAll(".well");
-          wells.forEach((well) => {
-            const extendedWell = well as ExtendedHTMLElement;
-            extendedWell.__mikotoCleanup = false;
-          });
-          processWells();
-        }
-      };
-
-      window.addEventListener("pageshow", handlePageShow);
-
-      // MutationObserverで要素の追加・変更を監視
-      const observer = new MutationObserver((_) => {
         processWells();
-      });
+      }
+    };
 
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
+    window.addEventListener("pageshow", handlePageShow);
 
-      return () => {
-        window.removeEventListener("pageshow", handlePageShow);
-        observer.disconnect();
-      };
-    }, []);
+    // MutationObserverで要素の追加・変更を監視
+    const observer = new MutationObserver(() => {
+      processWells();
+    });
 
-    return null;
-  };
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow);
+      observer.disconnect();
+    };
+  }, [storageManager]);
+
+  return null;
 };

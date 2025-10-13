@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect } from "react";
-import { createRoot } from "react-dom/client";
+import { useCallback, useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
-import { useElementObserver } from "../../hooks";
 import { CONFIG } from "../../constants";
+import { useElementObserver } from "../../hooks";
+import { useStorageManager } from "../../storage/context";
 import { applyStyles } from "../../utils/dom";
 import { containsKeywords } from "../../utils/text";
-import type { StorageManager } from "../../storage/manager";
-import { createDualViewToggle } from "../ui/DualViewToggle";
+import { DualViewToggle } from "../ui/DualViewToggle";
 
-const CONTENT_WRAPPER_SELECTOR = ".content-wrapper";
 const CONTENT_WRAPPER_LI_SELECTOR = ".content-wrapper li";
 const PAGINATION_SYMBOLS = ["«", "»"] as const;
 const ACTIVE_CLASS = "active";
+const DUAL_VIEW_CLASS = "mikoto-dual-view-enabled";
+const DUAL_VIEW_TOGGLE_CONTAINER_CLASS = "mikoto-dual-view-toggle-container";
 
 const getFirstChildElement = (element: Element): HTMLElement | null => {
   return element.children[0] as HTMLElement | null;
@@ -57,11 +58,6 @@ const processListItem = (li: HTMLLIElement): void => {
 
   // コンテンツタイプに応じたスタイルを適用
   applyContentTypeStyle(firstChild, title);
-};
-
-const findContentWrapper = (): Element | null => {
-  const wrapper = document.querySelector(CONTENT_WRAPPER_SELECTOR);
-  return wrapper;
 };
 
 interface KeyEventData {
@@ -138,37 +134,37 @@ const handleNumberKeyPress = (e: KeyEventData): void => {
   }
 };
 
-const DUAL_VIEW_CLASS = "mikoto-dual-view-enabled";
+const ensureDualViewToggleContainer = (): HTMLSpanElement | null => {
+  const content = document.querySelector(".content");
+  if (!content) return null;
 
-export const createContentEnhancer = (storageManager: StorageManager) => {
-  const DualViewToggle = createDualViewToggle(storageManager);
+  const problemContainer = content.querySelector(".problem-container");
+  if (!problemContainer) return null;
 
-  const insertDualViewToggle = () => {
-    const content = document.querySelector(".content");
-    if (!content) return;
+  const clearfix = content.querySelector(".clearfix");
+  if (!clearfix) return null;
 
-    // .problem-containerが存在しない場合は表示しない
-    const problemContainer = content.querySelector(".problem-container");
-    if (!problemContainer) return;
+  const pullRight = clearfix.querySelector(".pull-right");
+  if (!pullRight) return null;
 
-    const clearfix = content.querySelector(".clearfix");
-    if (!clearfix) return;
+  const existing = pullRight.querySelector<HTMLSpanElement>(
+    `.${DUAL_VIEW_TOGGLE_CONTAINER_CLASS}`,
+  );
+  if (existing) {
+    return existing;
+  }
 
-    const pullRight = clearfix.querySelector(".pull-right");
-    if (!pullRight) return;
+  const container = document.createElement("span");
+  container.classList.add(DUAL_VIEW_TOGGLE_CONTAINER_CLASS);
+  pullRight.appendChild(container);
+  return container;
+};
 
-    // 既存のトグルボタンを削除
-    const existingToggle = pullRight.querySelector(".mikoto-dual-view-toggle");
-    if (existingToggle) return;
+export const ContentEnhancer = () => {
+  const storageManager = useStorageManager();
+  const [toggleContainer, setToggleContainer] =
+    useState<HTMLSpanElement | null>(null);
 
-    const container = document.createElement("span");
-    pullRight.appendChild(container);
-
-    const root = createRoot(container);
-    root.render(React.createElement(DualViewToggle));
-  };
-
-  return () => {
   const handleContentItems = useCallback((elements: NodeListOf<Element>) => {
     const listItems = Array.from(elements) as HTMLLIElement[];
     listItems.forEach(processListItem);
@@ -178,6 +174,9 @@ export const createContentEnhancer = (storageManager: StorageManager) => {
 
   // dual-view設定の適用
   useEffect(() => {
+    let cleanupContainer: (() => void) | undefined;
+    let containerRef: HTMLSpanElement | null = null;
+
     const applyDualView = async () => {
       const enabled = await storageManager.getDualView();
       if (enabled) {
@@ -188,7 +187,34 @@ export const createContentEnhancer = (storageManager: StorageManager) => {
     };
 
     applyDualView();
-    insertDualViewToggle();
+    const attachToggle = () => {
+      if (containerRef?.isConnected) {
+        return;
+      }
+
+      const container = ensureDualViewToggleContainer();
+      if (!container) {
+        return;
+      }
+
+      containerRef = container;
+      setToggleContainer(container);
+      cleanupContainer = () => {
+        if (container.isConnected) {
+          container.remove();
+        }
+      };
+    };
+
+    attachToggle();
+
+    const observer = new MutationObserver(() => {
+      if (containerRef?.isConnected) {
+        return;
+      }
+      attachToggle();
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
 
     // 設定変更の監視
     const unwatch = storageManager.watchDualView((enabled) => {
@@ -201,8 +227,12 @@ export const createContentEnhancer = (storageManager: StorageManager) => {
 
     return () => {
       unwatch();
+      observer.disconnect();
+      cleanupContainer?.();
+      containerRef = null;
+      setToggleContainer(null);
     };
-  }, []);
+  }, [storageManager]);
 
   useEffect(() => {
     const keydownHandler = (e: KeyboardEvent): void => {
@@ -247,6 +277,9 @@ export const createContentEnhancer = (storageManager: StorageManager) => {
     };
   }, []);
 
+  if (toggleContainer) {
+    return createPortal(<DualViewToggle />, toggleContainer);
+  }
+
   return null;
-  };
 };

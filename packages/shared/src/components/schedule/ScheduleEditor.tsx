@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+
+import { useSchedule } from "../../hooks/schedule/useSchedule";
 import type { StorageManager } from "../../storage/manager";
-import { createUseSchedule } from "../../hooks/schedule/useSchedule";
+import { StorageProvider } from "../../storage/context";
 import { ClassEditModal } from "./ClassEditModal";
 import { ScheduleGrid } from "./ScheduleGrid";
 
-export const createScheduleEditor = (storageManager: StorageManager) => {
-  const useSchedule = createUseSchedule(storageManager);
-
-  return () => {
-    const {
+export const ScheduleEditor = () => {
+  const {
     editingCell,
     editingClass,
     setEditingClass,
@@ -77,6 +76,13 @@ export const createScheduleEditor = (storageManager: StorageManager) => {
         />
       )}
     </div>
-    );
-  };
+  );
+};
+
+export const createScheduleEditor = (storageManager: StorageManager) => {
+  return () => (
+    <StorageProvider storageManager={storageManager}>
+      <ScheduleEditor />
+    </StorageProvider>
+  );
 };
