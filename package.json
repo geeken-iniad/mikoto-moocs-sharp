@@ -7,10 +7,12 @@
   "type": "module",
   "scripts": {
     "dev:extension": "pnpm --filter @mikoto-moocs-sharp/extension dev",
-    "dev:userscript": "pnpm --filter @mikoto-moocs-sharp/userscript dev",
+    "dev:userscript-pro": "pnpm --filter @mikoto-moocs-sharp/userscript-pro dev",
+    "dev:userscript-light": "pnpm --filter @mikoto-moocs-sharp/userscript-light dev",
     "dev:extension:firefox": "pnpm --filter @mikoto-moocs-sharp/extension dev:firefox",
     "build:extension": "pnpm --filter @mikoto-moocs-sharp/extension build",
-    "build:userscript": "pnpm --filter @mikoto-moocs-sharp/userscript build",
+    "build:userscript-pro": "pnpm --filter @mikoto-moocs-sharp/userscript-pro build",
+    "build:userscript-light": "pnpm --filter @mikoto-moocs-sharp/userscript-light build",
     "build:all": "pnpm -r build",
     "compile": "pnpm -r compile"
   },
