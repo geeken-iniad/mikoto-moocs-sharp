@@ -1,14 +1,14 @@
 import type {
   IStorageAdapter,
-  StorageWatchCallback,
   StorageUnwatchFunction,
+  StorageWatchCallback,
 } from "@mikoto-moocs-sharp/shared";
 import {
-  GM_getValue,
-  GM_setValue,
-  GM_deleteValue,
   GM_addValueChangeListener,
+  GM_deleteValue,
+  GM_getValue,
   GM_removeValueChangeListener,
+  GM_setValue,
 } from "$";
 
 /**

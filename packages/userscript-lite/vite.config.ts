@@ -1,7 +1,7 @@
 import react from "@vitejs/plugin-react-swc";
+import path from "path";
 import { defineConfig } from "vite";
 import monkey from "vite-plugin-monkey";
-import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,8 +29,14 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@mikoto-moocs-sharp/shared/styles": path.resolve(__dirname, "../shared/src/styles"),
-      "@mikoto-moocs-sharp/shared": path.resolve(__dirname, "../shared/src/index.ts"),
+      "@mikoto-moocs-sharp/shared/styles": path.resolve(
+        __dirname,
+        "../shared/src/styles",
+      ),
+      "@mikoto-moocs-sharp/shared": path.resolve(
+        __dirname,
+        "../shared/src/index.ts",
+      ),
     },
   },
 });

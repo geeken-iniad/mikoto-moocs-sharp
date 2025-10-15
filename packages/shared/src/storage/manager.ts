@@ -1,5 +1,5 @@
-import type { IStorageAdapter } from "./interface";
 import type { Schedule } from "../types";
+import type { IStorageAdapter } from "./interface";
 
 export interface ScheduleHistory {
   subjects: string[];

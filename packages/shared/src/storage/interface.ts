@@ -35,5 +35,8 @@ export interface IStorageAdapter {
   /**
    * 値の変更を監視
    */
-  watch<T>(key: string, callback: StorageWatchCallback<T>): StorageUnwatchFunction;
+  watch<T>(
+    key: string,
+    callback: StorageWatchCallback<T>,
+  ): StorageUnwatchFunction;
 }

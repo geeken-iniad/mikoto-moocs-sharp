@@ -1,7 +1,7 @@
 import { Save, Trash2, X } from "lucide-react";
-import type { Class, EditingCell } from "../../types";
-import type { ScheduleHistory } from "../../storage/manager";
 import { DAY_LABELS, PERIODS } from "../../constants";
+import type { ScheduleHistory } from "../../storage/manager";
+import type { Class, EditingCell } from "../../types";
 
 interface ClassEditModalProps {
   editingCell: EditingCell;

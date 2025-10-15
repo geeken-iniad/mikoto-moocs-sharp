@@ -1,7 +1,7 @@
 import type {
   IStorageAdapter,
-  StorageWatchCallback,
   StorageUnwatchFunction,
+  StorageWatchCallback,
 } from "@mikoto-moocs-sharp/shared";
 
 /**

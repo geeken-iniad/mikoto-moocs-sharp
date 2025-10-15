@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-
-import type { ScheduleHistory, StorageManager } from "../../storage/manager";
 import { useStorageManager } from "../../storage/context";
+import type { ScheduleHistory, StorageManager } from "../../storage/manager";
 
 const useScheduleHistoryInternal = (storageManager: StorageManager) => {
   const [history, setHistory] = useState<ScheduleHistory>({

@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
-
-import { useElementObserver } from "../../hooks";
 import { CONFIG } from "../../constants";
+import { useElementObserver } from "../../hooks";
 import { applyStyles } from "../../utils/dom";
 import { containsKeywords } from "../../utils/text";
 

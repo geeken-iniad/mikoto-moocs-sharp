@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-
-import type { Class, DayOfWeek, EditingCell, Schedule } from "../../types";
 import { PERIODS } from "../../constants";
-import type { StorageManager } from "../../storage/manager";
 import { useStorageManager } from "../../storage/context";
+import type { StorageManager } from "../../storage/manager";
+import type { Class, DayOfWeek, EditingCell, Schedule } from "../../types";
 import { createUseScheduleHistory } from "./useScheduleHistory";
 
 const useScheduleInternal = (storageManager: StorageManager) => {
@@ -11,7 +10,8 @@ const useScheduleInternal = (storageManager: StorageManager) => {
   const [editingCell, setEditingCell] = useState<EditingCell | null>(null);
   const [editingClass, setEditingClass] = useState<Class | null>(null);
 
-  const useScheduleHistoryWithManager = createUseScheduleHistory(storageManager);
+  const useScheduleHistoryWithManager =
+    createUseScheduleHistory(storageManager);
   const { history, addToHistory } = useScheduleHistoryWithManager();
 
   useEffect(() => {
@@ -27,7 +27,10 @@ const useScheduleInternal = (storageManager: StorageManager) => {
     await storageManager.saveSchedule(newSchedule);
   };
 
-  const getClassForCell = (day: DayOfWeek, periodIndex: number): Class | null => {
+  const getClassForCell = (
+    day: DayOfWeek,
+    periodIndex: number,
+  ): Class | null => {
     const classes = schedule[day] || [];
     const period = PERIODS[periodIndex];
     return (

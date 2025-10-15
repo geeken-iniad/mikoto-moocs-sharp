@@ -1,9 +1,9 @@
-import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react";
 
 import { useSchedule } from "../../hooks/schedule/useSchedule";
-import type { StorageManager } from "../../storage/manager";
 import { StorageProvider } from "../../storage/context";
+import type { StorageManager } from "../../storage/manager";
 import { ClassEditModal } from "./ClassEditModal";
 import { ScheduleGrid } from "./ScheduleGrid";
 

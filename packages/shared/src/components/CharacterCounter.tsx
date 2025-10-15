@@ -1,5 +1,5 @@
-import React from "react";
 import { FileText } from "lucide-react";
+import React from "react";
 
 import type { CharacterCounterProps } from "../types";
 import { countCharacters } from "../utils/text";
@@ -53,7 +53,15 @@ export const CharacterCounter: React.FC<CharacterCounterProps> = ({
 
   return (
     <div className="mikoto-character-counter" style={containerStyle}>
-      <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "8px", fontWeight: "bold" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          marginBottom: "8px",
+          fontWeight: "bold",
+        }}
+      >
         <FileText size={16} />
         <span>文字数統計</span>
       </div>

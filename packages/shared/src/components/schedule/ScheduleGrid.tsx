@@ -1,5 +1,5 @@
-import type { DayOfWeek } from "../../types";
 import { DAY_LABELS, DAYS, PERIODS } from "../../constants";
+import type { DayOfWeek } from "../../types";
 import { ScheduleCell } from "./ScheduleCell";
 
 interface ScheduleGridProps {

@@ -1,3 +1,3 @@
 export * from "./dom";
-export * from "./text";
 export * from "./subjectExtractor";
+export * from "./text";

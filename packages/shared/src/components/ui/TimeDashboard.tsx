@@ -1,5 +1,5 @@
+import { BookOpen, Calendar, Clock as ClockIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
-import { Clock as ClockIcon, Calendar, BookOpen } from "lucide-react";
 
 const styles: Record<string, CSSProperties> = {
   dashboardContainer: {
@@ -131,13 +131,29 @@ const Clock = ({ currentTime }: { currentTime: Date }) => {
   };
   return (
     <div style={styles.clock}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+        }}
+      >
         <Calendar size={20} />
         <p style={styles.clockDate}>{formatDate(currentTime)}</p>
       </div>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "8px",
+        }}
+      >
         <ClockIcon size={24} />
-        <p style={styles.clockTime}>{currentTime.toLocaleTimeString("ja-JP")}</p>
+        <p style={styles.clockTime}>
+          {currentTime.toLocaleTimeString("ja-JP")}
+        </p>
       </div>
     </div>
   );
@@ -179,7 +195,14 @@ const SubjectCard = ({
   details: string;
 }) => (
   <div style={styles.card}>
-    <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "8px",
+        marginBottom: "8px",
+      }}
+    >
       <BookOpen size={20} />
       <h3 style={styles.subjectCardTitle}>{subject}</h3>
     </div>

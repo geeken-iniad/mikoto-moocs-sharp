@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
-import { Sun, Moon } from "lucide-react";
 import {
   ScheduleEditor,
   StorageProvider,
   type Theme,
 } from "@mikoto-moocs-sharp/shared";
+import { Moon, Sun } from "lucide-react";
+import { useEffect, useState } from "react";
 import { storageManager } from "../utils/storage";
 
 function App() {

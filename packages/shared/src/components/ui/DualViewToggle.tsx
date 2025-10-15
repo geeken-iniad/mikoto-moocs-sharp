@@ -35,7 +35,8 @@ export const DualViewToggle = () => {
       onClick={handleToggle}
       style={{ marginLeft: "10px" }}
     >
-      <i className={enabled ? "fa fa-columns" : "fa fa-file-text-o"} /> Dual View
+      <i className={enabled ? "fa fa-columns" : "fa fa-file-text-o"} /> Dual
+      View
     </button>
   );
 };

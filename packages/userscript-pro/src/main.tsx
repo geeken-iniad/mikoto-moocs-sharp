@@ -1,7 +1,7 @@
+import contentCssContent from "@mikoto-moocs-sharp/shared/styles/content.css?raw";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { MikotoApp } from "./components/MikotoApp";
-import contentCssContent from "@mikoto-moocs-sharp/shared/styles/content.css?raw";
 
 // MOOCsページでのみ実行
 const isMOOCsPage = window.location.hostname.includes("moocs.iniad.org");
