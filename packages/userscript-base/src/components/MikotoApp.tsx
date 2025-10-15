@@ -8,7 +8,7 @@ import {
 } from "@mikoto-moocs-sharp/shared";
 
 /**
- * Mikoto MOOCs # メインアプリケーションコンポーネント
+ * Mikoto MOOCs# メインアプリケーションコンポーネント
  * すべてのエンハンサーを統合
  */
 export const MikotoApp = ({

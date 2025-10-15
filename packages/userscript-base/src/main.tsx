@@ -5,7 +5,7 @@ import { MikotoApp } from "./components/MikotoApp";
 import { createStorageManager } from "./utils/storage";
 
 /**
- * Initialize Mikoto MOOCs # application
+ * Initialize Mikoto MOOCs# application
  */
 export function initializeMikoto() {
   // MOOCsページでのみ実行

@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div className="popup-container">
-      <h1>Mikoto (MOOCs #)</h1>
+      <h1>Mikoto (MOOCs#)</h1>
       <div className="settings">
         <div className="setting-item">
           <label htmlFor="dual-view-toggle">スライド横並び表示</label>

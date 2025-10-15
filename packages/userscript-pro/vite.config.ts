@@ -10,7 +10,7 @@ export default defineConfig({
     monkey({
       entry: "src/main.tsx",
       userscript: {
-        name: "Mikoto (MOOCs #)",
+        name: "Mikoto (MOOCs#)",
         description: "MOOCsをより便利に",
         author: "INIAD MDX",
         icon: "https://moocs.iniad.org/favicon.ico",

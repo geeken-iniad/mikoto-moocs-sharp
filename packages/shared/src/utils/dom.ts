@@ -19,5 +19,5 @@ export function isMoocsPage(): boolean {
  * ログ出力ユーティリティ
  */
 export function log(message: string, ...args: unknown[]): void {
-  console.log(`[Mikoto MOOCs #] ${message}`, ...args);
+  console.log(`[Mikoto MOOCs#] ${message}`, ...args);
 }
