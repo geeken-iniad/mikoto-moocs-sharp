@@ -10,8 +10,8 @@ export default defineConfig({
     monkey({
       entry: "src/main.tsx",
       userscript: {
-        name: "Mikoto (MOOCs#)",
-        description: "MOOCsをより便利に",
+        name: "Mikoto (MOOCs#) Lite",
+        description: "MOOCsをより便利に (基本機能版)",
         author: "INIAD MDX",
         icon: "https://moocs.iniad.org/favicon.ico",
         namespace: "https://github.com/iniad-mdx",
