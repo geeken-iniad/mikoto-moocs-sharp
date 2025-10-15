@@ -68,11 +68,36 @@ importers:
         specifier: ^5.9.2
         version: 5.9.3
 
+  packages/userscript-base:
+    dependencies:
+      '@mikoto-moocs-sharp/shared':
+        specifier: workspace:*
+        version: link:../shared
+      react:
+        specifier: ^19.1.1
+        version: 19.2.0
+      react-dom:
+        specifier: ^19.1.1
+        version: 19.2.0(react@19.2.0)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.11
+        version: 19.2.2
+      '@types/react-dom':
+        specifier: ^19.1.7
+        version: 19.2.1(@types/react@19.2.2)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
   packages/userscript-lite:
     dependencies:
       '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
         version: link:../shared
+      '@mikoto-moocs-sharp/userscript-base':
+        specifier: workspace:*
+        version: link:../userscript-base
       react:
         specifier: ^19.1.1
         version: 19.2.0
@@ -104,6 +129,9 @@ importers:
       '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
         version: link:../shared
+      '@mikoto-moocs-sharp/userscript-base':
+        specifier: workspace:*
+        version: link:../userscript-base
       react:
         specifier: ^19.1.1
         version: 19.2.0

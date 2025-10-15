@@ -29,6 +29,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
+      $: "vite-plugin-monkey/dist/client",
       "@mikoto-moocs-sharp/shared/styles": path.resolve(
         __dirname,
         "../shared/src/styles",
@@ -36,6 +37,14 @@ export default defineConfig({
       "@mikoto-moocs-sharp/shared": path.resolve(
         __dirname,
         "../shared/src/index.ts",
+      ),
+      "@mikoto-moocs-sharp/userscript-base/main": path.resolve(
+        __dirname,
+        "../userscript-base/src/main.tsx",
+      ),
+      "@mikoto-moocs-sharp/userscript-base": path.resolve(
+        __dirname,
+        "../userscript-base/src/index.ts",
       ),
     },
   },

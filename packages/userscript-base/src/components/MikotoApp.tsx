@@ -1,3 +1,4 @@
+import type { StorageManager } from "@mikoto-moocs-sharp/shared";
 import {
   ContentEnhancer,
   CourseListEnhancer,
@@ -5,13 +6,16 @@ import {
   StorageProvider,
   TextareaEnhancer,
 } from "@mikoto-moocs-sharp/shared";
-import { storageManager } from "../utils/storage";
 
 /**
  * Mikoto MOOCs # メインアプリケーションコンポーネント
  * すべてのエンハンサーを統合
  */
-export const MikotoApp = () => (
+export const MikotoApp = ({
+  storageManager,
+}: {
+  storageManager: StorageManager;
+}) => (
   <StorageProvider storageManager={storageManager}>
     <ContentEnhancer />
     <SidebarEnhancer />
