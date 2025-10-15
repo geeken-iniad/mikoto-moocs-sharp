@@ -2,13 +2,12 @@ import contentCssContent from "@mikoto-moocs-sharp/shared/styles/content.css?raw
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { MikotoApp } from "./components/MikotoApp";
-import type { GMApi } from "./utils/storageAdapter";
 import { createStorageManager } from "./utils/storage";
 
 /**
  * Initialize Mikoto MOOCs # application
  */
-export function initializeMikoto(gmApi: GMApi) {
+export function initializeMikoto() {
   // MOOCsページでのみ実行
   const isMOOCsPage = window.location.hostname.includes("moocs.iniad.org");
 
@@ -26,7 +25,7 @@ export function initializeMikoto(gmApi: GMApi) {
       document.body.append(mountContainer);
 
       // StorageManagerを作成
-      const storageManager = createStorageManager(gmApi);
+      const storageManager = createStorageManager();
 
       // Reactアプリケーションをマウント
       ReactDOM.createRoot(mountContainer).render(

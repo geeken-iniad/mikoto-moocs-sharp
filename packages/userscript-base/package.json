@@ -1,25 +1,26 @@
 {
-	"name": "@mikoto-moocs-sharp/userscript-base",
-	"private": true,
-	"version": "0.0.0",
-	"type": "module",
-	"main": "./src/index.ts",
-	"types": "./src/index.ts",
-	"exports": {
-		".": "./src/index.ts",
-		"./main": "./src/main.tsx"
-	},
-	"scripts": {
-		"build": "tsc"
-	},
-	"dependencies": {
-		"@mikoto-moocs-sharp/shared": "workspace:*",
-		"react": "^19.1.1",
-		"react-dom": "^19.1.1"
-	},
-	"devDependencies": {
-		"@types/react": "^19.1.11",
-		"@types/react-dom": "^19.1.7",
-		"typescript": "^5.9.2"
-	}
+  "name": "@mikoto-moocs-sharp/userscript-base",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./main": "./src/main.tsx"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@mikoto-moocs-sharp/shared": "workspace:*",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
+    "typescript": "^5.9.2",
+    "vite-plugin-monkey": "^7.1.1"
+  }
 }

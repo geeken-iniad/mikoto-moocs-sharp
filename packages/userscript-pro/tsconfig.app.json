@@ -25,5 +25,8 @@
 		/* Path mapping */
 		"types": ["src/types/greasemonkey.d.ts"]
 	},
-	"include": ["src"]
+	"include": ["src"],
+	"references": [
+		{ "path": "../userscript-base" }
+	]
 }
