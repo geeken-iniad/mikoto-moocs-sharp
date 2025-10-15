@@ -4,6 +4,7 @@
   "references": [
     { "path": "./packages/shared" },
     { "path": "./packages/extension" },
-    { "path": "./packages/userscript" }
+    { "path": "./packages/userscript-pro" },
+    { "path": "./packages/userscript-lite" }
   ]
 }
