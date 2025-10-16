@@ -2,7 +2,7 @@ name: Security Audit
 
 on:
   push:
-    branches: [main, monorepo]
+    branches: [main, develop]
   pull_request:
   schedule:
     # Run every Sunday at midnight UTC
