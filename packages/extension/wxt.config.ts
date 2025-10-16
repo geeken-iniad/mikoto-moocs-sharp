@@ -1,5 +1,8 @@
 import path from "path";
+import { fileURLToPath } from "url";
 import { defineConfig } from "wxt";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
