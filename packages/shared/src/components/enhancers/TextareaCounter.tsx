@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 
 import { useTextareaObserver } from "../../hooks";
 import type { ExtendedHTMLTextAreaElement } from "../../types";
+import { ensureTextareaId } from "../../utils/textarea";
 import { CharacterCounter } from "../CharacterCounter";
 
 const TextareaCounterContent: React.FC<{
@@ -61,6 +62,8 @@ export const TextareaCounter: React.FC = () => {
   const [textareas, setTextareas] = useState<HTMLTextAreaElement[]>([]);
 
   const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
+    ensureTextareaId(textarea);
+
     setTextareas((prev) => {
       if (prev.includes(textarea)) return prev;
       return [...prev, textarea];
@@ -79,7 +82,7 @@ export const TextareaCounter: React.FC = () => {
     <>
       {textareas.map((textarea) => (
         <TextareaCounterContent
-          key={textarea.toString()}
+          key={textarea.dataset.mikotoTextareaId ?? ensureTextareaId(textarea)}
           textarea={textarea}
         />
       ))}

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useTextareaObserver } from "../../hooks";
+import { ensureTextareaId } from "../../utils/textarea";
 import type { ExtendedHTMLTextAreaElement } from "../../types";
 
 const ResizeToggle: React.FC<{ textarea: HTMLTextAreaElement }> = ({
@@ -92,6 +93,8 @@ export const TextareaResizer: React.FC = () => {
   const [textareas, setTextareas] = useState<HTMLTextAreaElement[]>([]);
 
   const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
+    ensureTextareaId(textarea);
+
     setTextareas((prev) => {
       if (prev.includes(textarea)) return prev;
       return [...prev, textarea];
@@ -110,7 +113,7 @@ export const TextareaResizer: React.FC = () => {
     <>
       {textareas.map((textarea) => (
         <TextareaResizerContent
-          key={textarea.toString()}
+          key={textarea.dataset.mikotoTextareaId ?? ensureTextareaId(textarea)}
           textarea={textarea}
         />
       ))}
