@@ -22,8 +22,5 @@
 		"noFallthroughCasesInSwitch": true,
 		"noUncheckedSideEffectImports": true
 	},
-	"include": ["src"],
-	"references": [
-		{ "path": "../userscript-base" }
-	]
+	"include": ["src"]
 }
