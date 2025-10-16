@@ -49,10 +49,5 @@ export const PERIODS = [
   { label: "6限", start: "18:15", end: "19:45" },
 ];
 
-// Storage Keys
-export const STORAGE_KEY = "mikoto-schedule";
-export const HISTORY_STORAGE_KEY = "mikoto-schedule-history";
-export const SUBJECTS_STORAGE_KEY = "mikoto-extracted-subjects";
-
 // MOOCs URL
 export const MOOCS_URL = "https://moocs.iniad.org";
