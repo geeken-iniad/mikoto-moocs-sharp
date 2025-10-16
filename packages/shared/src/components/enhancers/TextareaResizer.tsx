@@ -1,5 +1,5 @@
 import { Maximize2 } from "lucide-react";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useTextareaObserver } from "../../hooks";
@@ -90,8 +90,14 @@ const TextareaResizerContent: React.FC<{
  */
 export const TextareaResizer: React.FC = () => {
   const [textareas, setTextareas] = useState<HTMLTextAreaElement[]>([]);
+  const idCounterRef = useRef(0);
 
   const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
+    if (!textarea.dataset.mikotoTextareaId) {
+      idCounterRef.current += 1;
+      textarea.dataset.mikotoTextareaId = `mikoto-textarea-${idCounterRef.current}`;
+    }
+
     setTextareas((prev) => {
       if (prev.includes(textarea)) return prev;
       return [...prev, textarea];
@@ -110,7 +116,7 @@ export const TextareaResizer: React.FC = () => {
     <>
       {textareas.map((textarea) => (
         <TextareaResizerContent
-          key={textarea.toString()}
+          key={textarea.dataset.mikotoTextareaId}
           textarea={textarea}
         />
       ))}
