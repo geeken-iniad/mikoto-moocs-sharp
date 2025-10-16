@@ -5,7 +5,12 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=22.20.0",
+    "pnpm": ">=10.18.3"
+  },
   "scripts": {
+    "preinstall": "npx only-allow pnpm",
     "dev:extension": "pnpm --filter @mikoto-moocs-sharp/extension dev",
     "dev:userscript-pro": "pnpm --filter @mikoto-moocs-sharp/userscript-pro dev",
     "dev:userscript-lite": "pnpm --filter @mikoto-moocs-sharp/userscript-lite dev",
