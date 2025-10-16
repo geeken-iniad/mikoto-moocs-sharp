@@ -3,7 +3,6 @@ import {
   ContentStyleEnhancer,
   CourseListEnhancer,
   DualViewManager,
-  KeyboardShortcuts,
   SidebarEnhancer,
   StorageProvider,
   TextareaCounter,
@@ -11,10 +10,10 @@ import {
 } from "@mikoto-moocs-sharp/shared";
 
 /**
- * Mikoto MOOCs# Pro版メインアプリケーションコンポーネント
- * すべてのエンハンサーを統合（UI・UX改善 + キーボードショートカット）
+ * Mikoto MOOCs# Lite版メインアプリケーションコンポーネント
+ * UI・UX改善機能のみを統合
  */
-export const MikotoApp = ({
+export const MikotoAppLite = ({
   storageManager,
 }: {
   storageManager: StorageManager;
@@ -23,7 +22,6 @@ export const MikotoApp = ({
     <ContentStyleEnhancer />
     <CourseListEnhancer />
     <DualViewManager />
-    <KeyboardShortcuts />
     <SidebarEnhancer />
     <TextareaCounter />
     <TextareaResizer />

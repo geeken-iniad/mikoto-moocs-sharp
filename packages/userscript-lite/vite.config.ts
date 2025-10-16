@@ -42,6 +42,10 @@ export default defineConfig({
         __dirname,
         "../userscript-base/src/main.tsx",
       ),
+      "@mikoto-moocs-sharp/userscript-base/mainLite": path.resolve(
+        __dirname,
+        "../userscript-base/src/mainLite.tsx",
+      ),
       "@mikoto-moocs-sharp/userscript-base": path.resolve(
         __dirname,
         "../userscript-base/src/index.ts",

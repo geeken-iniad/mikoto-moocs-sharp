@@ -1,9 +1,9 @@
 import { Maximize2 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+
 import { useTextareaObserver } from "../../hooks";
 import type { ExtendedHTMLTextAreaElement } from "../../types";
-import { CharacterCounter } from "../CharacterCounter";
 
 const ResizeToggle: React.FC<{ textarea: HTMLTextAreaElement }> = ({
   textarea,
@@ -40,10 +40,9 @@ const ResizeToggle: React.FC<{ textarea: HTMLTextAreaElement }> = ({
   );
 };
 
-const TextareaEnhancerContent: React.FC<{
+const TextareaResizerContent: React.FC<{
   textarea: HTMLTextAreaElement;
 }> = ({ textarea }) => {
-  const [value, setValue] = useState(textarea.value);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -65,17 +64,6 @@ const TextareaEnhancerContent: React.FC<{
     };
   }, [textarea]);
 
-  useEffect(() => {
-    const handleInput = () => {
-      setValue(textarea.value);
-    };
-
-    textarea.addEventListener("input", handleInput);
-    return () => {
-      textarea.removeEventListener("input", handleInput);
-    };
-  }, [textarea]);
-
   if (!container) return null;
 
   return createPortal(
@@ -91,15 +79,16 @@ const TextareaEnhancerContent: React.FC<{
       >
         <ResizeToggle textarea={textarea} />
       </div>
-      <div className="mikoto-counter-container">
-        <CharacterCounter value={value} />
-      </div>
     </div>,
     container,
   );
 };
 
-export const TextareaEnhancer: React.FC = () => {
+/**
+ * テキストエリアにリサイズトグルボタンを追加するコンポーネント
+ * - 横方向リサイズのオン/オフ切り替え
+ */
+export const TextareaResizer: React.FC = () => {
   const [textareas, setTextareas] = useState<HTMLTextAreaElement[]>([]);
 
   const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
@@ -120,7 +109,7 @@ export const TextareaEnhancer: React.FC = () => {
   return (
     <>
       {textareas.map((textarea) => (
-        <TextareaEnhancerContent
+        <TextareaResizerContent
           key={textarea.toString()}
           textarea={textarea}
         />
