@@ -1,2 +1,7 @@
 packages:
-  - 'packages/*'
+  - packages/*
+
+# Supply chain attack mitigation
+# Wait 7 days after package release before allowing installation
+# This provides time for community review and vulnerability discovery
+minimumReleaseAge: 10080
