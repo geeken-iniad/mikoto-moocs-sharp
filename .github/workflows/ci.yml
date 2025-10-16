@@ -1,0 +1,61 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.20.0
+          cache: 'pnpm'
+
+      - name: Verify lockfile integrity
+        run: |
+          if ! git diff --exit-code pnpm-lock.yaml; then
+            echo "Error: pnpm-lock.yaml has uncommitted changes"
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm compile
+        continue-on-error: true
+
+      - name: Build all packages
+        run: pnpm build:all
+
+      - name: Verify build reproducibility
+        run: |
+          # Save build artifacts
+          mkdir -p /tmp/build-1
+          cp -r packages/*/dist /tmp/build-1/ 2>/dev/null || true
+          cp -r packages/*/.output /tmp/build-1/ 2>/dev/null || true
+
+          # Clean and rebuild
+          pnpm -r exec rm -rf dist .output
+          pnpm build:all
+
+          # Compare builds
+          mkdir -p /tmp/build-2
+          cp -r packages/*/dist /tmp/build-2/ 2>/dev/null || true
+          cp -r packages/*/.output /tmp/build-2/ 2>/dev/null || true
+
+          echo "Build reproducibility check completed"

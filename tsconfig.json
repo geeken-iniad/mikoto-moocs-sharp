@@ -1,7 +1,11 @@
 {
-  "extends": "./.wxt/tsconfig.json",
-  "compilerOptions": {
-    "allowImportingTsExtensions": true,
-    "jsx": "react-jsx"
-  }
+  "extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/userscript-base" },
+    { "path": "./packages/extension" },
+    { "path": "./packages/userscript-pro" },
+    { "path": "./packages/userscript-lite" }
+  ]
 }

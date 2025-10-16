@@ -1,0 +1,93 @@
+import { useEffect } from "react";
+
+import { useStorageManager } from "../../storage/context";
+import { createSubjectExtractor } from "../../utils/subjectExtractor";
+
+interface ExtendedHTMLElement extends HTMLElement {
+  __mikotoCleanup?: boolean;
+  __mikotoHandler?: (e: Event) => void;
+}
+
+const setupWellClickHandler = (well: HTMLElement): void => {
+  const handleClick = (e: Event): void => {
+    // リンク自体がクリックされた場合は何もしない
+    const target = e.target as HTMLElement;
+    if (target.tagName === "A" || target.closest("a")) {
+      return;
+    }
+
+    // well内のリンクを探してクリック
+    const link = well.querySelector("a.btn-primary") as HTMLAnchorElement;
+    if (link) {
+      link.click();
+    }
+  };
+
+  // 既存のハンドラを削除してから新しいハンドラを追加
+  const extendedWell = well as ExtendedHTMLElement;
+  if (extendedWell.__mikotoHandler) {
+    well.removeEventListener("click", extendedWell.__mikotoHandler);
+  }
+
+  well.addEventListener("click", handleClick);
+
+  // ハンドラの参照を保存
+  extendedWell.__mikotoHandler = handleClick;
+  extendedWell.__mikotoCleanup = true;
+};
+
+export const CourseListEnhancer = () => {
+  const storageManager = useStorageManager();
+
+  useEffect(() => {
+    const extractAndSaveSubjects = createSubjectExtractor(storageManager);
+
+    const processWells = () => {
+      const wells = document.querySelectorAll(".well");
+      wells.forEach((well) => {
+        const extendedWell = well as ExtendedHTMLElement;
+        if (!extendedWell.__mikotoCleanup) {
+          setupWellClickHandler(well as HTMLElement);
+        }
+      });
+
+      // 科目名を抽出して保存
+      extractAndSaveSubjects();
+    };
+
+    // 初回処理
+    processWells();
+
+    // ブラウザの戻る/進むボタンでページが復元された時の処理
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        // ページがキャッシュから復元された場合、すべてのwellのマークをリセットして再処理
+        const wells = document.querySelectorAll(".well");
+        wells.forEach((well) => {
+          const extendedWell = well as ExtendedHTMLElement;
+          extendedWell.__mikotoCleanup = false;
+        });
+        processWells();
+      }
+    };
+
+    window.addEventListener("pageshow", handlePageShow);
+
+    // MutationObserverで要素の追加・変更を監視
+    const observer = new MutationObserver(() => {
+      processWells();
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    return () => {
+      window.removeEventListener("pageshow", handlePageShow);
+      observer.disconnect();
+    };
+  }, [storageManager]);
+
+  return null;
+};

@@ -1,4 +1,8 @@
 {
+  "formatter": {
+    "indentStyle": "space",
+    "indentWidth": 2
+  },
   "assist": {
     "enabled": true,
     "actions": {
@@ -7,10 +11,14 @@
       }
     }
   },
+  "json": {
+    "formatter": {
+      "indentStyle": "space",
+      "indentWidth": 2
+    }
+  },
   "javascript": {
     "formatter": {
-      "indentWidth": 2,
-      "indentStyle": "space",
       "quoteStyle": "double",
       "jsxQuoteStyle": "double"
     },
@@ -32,9 +40,7 @@
   },
   "css": {
     "formatter": {
-      "enabled": true,
-      "indentWidth": 2,
-      "indentStyle": "space"
+      "enabled": true
     }
   }
 }

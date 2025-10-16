@@ -1,6 +1,6 @@
 # Mikoto (MOOCs Sharp): MOOCsを便利に
 
-Mikotoは、MOOCsをより便利に利用するためのブラウザ拡張機能です。
+Mikotoは、MOOCsをより便利に利用するためのツールです。ブラウザ拡張機能版とUserscript版の複数のエディションを提供しています。
 
 ## 機能
 
@@ -17,19 +17,35 @@ Mikotoは、MOOCsをより便利に利用するためのブラウザ拡張機能
 - [x] ⌨️ Ctrl + Enterでフォーム提出
 - [x] 🔁 数字キーでタブを切り替え
 
-## インストール
+## エディション
 
-### Google Chrome
+### エディション比較表
 
-### Mozilla Firefox
+| 項目 | Extension | Userscript Lite | Userscript |
+|------|-----------|------------------|----------------|
+| **機能** | ✅ 全機能 | ⚠️ 基本機能のみ | ✅ 全機能 |
+| **前提条件** | なし | Tampermonkey等 | Tampermonkey等 |
 
-### Microsoft Edge
 
-## Development To run the development server:
+## 開発
+
+このプロジェクトはpnpmワークスペースを使用したモノレポ構成です。
+
+### セットアップ
 
 ```sh
-pnpm i
-pnpm dev
+pnpm install
+```
+
+### プロジェクト構成
+
+```
+packages/
+├── shared/            # 共通コンポーネント・ロジック
+├── userscript-base/   # Userscriptの基盤
+├── extension/         # ブラウザ拡張機能版 (WXT)
+├── userscript-lite/   # Userscript Lite版 (vite-plugin-monkey)
+└── userscript-pro/    # Userscript Pro版  (vite-plugin-monkey)
 ```
 
 ## License
