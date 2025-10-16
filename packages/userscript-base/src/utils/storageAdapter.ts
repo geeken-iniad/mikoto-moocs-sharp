@@ -41,7 +41,18 @@ export class GMStorageAdapter implements IStorageAdapter {
     const listenerId = GM_addValueChangeListener(
       key,
       (_name: string, _oldValue: any, newValue: any, _remote: boolean) => {
-        const parsed = newValue ? JSON.parse(newValue) : null;
+        let parsed: T | null;
+        if (newValue === null || newValue === undefined) {
+          parsed = null;
+        } else if (typeof newValue === "string") {
+          try {
+            parsed = JSON.parse(newValue) as T;
+          } catch {
+            parsed = newValue as T;
+          }
+        } else {
+          parsed = newValue as T;
+        }
         callback(parsed);
       },
     );
