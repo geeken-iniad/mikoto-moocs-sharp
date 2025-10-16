@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useTextareaObserver } from "../../hooks";
 import type { ExtendedHTMLTextAreaElement } from "../../types";
+import { ensureTextareaId } from "../../utils/textarea";
 import { CharacterCounter } from "../CharacterCounter";
 
 const TextareaCounterContent: React.FC<{
@@ -59,13 +60,9 @@ const TextareaCounterContent: React.FC<{
  */
 export const TextareaCounter: React.FC = () => {
   const [textareas, setTextareas] = useState<HTMLTextAreaElement[]>([]);
-  const idCounterRef = useRef(0);
 
   const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
-    if (!textarea.dataset.mikotoTextareaId) {
-      idCounterRef.current += 1;
-      textarea.dataset.mikotoTextareaId = `mikoto-textarea-${idCounterRef.current}`;
-    }
+    ensureTextareaId(textarea);
 
     setTextareas((prev) => {
       if (prev.includes(textarea)) return prev;
@@ -85,7 +82,7 @@ export const TextareaCounter: React.FC = () => {
     <>
       {textareas.map((textarea) => (
         <TextareaCounterContent
-          key={textarea.dataset.mikotoTextareaId}
+          key={textarea.dataset.mikotoTextareaId ?? ensureTextareaId(textarea)}
           textarea={textarea}
         />
       ))}

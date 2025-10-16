@@ -1,8 +1,9 @@
 import { Maximize2 } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useTextareaObserver } from "../../hooks";
+import { ensureTextareaId } from "../../utils/textarea";
 import type { ExtendedHTMLTextAreaElement } from "../../types";
 
 const ResizeToggle: React.FC<{ textarea: HTMLTextAreaElement }> = ({
@@ -90,13 +91,9 @@ const TextareaResizerContent: React.FC<{
  */
 export const TextareaResizer: React.FC = () => {
   const [textareas, setTextareas] = useState<HTMLTextAreaElement[]>([]);
-  const idCounterRef = useRef(0);
 
   const handleTextareaFound = useCallback((textarea: HTMLTextAreaElement) => {
-    if (!textarea.dataset.mikotoTextareaId) {
-      idCounterRef.current += 1;
-      textarea.dataset.mikotoTextareaId = `mikoto-textarea-${idCounterRef.current}`;
-    }
+    ensureTextareaId(textarea);
 
     setTextareas((prev) => {
       if (prev.includes(textarea)) return prev;
@@ -116,7 +113,7 @@ export const TextareaResizer: React.FC = () => {
     <>
       {textareas.map((textarea) => (
         <TextareaResizerContent
-          key={textarea.dataset.mikotoTextareaId}
+          key={textarea.dataset.mikotoTextareaId ?? ensureTextareaId(textarea)}
           textarea={textarea}
         />
       ))}
