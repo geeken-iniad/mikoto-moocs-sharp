@@ -1,4 +1,4 @@
-import type { Schedule } from "../types";
+import type { Schedule, KeyboardShortcutSettings } from "../types";
 import type { IStorageAdapter } from "./interface";
 
 export interface ScheduleHistory {
@@ -16,6 +16,7 @@ export const STORAGE_KEYS = {
   SUBJECTS: "mikoto-extracted-subjects",
   DUAL_VIEW: "mikoto-dual-view",
   THEME: "mikoto-theme",
+  KEYBOARD_SHORTCUTS: "mikoto-keyboard-shortcuts",
 } as const;
 
 /**
@@ -142,5 +143,33 @@ export class StorageManager {
 
   watchTheme(callback: (theme: "light" | "dark" | null) => void) {
     return this.adapter.watch<"light" | "dark">(STORAGE_KEYS.THEME, callback);
+  }
+
+  async getKeyboardShortcuts(): Promise<KeyboardShortcutSettings> {
+    const result = await this.adapter.getItem<KeyboardShortcutSettings>(
+      STORAGE_KEYS.KEYBOARD_SHORTCUTS,
+    );
+    return (
+      result || {
+        submitShortcut: false,
+        numberKeyShortcut: false,
+        arrowKeyShortcut: false,
+      }
+    );
+  }
+
+  async setKeyboardShortcuts(
+    settings: KeyboardShortcutSettings,
+  ): Promise<void> {
+    await this.adapter.setItem(STORAGE_KEYS.KEYBOARD_SHORTCUTS, settings);
+  }
+
+  watchKeyboardShortcuts(
+    callback: (settings: KeyboardShortcutSettings | null) => void,
+  ) {
+    return this.adapter.watch<KeyboardShortcutSettings>(
+      STORAGE_KEYS.KEYBOARD_SHORTCUTS,
+      callback,
+    );
   }
 }

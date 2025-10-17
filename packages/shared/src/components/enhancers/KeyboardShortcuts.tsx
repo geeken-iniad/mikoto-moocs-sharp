@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useStorageManager } from "../../storage/context";
+import type { KeyboardShortcutSettings } from "../../types";
 
 interface KeyEventData {
   key: string;
@@ -132,10 +134,37 @@ const handleArrowKeyPress = (e: KeyEventData): void => {
  * - Shift + ←/→: 前のページ/次のページ
  */
 export const KeyboardShortcuts = () => {
+  const storageManager = useStorageManager();
+  const [settings, setSettings] = useState<KeyboardShortcutSettings>({
+    submitShortcut: false,
+    numberKeyShortcut: false,
+    arrowKeyShortcut: false,
+  });
+
+  useEffect(() => {
+    // 設定を読み込む
+    const loadSettings = async () => {
+      const shortcuts = await storageManager.getKeyboardShortcuts();
+      setSettings(shortcuts);
+    };
+    loadSettings();
+
+    // 設定の変更を監視
+    const unwatch = storageManager.watchKeyboardShortcuts((newSettings) => {
+      if (newSettings) {
+        setSettings(newSettings);
+      }
+    });
+
+    return unwatch;
+  }, [storageManager]);
+
   useEffect(() => {
     const keydownHandler = (e: KeyboardEvent): void => {
       // Ctrl/Cmd+Enterのショートカットを処理
-      handleSubmitShortcut(e);
+      if (settings.submitShortcut) {
+        handleSubmitShortcut(e);
+      }
 
       if (window !== window.top) {
         // iframeの場合、親フレームにメッセージを送信
@@ -153,15 +182,23 @@ export const KeyboardShortcuts = () => {
         );
       } else {
         // 親フレームの場合、直接処理
-        handleNumberKeyPress(e);
-        handleArrowKeyPress(e);
+        if (settings.numberKeyShortcut) {
+          handleNumberKeyPress(e);
+        }
+        if (settings.arrowKeyShortcut) {
+          handleArrowKeyPress(e);
+        }
       }
     };
 
     const messageHandler = (e: MessageEvent): void => {
       if (e.data.type === "IFRAME_KEYDOWN") {
-        handleNumberKeyPress(e.data);
-        handleArrowKeyPress(e.data);
+        if (settings.numberKeyShortcut) {
+          handleNumberKeyPress(e.data);
+        }
+        if (settings.arrowKeyShortcut) {
+          handleArrowKeyPress(e.data);
+        }
       }
     };
 
@@ -179,7 +216,7 @@ export const KeyboardShortcuts = () => {
         window.removeEventListener("message", messageHandler);
       }
     };
-  }, []);
+  }, [settings]);
 
   return null;
 };
