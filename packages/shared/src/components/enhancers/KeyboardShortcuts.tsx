@@ -83,10 +83,53 @@ const handleNumberKeyPress = (e: KeyEventData): void => {
   }
 };
 
+const handleArrowKeyPress = (e: KeyEventData): void => {
+  // Shiftキーのみが押されている必要がある (他の修飾キーは不可)
+  if (!e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) {
+    return;
+  }
+
+  // 入力要素にフォーカスがある場合は何もしない
+  if (e.target) {
+    const target = e.target as HTMLElement;
+    if (isInputElement(target)) {
+      return;
+    }
+  }
+
+  // 矢印キーの判定
+  const key = e.key;
+  let targetSymbol: string;
+  if (key === "ArrowLeft") {
+    targetSymbol = "«"; // 前へ
+  } else if (key === "ArrowRight") {
+    targetSymbol = "»"; // 次へ
+  } else {
+    return;
+  }
+
+  // ページネーション内のリンクを探す
+  const pagination = document.querySelector(".pagination");
+  if (!pagination) return;
+
+  const links = Array.from(
+    pagination.querySelectorAll("li a"),
+  ) as HTMLAnchorElement[];
+  const targetLink = links.find(
+    (link) => link.textContent?.trim() === targetSymbol,
+  );
+
+  if (targetLink) {
+    e.preventDefault?.();
+    targetLink.click();
+  }
+};
+
 /**
  * キーボードショートカット機能を提供するコンポーネント
  * - Ctrl/Cmd + Enter: フォーム提出
  * - 数字キー (1-9): ページネーション
+ * - Shift + ←/→: 前のページ/次のページ
  */
 export const KeyboardShortcuts = () => {
   useEffect(() => {
@@ -111,12 +154,14 @@ export const KeyboardShortcuts = () => {
       } else {
         // 親フレームの場合、直接処理
         handleNumberKeyPress(e);
+        handleArrowKeyPress(e);
       }
     };
 
     const messageHandler = (e: MessageEvent): void => {
       if (e.data.type === "IFRAME_KEYDOWN") {
         handleNumberKeyPress(e.data);
+        handleArrowKeyPress(e.data);
       }
     };
 
