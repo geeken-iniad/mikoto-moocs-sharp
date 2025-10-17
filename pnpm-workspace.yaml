@@ -5,3 +5,7 @@ packages:
 # Wait 7 days after package release before allowing installation
 # This provides time for community review and vulnerability discovery
 minimumReleaseAge: 10080
+minimumReleaseAgeExclude:
+  - "@types/node"
+  - "baseline-browser-mapping"
+  - "caniuse-lite"
