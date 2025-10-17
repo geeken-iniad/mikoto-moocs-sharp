@@ -5,6 +5,10 @@ interface KeyEventData {
   code?: string;
   target?: EventTarget | null;
   preventDefault?: () => void;
+  ctrlKey?: boolean;
+  metaKey?: boolean;
+  shiftKey?: boolean;
+  altKey?: boolean;
 }
 
 const isInputElement = (target: HTMLElement): boolean => {
@@ -47,6 +51,11 @@ const handleSubmitShortcut = (e: KeyEventData): void => {
 };
 
 const handleNumberKeyPress = (e: KeyEventData): void => {
+  // 修飾キーが押されている場合は何もしない
+  if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+    return;
+  }
+
   // 入力要素にフォーカスがある場合は何もしない
   if (e.target) {
     const target = e.target as HTMLElement;
@@ -92,6 +101,10 @@ export const KeyboardShortcuts = () => {
             type: "IFRAME_KEYDOWN",
             key: e.key,
             code: e.code,
+            ctrlKey: e.ctrlKey,
+            metaKey: e.metaKey,
+            shiftKey: e.shiftKey,
+            altKey: e.altKey,
           },
           "*",
         );
