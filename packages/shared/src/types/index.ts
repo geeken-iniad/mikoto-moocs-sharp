@@ -42,3 +42,10 @@ export interface EditingCell {
 
 // Theme Types
 export type Theme = "light" | "dark";
+
+// Keyboard Shortcuts Types
+export interface KeyboardShortcutSettings {
+  submitShortcut: boolean; // Ctrl/Cmd+Enter でフォーム提出
+  numberKeyShortcut: boolean; // 数字キー (1-9) でページネーション
+  arrowKeyShortcut: boolean; // Shift+左右矢印 でページ移動
+}

@@ -1,10 +1,16 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useStorageManager } from "../../storage/context";
+import type { KeyboardShortcutSettings } from "../../types";
 
 interface KeyEventData {
   key: string;
   code?: string;
   target?: EventTarget | null;
   preventDefault?: () => void;
+  ctrlKey?: boolean;
+  metaKey?: boolean;
+  shiftKey?: boolean;
+  altKey?: boolean;
 }
 
 const isInputElement = (target: HTMLElement): boolean => {
@@ -47,6 +53,11 @@ const handleSubmitShortcut = (e: KeyEventData): void => {
 };
 
 const handleNumberKeyPress = (e: KeyEventData): void => {
+  // 修飾キーが押されている場合は何もしない
+  if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) {
+    return;
+  }
+
   // 入力要素にフォーカスがある場合は何もしない
   if (e.target) {
     const target = e.target as HTMLElement;
@@ -74,16 +85,86 @@ const handleNumberKeyPress = (e: KeyEventData): void => {
   }
 };
 
+const handleArrowKeyPress = (e: KeyEventData): void => {
+  // Shiftキーのみが押されている必要がある (他の修飾キーは不可)
+  if (!e.shiftKey || e.ctrlKey || e.metaKey || e.altKey) {
+    return;
+  }
+
+  // 入力要素にフォーカスがある場合は何もしない
+  if (e.target) {
+    const target = e.target as HTMLElement;
+    if (isInputElement(target)) {
+      return;
+    }
+  }
+
+  // 矢印キーの判定
+  const key = e.key;
+  let targetSymbol: string;
+  if (key === "ArrowLeft") {
+    targetSymbol = "«"; // 前へ
+  } else if (key === "ArrowRight") {
+    targetSymbol = "»"; // 次へ
+  } else {
+    return;
+  }
+
+  // ページネーション内のリンクを探す
+  const pagination = document.querySelector(".pagination");
+  if (!pagination) return;
+
+  const links = Array.from(
+    pagination.querySelectorAll("li a"),
+  ) as HTMLAnchorElement[];
+  const targetLink = links.find(
+    (link) => link.textContent?.trim() === targetSymbol,
+  );
+
+  if (targetLink) {
+    e.preventDefault?.();
+    targetLink.click();
+  }
+};
+
 /**
  * キーボードショートカット機能を提供するコンポーネント
  * - Ctrl/Cmd + Enter: フォーム提出
  * - 数字キー (1-9): ページネーション
+ * - Shift + ←/→: 前のページ/次のページ
  */
 export const KeyboardShortcuts = () => {
+  const storageManager = useStorageManager();
+  const [settings, setSettings] = useState<KeyboardShortcutSettings>({
+    submitShortcut: false,
+    numberKeyShortcut: false,
+    arrowKeyShortcut: false,
+  });
+
+  useEffect(() => {
+    // 設定を読み込む
+    const loadSettings = async () => {
+      const shortcuts = await storageManager.getKeyboardShortcuts();
+      setSettings(shortcuts);
+    };
+    loadSettings();
+
+    // 設定の変更を監視
+    const unwatch = storageManager.watchKeyboardShortcuts((newSettings) => {
+      if (newSettings) {
+        setSettings(newSettings);
+      }
+    });
+
+    return unwatch;
+  }, [storageManager]);
+
   useEffect(() => {
     const keydownHandler = (e: KeyboardEvent): void => {
       // Ctrl/Cmd+Enterのショートカットを処理
-      handleSubmitShortcut(e);
+      if (settings.submitShortcut) {
+        handleSubmitShortcut(e);
+      }
 
       if (window !== window.top) {
         // iframeの場合、親フレームにメッセージを送信
@@ -92,18 +173,32 @@ export const KeyboardShortcuts = () => {
             type: "IFRAME_KEYDOWN",
             key: e.key,
             code: e.code,
+            ctrlKey: e.ctrlKey,
+            metaKey: e.metaKey,
+            shiftKey: e.shiftKey,
+            altKey: e.altKey,
           },
           "*",
         );
       } else {
         // 親フレームの場合、直接処理
-        handleNumberKeyPress(e);
+        if (settings.numberKeyShortcut) {
+          handleNumberKeyPress(e);
+        }
+        if (settings.arrowKeyShortcut) {
+          handleArrowKeyPress(e);
+        }
       }
     };
 
     const messageHandler = (e: MessageEvent): void => {
       if (e.data.type === "IFRAME_KEYDOWN") {
-        handleNumberKeyPress(e.data);
+        if (settings.numberKeyShortcut) {
+          handleNumberKeyPress(e.data);
+        }
+        if (settings.arrowKeyShortcut) {
+          handleArrowKeyPress(e.data);
+        }
       }
     };
 
@@ -121,7 +216,7 @@ export const KeyboardShortcuts = () => {
         window.removeEventListener("message", messageHandler);
       }
     };
-  }, []);
+  }, [settings]);
 
   return null;
 };
