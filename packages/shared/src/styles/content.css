@@ -16,7 +16,6 @@ body {
     overflow: visible;
   }
 
-  /* コンテンツラッパーにマージンを追加 */
   .content-wrapper {
     margin-top: 50px;
   }
