@@ -1,4 +1,26 @@
 body {
+  /* ヘッダーを固定 */
+  .main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: #ffffff;
+  }
+
+  /* サイドバーを固定 */
+  .main-sidebar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    overflow: visible;
+  }
+
+  /* コンテンツラッパーにマージンを追加 */
+  .content-wrapper {
+    margin-top: 50px;
+  }
+
   .btn {
     border: 2px solid #a5a6a8;
     border-radius: 7px;
@@ -165,6 +187,16 @@ body.mikoto-dark-theme {
   .navbar {
     background-color: #1a1a1a;
     color: #e0e0e0;
+  }
+
+  /* ダークテーマでの固定要素の背景 */
+  .main-header {
+    background-color: #1a1a1a;
+    border-bottom: 1px solid #3a3a3a;
+  }
+
+  .main-sidebar {
+    background-color: #1a1a1a;
   }
 
   .box,
