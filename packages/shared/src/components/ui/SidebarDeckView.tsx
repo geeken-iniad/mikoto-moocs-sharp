@@ -210,67 +210,65 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       if (!sidebar) return [];
 
       const sections: SidebarSection[] = [];
-      let currentSection: SidebarSection | null = null;
 
       sidebar.childNodes.forEach((node) => {
         if (node.nodeType !== Node.ELEMENT_NODE) return;
         const element = node as HTMLElement;
 
-        // ヘッダー要素の場合
+        // ヘッダー要素はスキップ（treeviewのみを列として扱う）
         if (element.classList.contains("header")) {
-          if (currentSection) {
-            sections.push(currentSection);
-          }
-          currentSection = {
-            title: element.textContent?.trim() || "",
-            items: [],
-          };
+          return;
         }
-        // 通常のリンク項目の場合
-        else if (element.tagName === "LI" && currentSection) {
+
+        // treeview要素の場合、独立した列として扱う
+        if (element.tagName === "LI" && element.classList.contains("treeview")) {
           const link = element.querySelector("a");
           if (!link) return;
 
           const textElement = link.querySelector(".sidebar-menu-text");
           const iconElement = link.querySelector("i");
-          const href = link.getAttribute("href") || "";
           const text = textElement?.textContent?.trim() || "";
           const icon = iconElement?.className || "";
 
-          // treeview の場合は子要素も取得
-          if (element.classList.contains("treeview")) {
-            const submenu = element.querySelector(".treeview-menu");
-            if (submenu) {
-              submenu.querySelectorAll("li").forEach((subItem) => {
-                const subLink = subItem.querySelector("a");
-                if (!subLink) return;
+          // treeviewのタイトルを列のタイトルとする
+          const section: SidebarSection = {
+            title: text,
+            items: [],
+          };
 
-                const subText =
-                  subLink
-                    .querySelector(".sidebar-menu-text")
-                    ?.textContent?.trim() ||
-                  subLink.textContent?.trim() ||
-                  "";
-                const subHref = subLink.getAttribute("href") || "";
+          // treeview-menuの子要素をアイテムとして追加
+          const submenu = element.querySelector(".treeview-menu");
+          if (submenu) {
+            submenu.querySelectorAll("li").forEach((subItem) => {
+              const subLink = subItem.querySelector("a");
+              if (!subLink) return;
 
-                if (subText && subHref) {
-                  currentSection?.items.push({
-                    text: `${text} > ${subText}`,
-                    href: subHref,
-                    icon,
-                  });
-                }
-              });
-            }
-          } else if (text && href) {
-            currentSection.items.push({ text, href, icon });
+              const subText =
+                subLink
+                  .querySelector(".sidebar-menu-text")
+                  ?.textContent?.trim() ||
+                subLink.textContent?.trim() ||
+                "";
+              const subHref = subLink.getAttribute("href") || "";
+              const subIconElement = subLink.querySelector("i");
+              const subIcon = subIconElement?.className || icon;
+
+              if (subText && subHref) {
+                section.items.push({
+                  text: subText,
+                  href: subHref,
+                  icon: subIcon,
+                });
+              }
+            });
+          }
+
+          // アイテムがある場合のみセクションを追加
+          if (section.items.length > 0) {
+            sections.push(section);
           }
         }
       });
-
-      if (currentSection) {
-        sections.push(currentSection);
-      }
 
       return sections;
     };
