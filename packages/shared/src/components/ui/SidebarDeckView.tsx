@@ -27,7 +27,7 @@ const styles = {
     flexDirection: "column" as const,
     overflow: "hidden",
     boxShadow: "-2px 0 10px rgba(0, 0, 0, 0.1)",
-    zIndex: 9999,
+    zIndex: 4,
   },
   header: {
     display: "flex",
