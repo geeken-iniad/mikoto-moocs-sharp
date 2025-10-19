@@ -102,6 +102,25 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   onClose,
 }) => {
   const [sections, setSections] = useState<SidebarSection[]>([]);
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+
+  useEffect(() => {
+    // ダークテーマの検出
+    const checkDarkTheme = () => {
+      setIsDarkTheme(document.body.classList.contains("mikoto-dark-theme"));
+    };
+
+    checkDarkTheme();
+
+    // テーマ変更の監視
+    const observer = new MutationObserver(checkDarkTheme);
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -193,40 +212,77 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
 
   if (!isOpen) return null;
 
+  // ダークテーマ用のスタイル
+  const themedStyles = {
+    container: {
+      ...styles.container,
+      backgroundColor: isDarkTheme ? "#1a1a1a" : "#fff",
+    },
+    header: {
+      ...styles.header,
+      backgroundColor: isDarkTheme ? "#1a1a1a" : "#f8f9fa",
+      borderBottom: isDarkTheme ? "2px solid #3a3a3a" : "2px solid #e0e0e0",
+    },
+    title: {
+      ...styles.title,
+      color: isDarkTheme ? "#e0e0e0" : "#333",
+    },
+    column: {
+      ...styles.column,
+      backgroundColor: isDarkTheme ? "#2a2a2a" : "#f8f9fa",
+    },
+    columnTitle: {
+      ...styles.columnTitle,
+      color: isDarkTheme ? "#e0e0e0" : "#333",
+      borderBottom: isDarkTheme ? "2px solid #4a7bc8" : "2px solid #426dc2",
+    },
+    link: {
+      ...styles.link,
+      backgroundColor: isDarkTheme ? "#2a2a2a" : "#fff",
+      borderColor: isDarkTheme ? "#4a7bc8" : "#426dc2",
+      color: isDarkTheme ? "#e0e0e0" : "#333",
+    },
+  };
+
   const closeButtonStyle = {
     background: "none",
     border: "none",
     fontSize: "24px",
     cursor: "pointer",
-    color: "#666",
+    color: isDarkTheme ? "#e0e0e0" : "#666",
     padding: "5px 10px",
     transition: "color 0.2s",
   };
 
+  const hoverColor = isDarkTheme ? "#e0e0e0" : "#333";
+  const normalColor = isDarkTheme ? "#a0a0a0" : "#666";
+  const linkHoverBg = isDarkTheme ? "#333333" : "#f0f0f0";
+  const linkNormalBg = isDarkTheme ? "#2a2a2a" : "#fff";
+
   const deckContent = (
-    <div style={styles.container}>
-      <div style={styles.header}>
+    <div style={themedStyles.container}>
+      <div style={themedStyles.header}>
         <button
           style={closeButtonStyle}
           onClick={onClose}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#333";
+            e.currentTarget.style.color = hoverColor;
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = "#666";
+            e.currentTarget.style.color = normalColor;
           }}
         >
           <i className="fa fa-times" />
         </button>
-        <h2 style={styles.title}>目次デックビュー</h2>
+        <h2 style={themedStyles.title}>目次デックビュー</h2>
         <button
           style={closeButtonStyle}
           onClick={onClose}
           onMouseEnter={(e) => {
-            e.currentTarget.style.color = "#333";
+            e.currentTarget.style.color = hoverColor;
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.color = "#666";
+            e.currentTarget.style.color = normalColor;
           }}
         >
           <i className="fa fa-times" />
@@ -234,20 +290,20 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       </div>
       <div style={styles.columnsContainer}>
         {sections.map((section, index) => (
-          <div key={index} style={styles.column}>
-            <h3 style={styles.columnTitle}>{section.title}</h3>
+          <div key={index} style={themedStyles.column}>
+            <h3 style={themedStyles.columnTitle}>{section.title}</h3>
             <ul style={styles.itemsList}>
               {section.items.map((item, itemIndex) => (
                 <li key={itemIndex} style={styles.item}>
                   <a
                     href={item.href}
-                    style={styles.link}
+                    style={themedStyles.link}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = "#f0f0f0";
+                      e.currentTarget.style.backgroundColor = linkHoverBg;
                       e.currentTarget.style.transform = "translateX(5px)";
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = "#fff";
+                      e.currentTarget.style.backgroundColor = linkNormalBg;
                       e.currentTarget.style.transform = "translateX(0)";
                     }}
                   >
