@@ -202,6 +202,18 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   }, [isOpen, onClose]);
 
   useEffect(() => {
+    // デックが開いている時は背景のスクロールを無効化
+    if (isOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     // サイドバーのHTMLから構造を読み取る
