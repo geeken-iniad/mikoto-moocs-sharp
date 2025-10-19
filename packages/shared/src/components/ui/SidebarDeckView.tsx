@@ -7,7 +7,9 @@ interface SidebarSection {
     text: string;
     href: string;
     icon?: string;
+    isActive?: boolean;
   }[];
+  isActive?: boolean;
 }
 
 interface SidebarDeckViewProps {
@@ -242,10 +244,14 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
           const text = textElement?.textContent?.trim() || "";
           const icon = iconElement?.className || "";
 
+          // treeview自体がactiveかチェック
+          const isTreeviewActive = element.classList.contains("active");
+
           // treeviewのタイトルを列のタイトルとする
           const section: SidebarSection = {
             title: text,
             items: [],
+            isActive: isTreeviewActive,
           };
 
           // treeview-menuの子要素をアイテムとして追加
@@ -264,12 +270,14 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
               const subHref = subLink.getAttribute("href") || "";
               const subIconElement = subLink.querySelector("i");
               const subIcon = subIconElement?.className || icon;
+              const isItemActive = subItem.classList.contains("active");
 
               if (subText && subHref) {
                 section.items.push({
                   text: subText,
                   href: subHref,
                   icon: subIcon,
+                  isActive: isItemActive,
                 });
               }
             });
@@ -381,41 +389,94 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
         </button>
       </div>
       <div style={styles.columnsContainer}>
-        {sections.map((section, index) => (
-          <div key={index} style={themedStyles.column}>
-            <div style={themedStyles.columnHeader}>
-              <h3 style={themedStyles.columnTitle}>{section.title}</h3>
+        {sections.map((section, index) => {
+          // アクティブな列のスタイル
+          const activeColumnStyle = section.isActive
+            ? {
+                ...themedStyles.column,
+                backgroundColor: isDarkTheme ? "#3a3a3a" : "#e8f0fe",
+                boxShadow: isDarkTheme
+                  ? "0 0 0 2px #4a7bc8"
+                  : "0 0 0 2px #426dc2",
+              }
+            : themedStyles.column;
+
+          const activeColumnTitleStyle = section.isActive
+            ? {
+                ...themedStyles.columnTitle,
+                borderBottom: isDarkTheme
+                  ? "3px solid #5a8bd8"
+                  : "3px solid #4a7bc8",
+                fontWeight: 700,
+              }
+            : themedStyles.columnTitle;
+
+          return (
+            <div key={index} style={activeColumnStyle}>
+              <div style={themedStyles.columnHeader}>
+                <h3 style={activeColumnTitleStyle}>{section.title}</h3>
+              </div>
+              <div
+                style={themedStyles.columnContent}
+                className="mikoto-deck-column-content"
+              >
+                <ul style={styles.itemsList}>
+                  {section.items.map((item, itemIndex) => {
+                    // アクティブなアイテムのスタイル
+                    const activeItemStyle = item.isActive
+                      ? {
+                          ...themedStyles.link,
+                          backgroundColor: isDarkTheme ? "#4a7bc8" : "#426dc2",
+                          color: "#fff",
+                          fontWeight: 600,
+                          boxShadow: isDarkTheme
+                            ? "0 2px 8px rgba(74, 123, 200, 0.4)"
+                            : "0 2px 8px rgba(66, 109, 194, 0.4)",
+                        }
+                      : themedStyles.link;
+
+                    return (
+                      <li key={itemIndex} style={styles.item}>
+                        <a
+                          href={item.isActive ? "#" : item.href}
+                          style={activeItemStyle}
+                          onClick={(e) => {
+                            if (item.isActive) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onMouseEnter={(e) => {
+                            if (!item.isActive) {
+                              e.currentTarget.style.backgroundColor =
+                                linkHoverBg;
+                            }
+                            e.currentTarget.style.transform = "translateX(5px)";
+                          }}
+                          onMouseLeave={(e) => {
+                            if (!item.isActive) {
+                              e.currentTarget.style.backgroundColor =
+                                linkNormalBg;
+                            } else {
+                              e.currentTarget.style.backgroundColor = isDarkTheme
+                                ? "#4a7bc8"
+                                : "#426dc2";
+                            }
+                            e.currentTarget.style.transform = "translateX(0)";
+                          }}
+                        >
+                          {item.icon && (
+                            <i className={item.icon} style={styles.icon} />
+                          )}
+                          <span>{item.text}</span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </div>
-            <div
-              style={themedStyles.columnContent}
-              className="mikoto-deck-column-content"
-            >
-              <ul style={styles.itemsList}>
-                {section.items.map((item, itemIndex) => (
-                  <li key={itemIndex} style={styles.item}>
-                    <a
-                      href={item.href}
-                      style={themedStyles.link}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = linkHoverBg;
-                        e.currentTarget.style.transform = "translateX(5px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = linkNormalBg;
-                        e.currentTarget.style.transform = "translateX(0)";
-                      }}
-                    >
-                      {item.icon && (
-                        <i className={item.icon} style={styles.icon} />
-                      )}
-                      <span>{item.text}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
