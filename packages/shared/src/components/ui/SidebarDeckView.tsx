@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 
 interface SidebarSection {
@@ -120,6 +120,7 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   const [sections, setSections] = useState<SidebarSection[]>([]);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [dimensions, setDimensions] = useState({ headerHeight: 50, sidebarWidth: 50 });
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // ヘッダーとサイドバーの実際のサイズを計算
@@ -224,6 +225,13 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, onClose]);
+
+  useEffect(() => {
+    // ダイアログが開いた時にフォーカスを移動
+    if (isOpen && dialogRef.current) {
+      dialogRef.current.focus();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     // デックが開いている時は背景のスクロールを無効化
@@ -384,7 +392,15 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   const linkNormalBg = isDarkTheme ? "#2a2a2a" : "#fff";
 
   const deckContent = (
-    <div id="mikoto-deck-view" style={themedStyles.container}>
+    <div
+      id="mikoto-deck-view"
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="mikoto-deck-view-title"
+      tabIndex={-1}
+      style={themedStyles.container}
+    >
       <div style={themedStyles.header}>
         <button
           style={closeButtonStyle}
@@ -400,7 +416,9 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
           <i className="fa fa-times" />
         </button>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <h2 style={themedStyles.title}>目次デックビュー</h2>
+          <h2 id="mikoto-deck-view-title" style={themedStyles.title}>
+            目次デックビュー
+          </h2>
           <div style={themedStyles.hint}>(Escキーで閉じる)</div>
         </div>
         <button
