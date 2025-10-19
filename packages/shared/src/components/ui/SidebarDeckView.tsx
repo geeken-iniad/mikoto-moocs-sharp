@@ -16,36 +16,24 @@ interface SidebarDeckViewProps {
 }
 
 const styles = {
-  overlay: {
-    position: "fixed" as const,
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    zIndex: 9999,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: "20px",
-  },
   container: {
+    position: "fixed" as const,
+    top: "50px",
+    left: "50px",
+    bottom: 0,
+    right: 0,
     backgroundColor: "#fff",
-    borderRadius: "8px",
-    width: "100%",
-    height: "100%",
-    maxWidth: "100%",
-    maxHeight: "100%",
     display: "flex",
     flexDirection: "column" as const,
     overflow: "hidden",
-    boxShadow: "0 4px 20px rgba(0, 0, 0, 0.3)",
+    boxShadow: "-2px 0 10px rgba(0, 0, 0, 0.1)",
+    zIndex: 9999,
   },
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "20px 30px",
+    padding: "20px 20px",
     borderBottom: "2px solid #e0e0e0",
     backgroundColor: "#f8f9fa",
   },
@@ -54,15 +42,6 @@ const styles = {
     fontSize: "24px",
     fontWeight: 600,
     color: "#333",
-  },
-  closeButton: {
-    background: "none",
-    border: "none",
-    fontSize: "24px",
-    cursor: "pointer",
-    color: "#666",
-    padding: "5px 10px",
-    transition: "color 0.2s",
   },
   columnsContainer: {
     display: "flex",
@@ -125,6 +104,17 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   const [sections, setSections] = useState<SidebarSection[]>([]);
 
   useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
     if (!isOpen) return;
 
     // サイドバーのHTMLから構造を読み取る
@@ -169,7 +159,9 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
                 if (!subLink) return;
 
                 const subText =
-                  subLink.querySelector(".sidebar-menu-text")?.textContent?.trim() ||
+                  subLink
+                    .querySelector(".sidebar-menu-text")
+                    ?.textContent?.trim() ||
                   subLink.textContent?.trim() ||
                   "";
                 const subHref = subLink.getAttribute("href") || "";
@@ -199,67 +191,76 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
     setSections(parseSidebarStructure());
   }, [isOpen]);
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        onClose();
-      }
-    };
-
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, onClose]);
-
   if (!isOpen) return null;
 
+  const closeButtonStyle = {
+    background: "none",
+    border: "none",
+    fontSize: "24px",
+    cursor: "pointer",
+    color: "#666",
+    padding: "5px 10px",
+    transition: "color 0.2s",
+  };
+
   const deckContent = (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.container} onClick={(e) => e.stopPropagation()}>
-        <div style={styles.header}>
-          <h2 style={styles.title}>目次デックビュー</h2>
-          <button
-            style={styles.closeButton}
-            onClick={onClose}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = "#333";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.color = "#666";
-            }}
-          >
-            <i className="fa fa-times" />
-          </button>
-        </div>
-        <div style={styles.columnsContainer}>
-          {sections.map((section, index) => (
-            <div key={index} style={styles.column}>
-              <h3 style={styles.columnTitle}>{section.title}</h3>
-              <ul style={styles.itemsList}>
-                {section.items.map((item, itemIndex) => (
-                  <li key={itemIndex} style={styles.item}>
-                    <a
-                      href={item.href}
-                      style={styles.link}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.backgroundColor = "#f0f0f0";
-                        e.currentTarget.style.transform = "translateX(5px)";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.backgroundColor = "#fff";
-                        e.currentTarget.style.transform = "translateX(0)";
-                      }}
-                    >
-                      {item.icon && (
-                        <i className={item.icon} style={styles.icon} />
-                      )}
-                      <span>{item.text}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <button
+          style={closeButtonStyle}
+          onClick={onClose}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "#333";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "#666";
+          }}
+        >
+          <i className="fa fa-times" />
+        </button>
+        <h2 style={styles.title}>目次デックビュー</h2>
+        <button
+          style={closeButtonStyle}
+          onClick={onClose}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.color = "#333";
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.color = "#666";
+          }}
+        >
+          <i className="fa fa-times" />
+        </button>
+      </div>
+      <div style={styles.columnsContainer}>
+        {sections.map((section, index) => (
+          <div key={index} style={styles.column}>
+            <h3 style={styles.columnTitle}>{section.title}</h3>
+            <ul style={styles.itemsList}>
+              {section.items.map((item, itemIndex) => (
+                <li key={itemIndex} style={styles.item}>
+                  <a
+                    href={item.href}
+                    style={styles.link}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = "#f0f0f0";
+                      e.currentTarget.style.transform = "translateX(5px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = "#fff";
+                      e.currentTarget.style.transform = "translateX(0)";
+                    }}
+                  >
+                    {item.icon && (
+                      <i className={item.icon} style={styles.icon} />
+                    )}
+                    <span>{item.text}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </div>
   );

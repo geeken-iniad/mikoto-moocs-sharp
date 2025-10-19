@@ -33,12 +33,12 @@ export const SidebarDeckButton: React.FC = () => {
 
   useElementObserver(".sidebar-menu", handleSidebar);
 
-  const handleOpenDeck = (e: React.MouseEvent) => {
+  const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    setIsDeckOpen(true);
+    setIsDeckOpen(!isDeckOpen);
   };
 
-  const handleCloseDeck = () => {
+  const handleClose = () => {
     setIsDeckOpen(false);
   };
 
@@ -47,7 +47,7 @@ export const SidebarDeckButton: React.FC = () => {
       {buttonContainer &&
         createPortal(
           <>
-            <a href="#" onClick={handleOpenDeck}>
+            <a href="#" onClick={handleClick}>
               <i className="fa fa-th"></i>
               <span>
                 {" "}
@@ -61,7 +61,7 @@ export const SidebarDeckButton: React.FC = () => {
           </>,
           buttonContainer
         )}
-      <SidebarDeckView isOpen={isDeckOpen} onClose={handleCloseDeck} />
+      <SidebarDeckView isOpen={isDeckOpen} onClose={handleClose} />
     </>
   );
 };
