@@ -235,7 +235,10 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
         }
 
         // treeview要素の場合、独立した列として扱う
-        if (element.tagName === "LI" && element.classList.contains("treeview")) {
+        if (
+          element.tagName === "LI" &&
+          element.classList.contains("treeview")
+        ) {
           const link = element.querySelector("a");
           if (!link) return;
 
@@ -457,9 +460,8 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
                               e.currentTarget.style.backgroundColor =
                                 linkNormalBg;
                             } else {
-                              e.currentTarget.style.backgroundColor = isDarkTheme
-                                ? "#4a7bc8"
-                                : "#426dc2";
+                              e.currentTarget.style.backgroundColor =
+                                isDarkTheme ? "#4a7bc8" : "#426dc2";
                             }
                             e.currentTarget.style.transform = "translateX(0)";
                           }}
