@@ -395,6 +395,7 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
           onMouseLeave={(e) => {
             e.currentTarget.style.color = normalColor;
           }}
+          aria-label="閉じる"
         >
           <i className="fa fa-times" />
         </button>
@@ -411,6 +412,7 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
           onMouseLeave={(e) => {
             e.currentTarget.style.color = normalColor;
           }}
+          aria-label="閉じる"
         >
           <i className="fa fa-times" />
         </button>
