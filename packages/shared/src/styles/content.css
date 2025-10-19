@@ -1,4 +1,8 @@
 body {
+  /* CSS変数でヘッダーとサイドバーのサイズを管理 */
+  --mikoto-header-height: 50px;
+  --mikoto-sidebar-width: 50px;
+
   /* ヘッダーを固定 */
   .main-header {
     position: fixed;
@@ -17,7 +21,7 @@ body {
   }
 
   .content-wrapper {
-    margin-top: 50px;
+    margin-top: var(--mikoto-header-height);
   }
 
   .btn {

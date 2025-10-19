@@ -20,8 +20,6 @@ interface SidebarDeckViewProps {
 const styles = {
   container: {
     position: "fixed" as const,
-    top: "50px",
-    left: "50px",
     bottom: 0,
     right: 0,
     backgroundColor: "#fff",
@@ -121,6 +119,30 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
 }) => {
   const [sections, setSections] = useState<SidebarSection[]>([]);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [dimensions, setDimensions] = useState({ headerHeight: 50, sidebarWidth: 50 });
+
+  useEffect(() => {
+    // ヘッダーとサイドバーの実際のサイズを計算
+    const calculateDimensions = () => {
+      const header = document.querySelector(".main-header");
+      const sidebar = document.querySelector(".main-sidebar");
+
+      const headerHeight = header?.getBoundingClientRect().height || 50;
+      const sidebarWidth = sidebar?.getBoundingClientRect().width || 50;
+
+      setDimensions({ headerHeight, sidebarWidth });
+
+      // CSS変数も更新して他の要素でも使えるようにする
+      document.body.style.setProperty("--mikoto-header-height", `${headerHeight}px`);
+      document.body.style.setProperty("--mikoto-sidebar-width", `${sidebarWidth}px`);
+    };
+
+    calculateDimensions();
+
+    // ウィンドウリサイズ時に再計算
+    window.addEventListener("resize", calculateDimensions);
+    return () => window.removeEventListener("resize", calculateDimensions);
+  }, []);
 
   useEffect(() => {
     // ダークテーマの検出
@@ -306,6 +328,8 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
     container: {
       ...styles.container,
       backgroundColor: isDarkTheme ? "#1a1a1a" : "#fff",
+      top: `${dimensions.headerHeight}px`,
+      left: `${dimensions.sidebarWidth}px`,
     },
     header: {
       ...styles.header,
