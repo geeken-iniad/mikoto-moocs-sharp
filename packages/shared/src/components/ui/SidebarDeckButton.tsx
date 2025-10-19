@@ -43,6 +43,14 @@ export const SidebarDeckButton: React.FC = () => {
     setIsDeckOpen(!isDeckOpen);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === " " || e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      setIsDeckOpen(!isDeckOpen);
+    }
+  };
+
   const handleClose = () => {
     setIsDeckOpen(false);
   };
@@ -55,6 +63,7 @@ export const SidebarDeckButton: React.FC = () => {
             <a
               href="#"
               onClick={handleClick}
+              onKeyDown={handleKeyDown}
               role="button"
               aria-expanded={isDeckOpen}
               aria-controls="mikoto-deck-view"
