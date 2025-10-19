@@ -109,6 +109,7 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   const [isDarkTheme, setIsDarkTheme] = useState(false);
   const [dimensions, setDimensions] = useState({ headerHeight: 50, sidebarWidth: 50 });
   const dialogRef = useRef<HTMLDivElement>(null);
+  const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     // ヘッダーとサイドバーの実際のサイズを計算
@@ -215,9 +216,21 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   }, [isOpen, onClose]);
 
   useEffect(() => {
-    // ダイアログが開いた時にフォーカスを移動
-    if (isOpen && dialogRef.current) {
-      dialogRef.current.focus();
+    // ダイアログが開いた時にフォーカスを移動し、閉じた時に復元
+    if (isOpen) {
+      // 現在のアクティブ要素を保存
+      previousActiveElementRef.current = document.activeElement as HTMLElement;
+
+      // ダイアログにフォーカスを移動
+      if (dialogRef.current) {
+        dialogRef.current.focus();
+      }
+    } else {
+      // ダイアログが閉じられた時、元の要素にフォーカスを復元
+      if (previousActiveElementRef.current && typeof previousActiveElementRef.current.focus === 'function') {
+        previousActiveElementRef.current.focus();
+      }
+      previousActiveElementRef.current = null;
     }
   }, [isOpen]);
 
