@@ -51,7 +51,13 @@ export const SidebarDeckButton: React.FC = () => {
       {buttonContainer &&
         createPortal(
           <>
-            <a href="#" onClick={handleClick}>
+            <a
+              href="#"
+              onClick={handleClick}
+              role="button"
+              aria-expanded={isDeckOpen}
+              aria-controls="mikoto-deck-view"
+            >
               <i className="fa fa-th"></i>
               <span>
                 {" "}

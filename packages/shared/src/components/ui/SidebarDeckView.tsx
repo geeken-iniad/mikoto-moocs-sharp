@@ -384,7 +384,7 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   const linkNormalBg = isDarkTheme ? "#2a2a2a" : "#fff";
 
   const deckContent = (
-    <div style={themedStyles.container}>
+    <div id="mikoto-deck-view" style={themedStyles.container}>
       <div style={themedStyles.header}>
         <button
           style={closeButtonStyle}
