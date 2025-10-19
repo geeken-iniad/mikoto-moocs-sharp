@@ -19,9 +19,9 @@ export const SidebarDeckButton: React.FC = () => {
     ) as HTMLElement;
 
     if (!container) {
-      // 新しいコンテナを作成（treeview構造のli）
+      // 新しいコンテナを作成
       container = document.createElement("li");
-      container.className = "treeview mikoto-deck-button-container";
+      container.className = "mikoto-deck-button-container";
 
       // サイドバーメニューの先頭に追加
       const firstChild = sidebar.firstChild;
@@ -39,6 +39,7 @@ export const SidebarDeckButton: React.FC = () => {
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDeckOpen(!isDeckOpen);
   };
 
@@ -69,7 +70,6 @@ export const SidebarDeckButton: React.FC = () => {
                 <i className="fa fa-angle-left pull-right"></i>
               </span>
             </a>
-            <ul className="treeview-menu" style={{ display: "none" }}></ul>
           </>,
           buttonContainer,
         )}
