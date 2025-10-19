@@ -55,9 +55,14 @@ const styles = {
     maxWidth: "400px",
     backgroundColor: "#f8f9fa",
     borderRadius: "8px",
-    padding: "20px",
     display: "flex",
     flexDirection: "column" as const,
+    maxHeight: "100%",
+    overflow: "hidden",
+  },
+  columnHeader: {
+    padding: "20px 20px 0 20px",
+    flexShrink: 0,
   },
   columnTitle: {
     margin: "0 0 15px 0",
@@ -66,6 +71,11 @@ const styles = {
     color: "#333",
     paddingBottom: "10px",
     borderBottom: "2px solid #426dc2",
+  },
+  columnContent: {
+    flex: 1,
+    overflow: "auto",
+    padding: "0 20px 20px 20px",
   },
   itemsList: {
     listStyle: "none",
@@ -121,6 +131,58 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
 
     return () => observer.disconnect();
   }, []);
+
+  useEffect(() => {
+    // スクロールバーのスタイルを動的に追加
+    const styleId = "mikoto-deck-scrollbar-style";
+    let styleElement = document.getElementById(styleId) as HTMLStyleElement;
+
+    if (!styleElement) {
+      styleElement = document.createElement("style");
+      styleElement.id = styleId;
+      document.head.appendChild(styleElement);
+    }
+
+    const scrollbarStyles = isDarkTheme
+      ? `
+        .mikoto-deck-column-content::-webkit-scrollbar {
+          width: 12px;
+        }
+        .mikoto-deck-column-content::-webkit-scrollbar-track {
+          background: #1a1a1a;
+          border-radius: 6px;
+        }
+        .mikoto-deck-column-content::-webkit-scrollbar-thumb {
+          background: #4a4a4a;
+          border-radius: 6px;
+        }
+        .mikoto-deck-column-content::-webkit-scrollbar-thumb:hover {
+          background: #5a5a5a;
+        }
+      `
+      : `
+        .mikoto-deck-column-content::-webkit-scrollbar {
+          width: 12px;
+        }
+        .mikoto-deck-column-content::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 6px;
+        }
+        .mikoto-deck-column-content::-webkit-scrollbar-thumb {
+          background: #c1c1c1;
+          border-radius: 6px;
+        }
+        .mikoto-deck-column-content::-webkit-scrollbar-thumb:hover {
+          background: #a8a8a8;
+        }
+      `;
+
+    styleElement.textContent = scrollbarStyles;
+
+    return () => {
+      styleElement?.remove();
+    };
+  }, [isDarkTheme]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -231,10 +293,17 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       ...styles.column,
       backgroundColor: isDarkTheme ? "#2a2a2a" : "#f8f9fa",
     },
+    columnHeader: {
+      ...styles.columnHeader,
+      backgroundColor: isDarkTheme ? "#2a2a2a" : "#f8f9fa",
+    },
     columnTitle: {
       ...styles.columnTitle,
       color: isDarkTheme ? "#e0e0e0" : "#333",
       borderBottom: isDarkTheme ? "2px solid #4a7bc8" : "2px solid #426dc2",
+    },
+    columnContent: {
+      ...styles.columnContent,
     },
     link: {
       ...styles.link,
@@ -291,30 +360,37 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       <div style={styles.columnsContainer}>
         {sections.map((section, index) => (
           <div key={index} style={themedStyles.column}>
-            <h3 style={themedStyles.columnTitle}>{section.title}</h3>
-            <ul style={styles.itemsList}>
-              {section.items.map((item, itemIndex) => (
-                <li key={itemIndex} style={styles.item}>
-                  <a
-                    href={item.href}
-                    style={themedStyles.link}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = linkHoverBg;
-                      e.currentTarget.style.transform = "translateX(5px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = linkNormalBg;
-                      e.currentTarget.style.transform = "translateX(0)";
-                    }}
-                  >
-                    {item.icon && (
-                      <i className={item.icon} style={styles.icon} />
-                    )}
-                    <span>{item.text}</span>
-                  </a>
-                </li>
-              ))}
-            </ul>
+            <div style={themedStyles.columnHeader}>
+              <h3 style={themedStyles.columnTitle}>{section.title}</h3>
+            </div>
+            <div
+              style={themedStyles.columnContent}
+              className="mikoto-deck-column-content"
+            >
+              <ul style={styles.itemsList}>
+                {section.items.map((item, itemIndex) => (
+                  <li key={itemIndex} style={styles.item}>
+                    <a
+                      href={item.href}
+                      style={themedStyles.link}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = linkHoverBg;
+                        e.currentTarget.style.transform = "translateX(5px)";
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = linkNormalBg;
+                        e.currentTarget.style.transform = "translateX(0)";
+                      }}
+                    >
+                      {item.icon && (
+                        <i className={item.icon} style={styles.icon} />
+                      )}
+                      <span>{item.text}</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         ))}
       </div>
