@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
+import styles from "./SidebarDeckView.module.scss";
 
 interface SidebarSection {
   title: string;
@@ -17,7 +18,7 @@ interface SidebarDeckViewProps {
   onClose: () => void;
 }
 
-const styles = {
+const inlineStyles = {
   container: {
     position: "fixed" as const,
     bottom: 0,
@@ -93,19 +94,6 @@ const styles = {
   },
   item: {
     margin: 0,
-  },
-  link: {
-    display: "flex",
-    alignItems: "center",
-    gap: "10px",
-    padding: "12px 15px",
-    backgroundColor: "#fff",
-    border: "1.5px solid #426dc2",
-    borderRadius: "6px",
-    textDecoration: "none",
-    color: "#333",
-    transition: "all 0.2s ease",
-    fontSize: "14px",
   },
   icon: {
     minWidth: "20px",
@@ -334,62 +322,41 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
   // ダークテーマ用のスタイル
   const themedStyles = {
     container: {
-      ...styles.container,
+      ...inlineStyles.container,
       backgroundColor: isDarkTheme ? "#1a1a1a" : "#fff",
       top: `${dimensions.headerHeight}px`,
       left: `${dimensions.sidebarWidth}px`,
     },
     header: {
-      ...styles.header,
+      ...inlineStyles.header,
       backgroundColor: isDarkTheme ? "#1a1a1a" : "#f8f9fa",
       borderBottom: isDarkTheme ? "2px solid #3a3a3a" : "2px solid #e0e0e0",
     },
     title: {
-      ...styles.title,
+      ...inlineStyles.title,
       color: isDarkTheme ? "#e0e0e0" : "#333",
     },
     hint: {
-      ...styles.hint,
+      ...inlineStyles.hint,
       color: isDarkTheme ? "#888" : "#999",
     },
     column: {
-      ...styles.column,
+      ...inlineStyles.column,
       backgroundColor: isDarkTheme ? "#2a2a2a" : "#f8f9fa",
     },
     columnHeader: {
-      ...styles.columnHeader,
+      ...inlineStyles.columnHeader,
       backgroundColor: isDarkTheme ? "#2a2a2a" : "#f8f9fa",
     },
     columnTitle: {
-      ...styles.columnTitle,
+      ...inlineStyles.columnTitle,
       color: isDarkTheme ? "#e0e0e0" : "#333",
       borderBottom: isDarkTheme ? "2px solid #4a7bc8" : "2px solid #426dc2",
     },
     columnContent: {
-      ...styles.columnContent,
-    },
-    link: {
-      ...styles.link,
-      backgroundColor: isDarkTheme ? "#2a2a2a" : "#fff",
-      borderColor: isDarkTheme ? "#4a7bc8" : "#426dc2",
-      color: isDarkTheme ? "#e0e0e0" : "#333",
+      ...inlineStyles.columnContent,
     },
   };
-
-  const closeButtonStyle = {
-    background: "none",
-    border: "none",
-    fontSize: "24px",
-    cursor: "pointer",
-    color: isDarkTheme ? "#e0e0e0" : "#666",
-    padding: "5px 10px",
-    transition: "color 0.2s",
-  };
-
-  const hoverColor = isDarkTheme ? "#e0e0e0" : "#333";
-  const normalColor = isDarkTheme ? "#a0a0a0" : "#666";
-  const linkHoverBg = isDarkTheme ? "#333333" : "#f0f0f0";
-  const linkNormalBg = isDarkTheme ? "#2a2a2a" : "#fff";
 
   const deckContent = (
     <div
@@ -409,20 +376,14 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
           <div style={themedStyles.hint}>(Escキーで閉じる)</div>
         </div>
         <button
-          style={closeButtonStyle}
+          className={`${styles.mikotoCloseButton} ${isDarkTheme ? styles.dark : styles.light}`}
           onClick={onClose}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = hoverColor;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = normalColor;
-          }}
           aria-label="閉じる"
         >
           <i className="fa fa-times" />
         </button>
       </div>
-      <div style={styles.columnsContainer}>
+      <div style={inlineStyles.columnsContainer}>
         {sections.map((section, index) => {
           // アクティブな列のスタイル
           const activeColumnStyle = section.isActive
@@ -454,51 +415,21 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
                 style={themedStyles.columnContent}
                 className="mikoto-deck-column-content"
               >
-                <ul style={styles.itemsList}>
+                <ul style={inlineStyles.itemsList}>
                   {section.items.map((item, itemIndex) => {
-                    // アクティブなアイテムのスタイル
-                    const activeItemStyle = item.isActive
-                      ? {
-                          ...themedStyles.link,
-                          backgroundColor: isDarkTheme ? "#4a7bc8" : "#426dc2",
-                          color: "#fff",
-                          fontWeight: 600,
-                          boxShadow: isDarkTheme
-                            ? "0 2px 8px rgba(74, 123, 200, 0.4)"
-                            : "0 2px 8px rgba(66, 109, 194, 0.4)",
-                        }
-                      : themedStyles.link;
-
                     return (
-                      <li key={itemIndex} style={styles.item}>
+                      <li key={itemIndex} style={inlineStyles.item}>
                         <a
                           href={item.isActive ? "#" : item.href}
-                          style={activeItemStyle}
+                          className={`${styles.mikotoDeckLink} ${isDarkTheme ? styles.dark : styles.light} ${item.isActive ? styles.active : ""}`}
                           onClick={(e) => {
                             if (item.isActive) {
                               e.preventDefault();
                             }
                           }}
-                          onMouseEnter={(e) => {
-                            if (!item.isActive) {
-                              e.currentTarget.style.backgroundColor =
-                                linkHoverBg;
-                            }
-                            e.currentTarget.style.transform = "translateX(5px)";
-                          }}
-                          onMouseLeave={(e) => {
-                            if (!item.isActive) {
-                              e.currentTarget.style.backgroundColor =
-                                linkNormalBg;
-                            } else {
-                              e.currentTarget.style.backgroundColor =
-                                isDarkTheme ? "#4a7bc8" : "#426dc2";
-                            }
-                            e.currentTarget.style.transform = "translateX(0)";
-                          }}
                         >
                           {item.icon && (
-                            <i className={item.icon} style={styles.icon} />
+                            <i className={item.icon} style={inlineStyles.icon} />
                           )}
                           <span>{item.text}</span>
                         </a>

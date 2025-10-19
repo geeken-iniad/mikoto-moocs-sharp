@@ -1,0 +1,81 @@
+// 閉じるボタンのスタイル
+.mikotoCloseButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 5px 10px;
+  transition: color 0.2s;
+
+  &.light {
+    color: #666;
+
+    &:hover {
+      color: #333;
+    }
+  }
+
+  &.dark {
+    color: #a0a0a0;
+
+    &:hover {
+      color: #e0e0e0;
+    }
+  }
+}
+
+// リンクアイテムのスタイル
+.mikotoDeckLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  border: 1.5px solid;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 14px;
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  &:hover:not(.active) {
+    transform: translateX(5px);
+  }
+
+  // ライトテーマ
+  &.light {
+    background-color: #fff;
+    border-color: #426dc2;
+    color: #333;
+
+    &:hover:not(.active) {
+      background-color: #f0f0f0;
+    }
+
+    &.active {
+      background-color: #426dc2;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(66, 109, 194, 0.4);
+    }
+  }
+
+  // ダークテーマ
+  &.dark {
+    background-color: #2a2a2a;
+    border-color: #4a7bc8;
+    color: #e0e0e0;
+
+    &:hover:not(.active) {
+      background-color: #333333;
+    }
+
+    &.active {
+      background-color: #4a7bc8;
+      color: #fff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(74, 123, 200, 0.4);
+    }
+  }
+}
