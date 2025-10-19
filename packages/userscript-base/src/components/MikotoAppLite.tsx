@@ -3,6 +3,7 @@ import {
   ContentStyleEnhancer,
   CourseListEnhancer,
   DualViewManager,
+  SidebarDeckButton,
   SidebarEnhancer,
   StorageProvider,
   TextareaCounter,
@@ -22,6 +23,7 @@ export const MikotoAppLite = ({
     <ContentStyleEnhancer />
     <CourseListEnhancer />
     <DualViewManager />
+    <SidebarDeckButton />
     <SidebarEnhancer />
     <TextareaCounter />
     <TextareaResizer />
