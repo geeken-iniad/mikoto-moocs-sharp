@@ -4,6 +4,7 @@ import {
   CourseListEnhancer,
   DualViewManager,
   KeyboardShortcuts,
+  SidebarDeckButton,
   SidebarEnhancer,
   StorageProvider,
   TextareaCounter,
@@ -24,6 +25,7 @@ export const MikotoApp = ({
     <CourseListEnhancer />
     <DualViewManager />
     <KeyboardShortcuts />
+    <SidebarDeckButton />
     <SidebarEnhancer />
     <TextareaCounter />
     <TextareaResizer />

@@ -1,0 +1,366 @@
+// 変数定義
+$mikoto-header-height: 50px;
+$mikoto-sidebar-width: 50px;
+
+// カラーパレット - ライトテーマ
+$light-bg-primary: #ffffff;
+$light-bg-secondary: #e0e0e0;
+$light-text-primary: #333;
+$light-text-secondary: #333333;
+$light-border-primary: #a5a6a8;
+$light-border-secondary: #46484d;
+$light-border-tertiary: #dcdfe6;
+
+// カラーパレット - ダークテーマ
+$dark-bg-primary: #1a1a1a;
+$dark-bg-secondary: #2a2a2a;
+$dark-bg-tertiary: #333333;
+$dark-bg-quaternary: #3a3a3a;
+$dark-text-primary: #e0e0e0;
+$dark-border-primary: #3a3a3a;
+
+// アクションカラー
+$color-primary: #3471eb;
+$color-primary-hover: #0056b3;
+$color-primary-border: #007bff;
+$color-primary-dark: #4a7bc8;
+$color-primary-dark-hover: #3a5fa8;
+$color-success: #00a65a;
+$color-success-border: #008d4c;
+$color-sidebar-border: #426dc2;
+
+// トランジション
+$transition-base: 0.2s;
+
+body {
+  /* CSS変数でヘッダーとサイドバーのサイズを管理 */
+  --mikoto-header-height: #{$mikoto-header-height};
+  --mikoto-sidebar-width: #{$mikoto-sidebar-width};
+
+  /* ヘッダーを固定 */
+  .main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: $light-bg-primary;
+  }
+
+  /* サイドバーを固定 */
+  .main-sidebar {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    overflow: visible;
+  }
+
+  .content-wrapper {
+    margin-top: var(--mikoto-header-height);
+  }
+
+  .btn {
+    border: 2px solid $light-border-primary;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 8px 12px;
+    text-align: center;
+    text-decoration: none;
+    transition:
+      background-color $transition-base,
+      color $transition-base,
+      border-color $transition-base;
+    -webkit-appearance: none;
+
+    &:hover {
+      filter: brightness(95%);
+    }
+  }
+
+  .btn-primary {
+    background-color: $color-primary;
+    border-color: $color-primary-border;
+    color: $light-bg-primary;
+
+    &:hover {
+      background-color: $color-primary-hover;
+      border-color: $color-primary-hover;
+      filter: none;
+    }
+  }
+
+  .btn-success {
+    background-color: $color-success;
+    border-color: $color-success-border;
+    color: white;
+  }
+
+  .pager li > a {
+    border-radius: 7px;
+  }
+
+  .content-header > .breadcrumb {
+    border-radius: 5px;
+  }
+
+  .well {
+    border: 1.3px solid $light-border-secondary;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color $transition-base;
+
+    &:hover {
+      background-color: $light-bg-secondary;
+    }
+  }
+
+  .media-left {
+    padding-right: 25px;
+  }
+
+  .media-heading {
+    margin-bottom: 10px;
+  }
+
+  .treeview-menu > li {
+    border: 1.3px solid $light-border-secondary;
+  }
+
+  .panel {
+    border-radius: 10px;
+  }
+
+  .form-label {
+    color: $light-text-primary;
+    font-weight: 500;
+  }
+
+  .form-control {
+    background-color: $light-bg-primary;
+    border: 1px solid $light-border-tertiary;
+    border-radius: 8px;
+    box-sizing: border-box;
+    color: $light-text-secondary;
+    font-family: inherit;
+    font-size: 16px;
+    transition:
+      border-color $transition-base,
+      box-shadow $transition-base;
+    width: 100%;
+
+    &:focus {
+      border-color: $color-primary-border;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+      outline: none;
+    }
+  }
+
+  textarea.form-control {
+    resize: vertical;
+  }
+
+  .sidebar-menu > li > a {
+    border: 1.5px solid $color-sidebar-border;
+  }
+
+  .content-wrapper li.active {
+    transform: scale(1.02);
+    transition: transform $transition-base ease;
+  }
+
+  #mikoto-react-root {
+    display: none;
+    height: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 0;
+  }
+}
+
+/* スライド+課題 Dual Viewの横並びレイアウト */
+body.mikoto-dual-view-enabled {
+  .content {
+    align-items: flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+
+    > .pad-block {
+      flex: 1;
+      min-width: 0;
+
+      &:nth-of-type(2) {
+        margin-bottom: 0;
+        max-height: 62vh;
+        overflow: auto;
+      }
+    }
+
+    > *:not(.pad-block) {
+      flex-basis: 100%;
+    }
+  }
+}
+
+/* ダークテーマ */
+body.mikoto-dark-theme {
+  background-color: $dark-bg-primary;
+  color: $dark-text-primary;
+
+  .content-wrapper,
+  .main-sidebar,
+  .main-header,
+  .navbar {
+    background-color: $dark-bg-primary;
+    color: $dark-text-primary;
+  }
+
+  /* ダークテーマでの固定要素の背景 */
+  .main-header {
+    background-color: $dark-bg-primary;
+    border-bottom: 1px solid $dark-bg-quaternary;
+  }
+
+  .main-sidebar {
+    background-color: $dark-bg-primary;
+  }
+
+  .box,
+  .panel {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-bg-quaternary;
+    color: $dark-text-primary;
+  }
+
+  .box-header,
+  .panel-heading {
+    background-color: $dark-bg-secondary;
+    border-bottom-color: $dark-bg-quaternary;
+    color: $dark-text-primary;
+  }
+
+  .well {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-bg-quaternary;
+    color: $dark-text-primary;
+
+    &:hover {
+      background-color: $dark-bg-tertiary;
+    }
+  }
+
+  .form-control {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-bg-quaternary;
+    color: $dark-text-primary;
+
+    &:focus {
+      border-color: $color-primary-dark;
+      box-shadow: 0 0 0 3px rgba(74, 123, 200, 0.25);
+    }
+  }
+
+  .form-label {
+    color: $dark-text-primary;
+  }
+
+  .sidebar-menu > li > a {
+    background-color: $dark-bg-secondary;
+    border-color: $color-primary-dark;
+    color: $dark-text-primary;
+
+    &:hover {
+      background-color: $dark-bg-tertiary;
+    }
+  }
+
+  .treeview-menu > li {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-bg-quaternary;
+
+    > a {
+      color: $dark-text-primary;
+
+      &:hover {
+        background-color: $dark-bg-tertiary;
+      }
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  span,
+  a,
+  label {
+    color: $dark-text-primary;
+  }
+
+  .breadcrumb {
+    background-color: $dark-bg-secondary;
+
+    > li + li:before {
+      color: $dark-text-primary;
+    }
+  }
+
+  .btn {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-bg-quaternary;
+    color: $dark-text-primary;
+
+    &:hover {
+      background-color: $dark-bg-tertiary;
+    }
+  }
+
+  .btn-primary {
+    background-color: $color-primary-dark;
+    border-color: $color-primary-dark;
+    color: $light-bg-primary;
+
+    &:hover {
+      background-color: $color-primary-dark-hover;
+      border-color: $color-primary-dark-hover;
+    }
+  }
+
+  .btn-success {
+    background-color: $color-success;
+    border-color: $color-success-border;
+  }
+
+  table {
+    color: $dark-text-primary;
+  }
+
+  .table > thead > tr > th,
+  .table > tbody > tr > th,
+  .table > tfoot > tr > th,
+  .table > thead > tr > td,
+  .table > tbody > tr > td,
+  .table > tfoot > tr > td {
+    border-color: $dark-bg-quaternary;
+  }
+
+  .pager li > a,
+  .pager li > span {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-bg-quaternary;
+    color: $dark-text-primary;
+  }
+
+  .pager li > a:hover {
+    background-color: $dark-bg-tertiary;
+  }
+
+  .pagination > li > a {
+    background-color: $dark-bg-secondary;
+    border-color: $dark-bg-quaternary;
+  }
+}

@@ -31,9 +31,7 @@ function App() {
     await storageManager.setTheme(newTheme);
   };
 
-  const handleShortcutToggle = async (
-    key: keyof KeyboardShortcutSettings,
-  ) => {
+  const handleShortcutToggle = async (key: keyof KeyboardShortcutSettings) => {
     const newShortcuts = { ...shortcuts, [key]: !shortcuts[key] };
     setShortcuts(newShortcuts);
     await storageManager.setKeyboardShortcuts(newShortcuts);
@@ -87,7 +85,9 @@ function App() {
         </div>
         <div style={{ padding: "20px", borderBottom: "1px solid #dcdfe6" }}>
           <h2 style={{ marginBottom: "15px" }}>キーボードショートカット</h2>
-          <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "12px" }}
+          >
             <label
               style={{
                 display: "flex",

@@ -39,9 +39,7 @@ function App() {
     await storageManager.setTheme(newTheme);
   };
 
-  const handleShortcutToggle = async (
-    key: keyof KeyboardShortcutSettings,
-  ) => {
+  const handleShortcutToggle = async (key: keyof KeyboardShortcutSettings) => {
     const newShortcuts = { ...shortcuts, [key]: !shortcuts[key] };
     setShortcuts(newShortcuts);
     await storageManager.setKeyboardShortcuts(newShortcuts);
