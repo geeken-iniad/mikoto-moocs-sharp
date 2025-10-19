@@ -5,14 +5,18 @@ import { useElementObserver } from "../../hooks";
 
 export const SidebarDeckButton: React.FC = () => {
   const [isDeckOpen, setIsDeckOpen] = useState(false);
-  const [buttonContainer, setButtonContainer] = useState<HTMLElement | null>(null);
+  const [buttonContainer, setButtonContainer] = useState<HTMLElement | null>(
+    null,
+  );
 
   const handleSidebar = useCallback((elements: NodeListOf<Element>) => {
     const sidebar = elements[0];
     if (!sidebar) return;
 
     // 既にボタンコンテナが存在するかチェック
-    let container = sidebar.querySelector(".mikoto-deck-button-container") as HTMLElement;
+    let container = sidebar.querySelector(
+      ".mikoto-deck-button-container",
+    ) as HTMLElement;
 
     if (!container) {
       // 新しいコンテナを作成（treeview構造のli）
@@ -51,7 +55,9 @@ export const SidebarDeckButton: React.FC = () => {
               <i className="fa fa-th"></i>
               <span>
                 {" "}
-                <span className="sidebar-menu-text">デックビュー</span>
+                <span className="sidebar-menu-text">
+                  デックビュー (クリックで開閉)
+                </span>
               </span>
               <span className="pull-right-container">
                 <i className="fa fa-angle-left pull-right"></i>
@@ -59,7 +65,7 @@ export const SidebarDeckButton: React.FC = () => {
             </a>
             <ul className="treeview-menu" style={{ display: "none" }}></ul>
           </>,
-          buttonContainer
+          buttonContainer,
         )}
       <SidebarDeckView isOpen={isDeckOpen} onClose={handleClose} />
     </>
