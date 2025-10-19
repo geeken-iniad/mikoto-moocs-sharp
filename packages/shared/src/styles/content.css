@@ -124,16 +124,6 @@ body {
 
   .sidebar-menu > li > a {
     border: 1.5px solid #426dc2;
-    padding: 22px 20px 22px 15px;
-  }
-
-  .sidebar-menu-text {
-    font-weight: 500;
-    transition: all 0.2s ease;
-  }
-
-  .treeview-menu > li > a {
-    padding: 15px 5px 15px 15px;
   }
 
   .content-wrapper li.active {
