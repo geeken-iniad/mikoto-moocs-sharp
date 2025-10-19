@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import type {
-  Theme,
-  KeyboardShortcutSettings,
+import {
+  type Theme,
+  type KeyboardShortcutSettings,
+  getSubmitShortcutLabel,
 } from "@mikoto-moocs-sharp/shared";
 import { storageManager } from "../utils/storage";
 
@@ -14,6 +15,7 @@ function App() {
     numberKeyShortcut: false,
     arrowKeyShortcut: false,
   });
+  const submitShortcutLabel = getSubmitShortcutLabel();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -68,9 +70,7 @@ function App() {
           />
         </div>
         <div className="setting-item">
-          <label htmlFor="submit-shortcut-toggle">
-            Ctrl/Cmd+Enter でフォーム提出
-          </label>
+          <label htmlFor="submit-shortcut-toggle">{submitShortcutLabel}</label>
           <input
             id="submit-shortcut-toggle"
             type="checkbox"

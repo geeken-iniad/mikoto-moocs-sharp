@@ -3,7 +3,12 @@
   "compilerOptions": {
     "allowImportingTsExtensions": true,
     "jsx": "react-jsx",
-    "lib": ["ES2022", "DOM", "DOM.Iterable"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "baseUrl": ".",
+    "paths": {
+      "@mikoto-moocs-sharp/shared": ["../shared/src/index.ts"],
+      "@mikoto-moocs-sharp/shared/*": ["../shared/src/*"]
+    }
   },
   "include": [".wxt/**/*", "entrypoints/**/*"]
 }

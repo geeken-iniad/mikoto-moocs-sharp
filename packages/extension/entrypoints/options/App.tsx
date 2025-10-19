@@ -3,6 +3,7 @@ import {
   StorageProvider,
   type Theme,
   type KeyboardShortcutSettings,
+  getSubmitShortcutLabel,
 } from "@mikoto-moocs-sharp/shared";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -15,6 +16,7 @@ function App() {
     numberKeyShortcut: false,
     arrowKeyShortcut: false,
   });
+  const submitShortcutLabel = getSubmitShortcutLabel();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -103,7 +105,7 @@ function App() {
                 onChange={() => handleShortcutToggle("submitShortcut")}
                 style={{ width: "18px", height: "18px", cursor: "pointer" }}
               />
-              <span>Ctrl/Cmd+Enter でフォーム提出</span>
+              <span>{submitShortcutLabel}</span>
             </label>
             <label
               style={{

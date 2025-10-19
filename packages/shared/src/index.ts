@@ -5,5 +5,7 @@ export * from "./constants";
 export * from "./hooks";
 export * from "./storage";
 export * from "./types";
-export * from "./utils/dom";
-export * from "./utils/text";
+export * from "./utils";
+
+// Explicitly re-export platform utilities for better TypeScript resolution
+export { isMacPlatform, getSubmitShortcutLabel } from "./utils/platform";
