@@ -6,6 +6,12 @@ import type {
 } from "@mikoto-moocs-sharp/shared";
 import { storageManager } from "../utils/storage";
 
+// OS別のショートカットラベルを取得
+const getSubmitShortcutLabel = (): string => {
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  return isMac ? "⌘(Command)+Enter でフォーム提出" : "Ctrl+Enter でフォーム提出";
+};
+
 function App() {
   const [dualViewEnabled, setDualViewEnabled] = useState(false);
   const [theme, setTheme] = useState<Theme>("light");
@@ -14,6 +20,7 @@ function App() {
     numberKeyShortcut: false,
     arrowKeyShortcut: false,
   });
+  const submitShortcutLabel = getSubmitShortcutLabel();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -68,9 +75,7 @@ function App() {
           />
         </div>
         <div className="setting-item">
-          <label htmlFor="submit-shortcut-toggle">
-            Ctrl/Cmd+Enter でフォーム提出
-          </label>
+          <label htmlFor="submit-shortcut-toggle">{submitShortcutLabel}</label>
           <input
             id="submit-shortcut-toggle"
             type="checkbox"

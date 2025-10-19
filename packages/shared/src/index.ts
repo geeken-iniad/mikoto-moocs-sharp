@@ -5,5 +5,4 @@ export * from "./constants";
 export * from "./hooks";
 export * from "./storage";
 export * from "./types";
-export * from "./utils/dom";
-export * from "./utils/text";
+export * from "./utils";

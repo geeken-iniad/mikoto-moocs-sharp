@@ -8,6 +8,12 @@ import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { storageManager } from "../utils/storage";
 
+// OS別のショートカットラベルを取得
+const getSubmitShortcutLabel = (): string => {
+  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  return isMac ? "⌘(Command)+Enter でフォーム提出" : "Ctrl+Enter でフォーム提出";
+};
+
 function App() {
   const [theme, setTheme] = useState<Theme>("light");
   const [shortcuts, setShortcuts] = useState<KeyboardShortcutSettings>({
@@ -15,6 +21,7 @@ function App() {
     numberKeyShortcut: false,
     arrowKeyShortcut: false,
   });
+  const submitShortcutLabel = getSubmitShortcutLabel();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -103,7 +110,7 @@ function App() {
                 onChange={() => handleShortcutToggle("submitShortcut")}
                 style={{ width: "18px", height: "18px", cursor: "pointer" }}
               />
-              <span>Ctrl/Cmd+Enter でフォーム提出</span>
+              <span>{submitShortcutLabel}</span>
             </label>
             <label
               style={{
