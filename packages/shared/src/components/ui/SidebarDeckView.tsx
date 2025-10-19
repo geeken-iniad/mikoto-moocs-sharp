@@ -402,19 +402,6 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       style={themedStyles.container}
     >
       <div style={themedStyles.header}>
-        <button
-          style={closeButtonStyle}
-          onClick={onClose}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.color = hoverColor;
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.color = normalColor;
-          }}
-          aria-label="閉じる"
-        >
-          <i className="fa fa-times" />
-        </button>
         <div style={{ display: "flex", alignItems: "center" }}>
           <h2 id="mikoto-deck-view-title" style={themedStyles.title}>
             目次デックビュー
