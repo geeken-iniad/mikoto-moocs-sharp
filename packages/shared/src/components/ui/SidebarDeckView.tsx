@@ -39,9 +39,15 @@ const styles = {
   },
   title: {
     margin: 0,
-    fontSize: "24px",
+    fontSize: "20px",
     fontWeight: 600,
     color: "#333",
+  },
+  hint: {
+    fontSize: "12px",
+    color: "#999",
+    marginLeft: "10px",
+    fontWeight: 400,
   },
   columnsContainer: {
     display: "flex",
@@ -289,6 +295,10 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       ...styles.title,
       color: isDarkTheme ? "#e0e0e0" : "#333",
     },
+    hint: {
+      ...styles.hint,
+      color: isDarkTheme ? "#888" : "#999",
+    },
     column: {
       ...styles.column,
       backgroundColor: isDarkTheme ? "#2a2a2a" : "#f8f9fa",
@@ -343,7 +353,10 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
         >
           <i className="fa fa-times" />
         </button>
-        <h2 style={themedStyles.title}>目次デックビュー</h2>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <h2 style={themedStyles.title}>目次デックビュー</h2>
+          <div style={themedStyles.hint}>(Escキーで閉じる)</div>
+        </div>
         <button
           style={closeButtonStyle}
           onClick={onClose}
