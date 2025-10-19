@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import type {
-  Theme,
-  KeyboardShortcutSettings,
+import {
+  type Theme,
+  type KeyboardShortcutSettings,
+  getSubmitShortcutLabel,
 } from "@mikoto-moocs-sharp/shared";
 import { storageManager } from "../utils/storage";
-
-// OS別のショートカットラベルを取得
-const getSubmitShortcutLabel = (): string => {
-  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  return isMac ? "⌘(Command)+Enter でフォーム提出" : "Ctrl+Enter でフォーム提出";
-};
 
 function App() {
   const [dualViewEnabled, setDualViewEnabled] = useState(false);

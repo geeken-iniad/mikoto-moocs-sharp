@@ -3,16 +3,11 @@ import {
   StorageProvider,
   type Theme,
   type KeyboardShortcutSettings,
+  getSubmitShortcutLabel,
 } from "@mikoto-moocs-sharp/shared";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 import { storageManager } from "../utils/storage";
-
-// OS別のショートカットラベルを取得
-const getSubmitShortcutLabel = (): string => {
-  const isMac = /Mac|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  return isMac ? "⌘(Command)+Enter でフォーム提出" : "Ctrl+Enter でフォーム提出";
-};
 
 function App() {
   const [theme, setTheme] = useState<Theme>("light");

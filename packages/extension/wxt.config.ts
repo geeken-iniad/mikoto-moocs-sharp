@@ -20,7 +20,7 @@ export default defineConfig({
         ),
         "@mikoto-moocs-sharp/shared": path.resolve(
           __dirname,
-          "../shared/src/index.ts",
+          "../shared/src",
         ),
       },
     },
