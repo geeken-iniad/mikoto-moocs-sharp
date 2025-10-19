@@ -1,4 +1,4 @@
-import contentCssContent from "@mikoto-moocs-sharp/shared/styles/content.css?raw";
+import contentCssContent from "@mikoto-moocs-sharp/shared/styles/content.scss?raw";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { MikotoAppLite } from "./components/MikotoAppLite";
