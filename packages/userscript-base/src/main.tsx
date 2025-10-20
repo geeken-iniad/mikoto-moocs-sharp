@@ -3,15 +3,8 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { GM_registerMenuCommand } from "$";
 import { MikotoApp } from "./components/MikotoApp";
+import { openSettingsModal } from "./settings/modalController";
 import { createStorageManager } from "./utils/storage";
-
-// 設定モーダルの状態管理
-let setSettingsModalOpen: ((open: boolean) => void) | null = null;
-
-// グローバルにsetterを公開
-window.__mikotoRegisterSettingsModalSetter = (setter: (open: boolean) => void) => {
-  setSettingsModalOpen = setter;
-};
 
 /**
  * Initialize Mikoto MOOCs# application
@@ -23,9 +16,7 @@ export function initializeMikoto() {
   if (isMOOCsPage) {
     // GM_registerMenuCommandを早期に登録
     GM_registerMenuCommand("⚙️ 設定を開く", () => {
-      if (setSettingsModalOpen) {
-        setSettingsModalOpen(true);
-      }
+      openSettingsModal();
     });
 
     const initializeApp = () => {

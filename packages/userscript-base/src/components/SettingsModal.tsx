@@ -1,6 +1,7 @@
-import { SettingsPage } from "@mikoto-moocs-sharp/shared";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import type { StorageManager } from "@mikoto-moocs-sharp/shared";
-import { useState } from "react";
+import { SettingsPage } from "@mikoto-moocs-sharp/shared";
 
 interface SettingsModalProps {
   storageManager: StorageManager;
@@ -13,58 +14,124 @@ export const SettingsModal = ({
   isOpen,
   onClose,
 }: SettingsModalProps) => {
+  const [container, setContainer] = useState<HTMLElement | null>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
 
-  return (
+    const modalContainer = document.createElement("div");
+    modalContainer.setAttribute("data-mikoto-settings-modal", "true");
+    document.body.appendChild(modalContainer);
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    setContainer(modalContainer);
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = originalOverflow;
+      modalContainer.remove();
+      setContainer(null);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen || !container) {
+    return null;
+  }
+
+  return createPortal(
     <div
+      onClick={onClose}
       style={{
         position: "fixed",
         top: 0,
         left: 0,
         width: "100vw",
         height: "100vh",
-        backgroundColor: "white",
+        backgroundColor: "rgba(0,0,0,0.2)",
         zIndex: 100000,
         overflow: "auto",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        padding: "40px 0",
       }}
     >
       <div
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
         style={{
-          position: "sticky",
-          top: 0,
+          width: "min(960px, calc(100vw - 40px))",
+          maxHeight: "calc(100vh - 80px)",
           backgroundColor: "white",
-          borderBottom: "1px solid #dcdfe6",
-          padding: "20px",
+          boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
+          borderRadius: "12px",
           display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          zIndex: 10,
+          overflow: "hidden",
         }}
       >
-        <h1 style={{ margin: 0, fontSize: "24px", fontWeight: "bold" }}>
-          Mikoto MOOCs# 設定
-        </h1>
-        <button
-          onClick={onClose}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          aria-label="閉じる"
+        <div
           style={{
-            background: "none",
-            border: "none",
-            fontSize: "24px",
-            cursor: "pointer",
-            padding: "5px 10px",
-            transition: "color 0.2s",
-            color: isHovered ? "#333" : "#666",
+            flex: 1,
+            overflowY: "auto",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
-          <i className="fa fa-times" />
-        </button>
+          <header
+            style={{
+              position: "sticky",
+              top: 0,
+              backgroundColor: "white",
+              borderBottom: "1px solid #dcdfe6",
+              padding: "20px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              zIndex: 10,
+            }}
+          >
+            <h1 style={{ margin: 0, fontSize: "24px", fontWeight: "bold" }}>
+              Mikoto MOOCs# 設定
+            </h1>
+            <button
+              onClick={onClose}
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              aria-label="閉じる"
+              style={{
+                background: "none",
+                border: "none",
+                fontSize: "24px",
+                cursor: "pointer",
+                padding: "5px 10px",
+                transition: "color 0.2s",
+                color: isHovered ? "#333" : "#666",
+              }}
+            >
+              <i className="fa fa-times" />
+            </button>
+          </header>
+          <div
+            style={{
+              padding: "20px",
+            }}
+          >
+            <SettingsPage storageManager={storageManager} />
+          </div>
+        </div>
       </div>
-      <SettingsPage storageManager={storageManager} />
-    </div>
+    </div>,
+    container,
   );
 };
