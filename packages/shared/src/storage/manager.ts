@@ -1,18 +1,11 @@
-import type { Schedule, KeyboardShortcutSettings } from "../types";
+import type { ScheduleStore, KeyboardShortcutSettings } from "../types";
 import type { IStorageAdapter } from "./interface";
-
-export interface ScheduleHistory {
-  subjects: string[];
-  teachers: string[];
-  rooms: string[];
-}
 
 /**
  * ストレージキー定数
  */
 export const STORAGE_KEYS = {
-  SCHEDULE: "mikoto-schedule",
-  HISTORY: "mikoto-schedule-history",
+  SCHEDULE_STORE: "mikoto-schedule-store",
   SUBJECTS: "mikoto-extracted-subjects",
   DUAL_VIEW: "mikoto-dual-view",
   THEME: "mikoto-theme",
@@ -30,62 +23,28 @@ export class StorageManager {
   // スケジュール関連
   // ========================================
 
-  async getSchedule(): Promise<Schedule> {
-    const result = await this.adapter.getItem<Schedule>(STORAGE_KEYS.SCHEDULE);
-    return result || {};
-  }
-
-  async saveSchedule(schedule: Schedule): Promise<void> {
-    await this.adapter.setItem(STORAGE_KEYS.SCHEDULE, schedule);
-  }
-
-  watchSchedule(callback: (newSchedule: Schedule | null) => void) {
-    return this.adapter.watch<Schedule>(STORAGE_KEYS.SCHEDULE, callback);
-  }
-
-  // ========================================
-  // スケジュール履歴関連
-  // ========================================
-
-  async getHistory(): Promise<ScheduleHistory> {
-    const result = await this.adapter.getItem<ScheduleHistory>(
-      STORAGE_KEYS.HISTORY,
+  async getScheduleStore(): Promise<ScheduleStore> {
+    const result = await this.adapter.getItem<ScheduleStore>(
+      STORAGE_KEYS.SCHEDULE_STORE,
     );
     return (
       result || {
-        subjects: [],
-        teachers: [],
-        rooms: [],
+        courses: {},
+        offerings: {},
+        schedules: {},
       }
     );
   }
 
-  async saveHistory(history: ScheduleHistory): Promise<void> {
-    await this.adapter.setItem(STORAGE_KEYS.HISTORY, history);
+  async saveScheduleStore(store: ScheduleStore): Promise<void> {
+    await this.adapter.setItem(STORAGE_KEYS.SCHEDULE_STORE, store);
   }
 
-  async addToHistory(
-    subject?: string,
-    teacher?: string,
-    room?: string,
-  ): Promise<void> {
-    const history = await this.getHistory();
-
-    if (subject && subject.trim() && !history.subjects.includes(subject)) {
-      history.subjects = [...history.subjects, subject];
-    }
-    if (teacher && teacher.trim() && !history.teachers.includes(teacher)) {
-      history.teachers = [...history.teachers, teacher];
-    }
-    if (room && room.trim() && !history.rooms.includes(room)) {
-      history.rooms = [...history.rooms, room];
-    }
-
-    await this.saveHistory(history);
-  }
-
-  watchHistory(callback: (newHistory: ScheduleHistory | null) => void) {
-    return this.adapter.watch<ScheduleHistory>(STORAGE_KEYS.HISTORY, callback);
+  watchScheduleStore(callback: (newStore: ScheduleStore | null) => void) {
+    return this.adapter.watch<ScheduleStore>(
+      STORAGE_KEYS.SCHEDULE_STORE,
+      callback,
+    );
   }
 
   // ========================================

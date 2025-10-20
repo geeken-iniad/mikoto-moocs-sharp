@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { KeyboardShortcutSettings, Theme } from "../../types";
 import type { StorageManager } from "../../storage/manager";
 import { StorageProvider, useStorageManager } from "../../storage/context";
-import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { ThemeSettings } from "./ThemeSettings";
 import { ShortcutSettings } from "./KeyboardShortcutSettings";
 
@@ -47,7 +46,7 @@ const SettingsPageContent = () => {
         shortcuts={shortcuts}
         onShortcutToggle={handleShortcutToggle}
       />
-      <ScheduleEditor />
+      {/* TODO: ScheduleEditor will be re-implemented with new schedule types */}
     </div>
   );
 };
