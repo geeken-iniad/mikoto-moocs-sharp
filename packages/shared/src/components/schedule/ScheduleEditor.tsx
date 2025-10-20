@@ -4,7 +4,7 @@ import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useStorageManager } from "../../storage/context";
 import { ScheduleSelector } from "./ScheduleSelector";
 import { ScheduleGrid } from "./ScheduleGrid";
-import { CourseEditModal } from "./CourseEditModal";
+import { OfferingEditModal } from "./OfferingEditModal";
 import {
   getOfferingsByWeekdayAndPeriod,
   addCourse,
@@ -215,7 +215,8 @@ export const ScheduleEditor = () => {
       )}
 
       {editingCell && selectedSchedule && (
-        <CourseEditModal
+        <OfferingEditModal
+          store={store}
           weekday={editingCell.weekday}
           period={editingCell.period}
           existingOffering={getOfferingsByWeekdayAndPeriod(
