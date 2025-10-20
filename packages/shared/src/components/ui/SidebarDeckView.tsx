@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
+import { Z_INDEX } from "../../constants";
 import styles from "./SidebarDeckView.module.scss";
 
 interface SidebarSection {
@@ -28,7 +29,7 @@ const inlineStyles = {
     flexDirection: "column" as const,
     overflow: "hidden",
     boxShadow: "-2px 0 10px rgba(0, 0, 0, 0.1)",
-    zIndex: 4,
+    zIndex: Z_INDEX.SIDEBAR_DECK,
   },
   header: {
     display: "flex",
