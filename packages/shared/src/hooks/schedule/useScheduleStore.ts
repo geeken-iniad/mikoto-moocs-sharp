@@ -43,14 +43,21 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
 
   // Save store to storage
   const saveStore = async (newStore: ScheduleStore) => {
+    console.log("[useScheduleStore] saveStore called with:", newStore);
     setStore(newStore);
+    console.log("[useScheduleStore] Local state updated");
     await storageManager.saveScheduleStore(newStore);
+    console.log("[useScheduleStore] Storage manager save completed");
   };
 
   // Course operations
   const createCourse = async (course: Course) => {
+    console.log("[useScheduleStore] Creating course:", course);
+    console.log("[useScheduleStore] Current store before adding course:", store);
     const newStore = addCourse(store, course);
+    console.log("[useScheduleStore] New store after adding course:", newStore);
     await saveStore(newStore);
+    console.log("[useScheduleStore] Course saved to storage");
     return course;
   };
 
@@ -92,8 +99,12 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
 
   // Offering operations
   const createOffering = async (offering: Offering) => {
+    console.log("[useScheduleStore] Creating offering:", offering);
+    console.log("[useScheduleStore] Current store before adding offering:", store);
     const newStore = addOffering(store, offering);
+    console.log("[useScheduleStore] New store after adding offering:", newStore);
     await saveStore(newStore);
+    console.log("[useScheduleStore] Offering saved to storage");
     return offering;
   };
 
@@ -157,8 +168,14 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
     scheduleId: string,
     offeringId: string,
   ) => {
+    console.log("[useScheduleStore] Adding offering to schedule:", { scheduleId, offeringId });
+    console.log("[useScheduleStore] Current store.schedules[scheduleId]:", store.schedules[scheduleId]);
+    console.log("[useScheduleStore] Current offeringIds:", store.schedules[scheduleId]?.offeringIds);
     const newStore = addOfferingToSchedule(store, scheduleId, offeringId);
+    console.log("[useScheduleStore] New store.schedules[scheduleId]:", newStore.schedules[scheduleId]);
+    console.log("[useScheduleStore] New offeringIds:", newStore.schedules[scheduleId]?.offeringIds);
     await saveStore(newStore);
+    console.log("[useScheduleStore] Saved to storage");
   };
 
   const removeOfferingFromScheduleById = async (

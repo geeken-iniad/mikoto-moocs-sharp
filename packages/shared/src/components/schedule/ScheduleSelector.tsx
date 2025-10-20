@@ -6,7 +6,7 @@ import { createTermInfo, formatTermInfo, createSchedule } from "../../utils/sche
 interface ScheduleSelectorProps {
   store: ScheduleStore;
   selectedSchedule: Schedule | null;
-  onSelectSchedule: (schedule: Schedule) => void;
+  onSelectSchedule: (scheduleId: string) => void;
   onCreateSchedule: (schedule: Schedule) => void;
 }
 
@@ -97,9 +97,8 @@ export const ScheduleSelector = ({
   const [newDivision, setNewDivision] = useState<TermDivision>("Semester");
 
   const handleScheduleChange = (scheduleId: string) => {
-    const schedule = store.schedules[scheduleId];
-    if (schedule) {
-      onSelectSchedule(schedule);
+    if (scheduleId && store.schedules[scheduleId]) {
+      onSelectSchedule(scheduleId);
     }
   };
 

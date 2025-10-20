@@ -1,10 +1,16 @@
-import { useState, type CSSProperties } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import type { Course, Offering, Schedule, Weekday, Period } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
+import { useStorageManager } from "../../storage/context";
 import { ScheduleSelector } from "./ScheduleSelector";
 import { ScheduleGrid } from "./ScheduleGrid";
 import { CourseEditModal } from "./CourseEditModal";
-import { getOfferingsByWeekdayAndPeriod } from "../../utils/schedule";
+import {
+  getOfferingsByWeekdayAndPeriod,
+  addCourse,
+  addOffering,
+  addOfferingToSchedule,
+} from "../../utils/schedule";
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -35,18 +41,17 @@ export const ScheduleEditor = () => {
   const {
     store,
     isLoading,
-    createCourse,
     updateCourse,
     deleteCourse,
-    createOffering,
     updateOffering,
     deleteOffering,
     createSchedule,
-    addOfferingToSchedule,
     removeOfferingFromSchedule,
   } = useScheduleStore();
 
-  const [selectedSchedule, setSelectedSchedule] = useState<Schedule | null>(
+  const storageManager = useStorageManager();
+
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
     null,
   );
   const [editingCell, setEditingCell] = useState<{
@@ -56,13 +61,31 @@ export const ScheduleEditor = () => {
 
   // Auto-select first schedule if none selected
   const schedules = Object.values(store.schedules);
-  if (!selectedSchedule && schedules.length > 0 && !isLoading) {
-    setSelectedSchedule(schedules[0]);
-  }
+
+  // Use useEffect to avoid infinite loop
+  useEffect(() => {
+    if (!selectedScheduleId && schedules.length > 0 && !isLoading) {
+      setSelectedScheduleId(schedules[0].id);
+    }
+  }, [schedules.length, isLoading, selectedScheduleId]);
+
+  // Get the current selected schedule from store (always up-to-date)
+  const selectedSchedule = selectedScheduleId
+    ? store.schedules[selectedScheduleId]
+    : null;
+
+  console.log("[ScheduleEditor] Current state:", {
+    selectedScheduleId,
+    selectedSchedule,
+    selectedScheduleOfferingIds: selectedSchedule?.offeringIds,
+    storeSchedules: store.schedules,
+    storeCourses: Object.keys(store.courses),
+    storeOfferings: Object.keys(store.offerings),
+  });
 
   const handleCreateSchedule = async (schedule: Schedule) => {
     await createSchedule(schedule);
-    setSelectedSchedule(schedule);
+    setSelectedScheduleId(schedule.id);
   };
 
   const handleCellClick = (weekday: Weekday, period: Period) => {
@@ -70,9 +93,15 @@ export const ScheduleEditor = () => {
   };
 
   const handleSave = async (course: Course, offering: Offering) => {
-    if (!selectedSchedule) return;
+    if (!selectedSchedule) {
+      console.error("No schedule selected");
+      alert("時間割が選択されていません");
+      return;
+    }
 
     try {
+      console.log("Saving course and offering:", { course, offering, selectedSchedule });
+
       // Check if this is an update or create
       const existingOffering = getOfferingsByWeekdayAndPeriod(
         store,
@@ -82,18 +111,30 @@ export const ScheduleEditor = () => {
       );
 
       if (existingOffering) {
+        console.log("Updating existing offering");
         // Update existing course and offering
         await updateCourse(course.id, course);
         await updateOffering(offering.id, offering);
       } else {
-        // Create new course and offering
-        await createCourse(course);
-        await createOffering(offering);
-        await addOfferingToSchedule(selectedSchedule.id, offering.id);
+        console.log("Creating new course and offering");
+        // Create new course, offering, and add to schedule in one operation
+        // Build the complete new store state
+        let newStore = addCourse(store, course);
+        console.log("After addCourse:", newStore);
+        newStore = addOffering(newStore, offering);
+        console.log("After addOffering:", newStore);
+        newStore = addOfferingToSchedule(newStore, selectedSchedule.id, offering.id);
+        console.log("After addOfferingToSchedule:", newStore);
+
+        // Save the complete new store state
+        await storageManager.saveScheduleStore(newStore);
+        console.log("All changes saved to storage");
       }
 
+      console.log("Save completed successfully");
       setEditingCell(null);
     } catch (error) {
+      console.error("Save error:", error);
       alert(
         error instanceof Error ? error.message : "保存に失敗しました",
       );
@@ -157,7 +198,7 @@ export const ScheduleEditor = () => {
       <ScheduleSelector
         store={store}
         selectedSchedule={selectedSchedule}
-        onSelectSchedule={setSelectedSchedule}
+        onSelectSchedule={setSelectedScheduleId}
         onCreateSchedule={handleCreateSchedule}
       />
 
