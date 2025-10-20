@@ -26,6 +26,7 @@ export default defineConfig({
           "GM_deleteValue",
           "GM_addValueChangeListener",
           "GM_removeValueChangeListener",
+          "GM_registerMenuCommand",
         ],
       },
     }),

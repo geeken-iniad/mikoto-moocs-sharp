@@ -1,7 +1,9 @@
 import contentCssContent from "@mikoto-moocs-sharp/shared/styles/content.scss?raw";
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { GM_registerMenuCommand } from "$";
 import { MikotoApp } from "./components/MikotoApp";
+import { openSettingsModal } from "./settings/modalController";
 import { createStorageManager } from "./utils/storage";
 
 /**
@@ -12,6 +14,11 @@ export function initializeMikoto() {
   const isMOOCsPage = window.location.hostname.includes("moocs.iniad.org");
 
   if (isMOOCsPage) {
+    // GM_registerMenuCommandを早期に登録
+    GM_registerMenuCommand("⚙️ 設定を開く", () => {
+      openSettingsModal();
+    });
+
     const initializeApp = () => {
       // 静的CSSを手動で注入
       const style = document.createElement("style");
