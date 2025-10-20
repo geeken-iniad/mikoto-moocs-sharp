@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import type { StorageManager } from "@mikoto-moocs-sharp/shared";
-import { SettingsPage } from "@mikoto-moocs-sharp/shared";
+import { SettingsPage, Z_INDEX } from "@mikoto-moocs-sharp/shared";
 
 interface SettingsModalProps {
   storageManager: StorageManager;
@@ -58,7 +58,7 @@ export const SettingsModal = ({
         width: "100vw",
         height: "100vh",
         backgroundColor: "rgba(0,0,0,0.2)",
-        zIndex: 100000,
+        zIndex: Z_INDEX.SETTINGS_MODAL,
         overflow: "auto",
         display: "flex",
         justifyContent: "center",

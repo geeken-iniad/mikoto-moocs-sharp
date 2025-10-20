@@ -51,3 +51,9 @@ export const PERIODS = [
 
 // MOOCs URL
 export const MOOCS_URL = "https://moocs.iniad.org";
+
+// Z-Index Constants
+export const Z_INDEX = {
+  SETTINGS_MODAL: 100000,
+  SIDEBAR_DECK: 4,
+} as const;
