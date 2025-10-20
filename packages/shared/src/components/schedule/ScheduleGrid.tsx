@@ -1,0 +1,116 @@
+import type { CSSProperties } from "react";
+import type { ScheduleStore, Schedule, Weekday, Period } from "../../types";
+import { DAYS, DAY_LABELS, PERIODS } from "../../constants";
+import { getOfferingsByWeekdayAndPeriod } from "../../utils/schedule";
+import { ScheduleCell } from "./ScheduleCell";
+
+interface ScheduleGridProps {
+  store: ScheduleStore;
+  schedule: Schedule;
+  onCellClick: (weekday: Weekday, period: Period) => void;
+}
+
+const styles: Record<string, CSSProperties> = {
+  container: {
+    width: "100%",
+    overflowX: "auto",
+    backgroundColor: "#ffffff",
+    borderRadius: "0.5rem",
+    border: "1px solid #e5e7eb",
+  },
+  table: {
+    width: "100%",
+    borderCollapse: "collapse",
+    minWidth: "600px",
+  },
+  headerCell: {
+    padding: "0.75rem",
+    backgroundColor: "#f9fafb",
+    borderBottom: "2px solid #e5e7eb",
+    fontWeight: 600,
+    textAlign: "center",
+    color: "#374151",
+  },
+  periodHeader: {
+    width: "80px",
+  },
+  dayHeader: {
+    minWidth: "120px",
+  },
+  periodCell: {
+    padding: "0.75rem",
+    backgroundColor: "#f9fafb",
+    borderRight: "1px solid #e5e7eb",
+    fontWeight: 500,
+    textAlign: "center",
+    color: "#6b7280",
+    fontSize: "0.875rem",
+  },
+  periodTime: {
+    fontSize: "0.75rem",
+    color: "#9ca3af",
+    marginTop: "0.25rem",
+  },
+};
+
+export const ScheduleGrid = ({
+  store,
+  schedule,
+  onCellClick,
+}: ScheduleGridProps) => {
+  const periods: Period[] = [1, 2, 3, 4, 5, 6, 7];
+
+  return (
+    <div style={styles.container}>
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th style={{ ...styles.headerCell, ...styles.periodHeader }}>
+              時限
+            </th>
+            {DAYS.map((day) => (
+              <th key={day} style={{ ...styles.headerCell, ...styles.dayHeader }}>
+                {DAY_LABELS[day]}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {periods.map((period) => (
+            <tr key={period}>
+              <td style={styles.periodCell}>
+                <div>{PERIODS[period].label}</div>
+                <div style={styles.periodTime}>
+                  {PERIODS[period].start}-{PERIODS[period].end}
+                </div>
+              </td>
+              {DAYS.map((day) => {
+                const offering = getOfferingsByWeekdayAndPeriod(
+                  store,
+                  schedule.id,
+                  day,
+                  period,
+                );
+                const course = offering
+                  ? store.courses[offering.courseId]
+                  : undefined;
+
+                return (
+                  <td key={`${day}-${period}`}>
+                    <ScheduleCell
+                      weekday={day}
+                      period={period}
+                      offering={offering}
+                      course={course}
+                      onClick={() => onCellClick(day, period)}
+                    />
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
