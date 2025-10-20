@@ -13,8 +13,8 @@ interface ScheduleCellProps {
 const styles: Record<string, CSSProperties> = {
   cell: {
     border: "1px solid #d1d5db",
-    padding: "0.5rem",
-    minHeight: "80px",
+    padding: "0.875rem",
+    minHeight: "120px",
     cursor: "pointer",
     backgroundColor: "#ffffff",
     transition: "all 0.2s",
@@ -28,22 +28,25 @@ const styles: Record<string, CSSProperties> = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "0.875rem",
+    fontSize: "1.5rem",
   },
   courseName: {
     fontWeight: 600,
-    fontSize: "0.875rem",
-    marginBottom: "0.25rem",
+    fontSize: "1.125rem",
+    marginBottom: "0.5rem",
     color: "#1f2937",
+    lineHeight: "1.5",
   },
   instructors: {
-    fontSize: "0.75rem",
+    fontSize: "1rem",
     color: "#6b7280",
-    marginBottom: "0.25rem",
+    marginBottom: "0.375rem",
+    lineHeight: "1.5",
   },
   room: {
-    fontSize: "0.75rem",
+    fontSize: "0.9375rem",
     color: "#9ca3af",
+    lineHeight: "1.5",
   },
 };
 

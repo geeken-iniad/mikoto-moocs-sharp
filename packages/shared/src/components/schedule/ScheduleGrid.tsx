@@ -21,35 +21,36 @@ const styles: Record<string, CSSProperties> = {
   table: {
     width: "100%",
     borderCollapse: "collapse",
-    minWidth: "600px",
+    minWidth: "900px",
   },
   headerCell: {
-    padding: "0.75rem",
+    padding: "1rem",
     backgroundColor: "#f9fafb",
     borderBottom: "2px solid #e5e7eb",
     fontWeight: 600,
     textAlign: "center",
     color: "#374151",
+    fontSize: "1.125rem",
   },
   periodHeader: {
-    width: "80px",
+    width: "120px",
   },
   dayHeader: {
-    minWidth: "120px",
+    minWidth: "200px",
   },
   periodCell: {
-    padding: "0.75rem",
+    padding: "1rem",
     backgroundColor: "#f9fafb",
     borderRight: "1px solid #e5e7eb",
     fontWeight: 500,
     textAlign: "center",
     color: "#6b7280",
-    fontSize: "0.875rem",
+    fontSize: "1.0625rem",
   },
   periodTime: {
-    fontSize: "0.75rem",
+    fontSize: "0.9375rem",
     color: "#9ca3af",
-    marginTop: "0.25rem",
+    marginTop: "0.375rem",
   },
 };
 
