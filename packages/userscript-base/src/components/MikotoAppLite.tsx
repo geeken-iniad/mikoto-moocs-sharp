@@ -9,6 +9,7 @@ import {
   TextareaCounter,
   TextareaResizer,
 } from "@mikoto-moocs-sharp/shared";
+import { SettingsManager } from "./SettingsManager";
 
 /**
  * Mikoto MOOCs# Lite版メインアプリケーションコンポーネント
@@ -27,5 +28,6 @@ export const MikotoAppLite = ({
     <SidebarEnhancer />
     <TextareaCounter />
     <TextareaResizer />
+    <SettingsManager storageManager={storageManager} />
   </StorageProvider>
 );
