@@ -4,6 +4,7 @@ import type { StorageManager } from "../../storage/manager";
 import { StorageProvider, useStorageManager } from "../../storage/context";
 import { ThemeSettings } from "./ThemeSettings";
 import { ShortcutSettings } from "./KeyboardShortcutSettings";
+import { ScheduleEditor } from "../schedule/ScheduleEditor";
 
 interface SettingsPageProps {
   storageManager: StorageManager;
@@ -46,7 +47,7 @@ const SettingsPageContent = () => {
         shortcuts={shortcuts}
         onShortcutToggle={handleShortcutToggle}
       />
-      {/* TODO: ScheduleEditor will be re-implemented with new schedule types */}
+      <ScheduleEditor />
     </div>
   );
 };
