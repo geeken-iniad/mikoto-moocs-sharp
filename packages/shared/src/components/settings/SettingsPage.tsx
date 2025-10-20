@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { KeyboardShortcutSettings, Theme } from "../../types";
 import type { StorageManager } from "../../storage/manager";
-import { StorageProvider } from "../../storage/context";
+import { StorageProvider, useStorageManager } from "../../storage/context";
 import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { ThemeSettings } from "./ThemeSettings";
 import { ShortcutSettings } from "./KeyboardShortcutSettings";
@@ -10,11 +10,8 @@ interface SettingsPageProps {
   storageManager: StorageManager;
 }
 
-const SettingsPageContent = ({
-  storageManager,
-}: {
-  storageManager: StorageManager;
-}) => {
+const SettingsPageContent = () => {
+  const storageManager = useStorageManager();
   const [theme, setTheme] = useState<Theme>("light");
   const [shortcuts, setShortcuts] = useState<KeyboardShortcutSettings>({
     submitShortcut: false,
@@ -58,7 +55,7 @@ const SettingsPageContent = ({
 export const SettingsPage = ({ storageManager }: SettingsPageProps) => {
   return (
     <StorageProvider storageManager={storageManager}>
-      <SettingsPageContent storageManager={storageManager} />
+      <SettingsPageContent />
     </StorageProvider>
   );
 };
