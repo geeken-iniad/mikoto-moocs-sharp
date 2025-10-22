@@ -73,7 +73,12 @@ export const ScheduleCell = ({
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.backgroundColor = isEmpty ? "#fafafa" : (slot?.color || "#ffffff");
+    if (isEmpty || !slot) {
+      e.currentTarget.style.backgroundColor = "#fafafa";
+      return;
+    }
+    const backgroundColor = slot.color || "#ffffff";
+    e.currentTarget.style.backgroundColor = backgroundColor;
   };
 
   if (isEmpty) {
