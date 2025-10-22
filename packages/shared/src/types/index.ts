@@ -113,6 +113,7 @@ export interface ScheduleStore {
   schemaVersion: number;
   courses: Record<UUID, Course>;
   schedules: Record<UUID, Schedule>;
+  instructors?: string[]; // 教員名リスト
 }
 
 // 整合性検証エラー

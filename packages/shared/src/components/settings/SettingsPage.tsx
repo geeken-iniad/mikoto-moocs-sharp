@@ -9,6 +9,7 @@ import { StorageProvider, useStorageManager } from "../../storage/context";
 import { ThemeSettings } from "./ThemeSettings";
 import { ShortcutSettings } from "./KeyboardShortcutSettings";
 import { CampusSettings } from "./CampusSettings";
+import { InstructorSettings } from "./InstructorSettings";
 import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { CourseList } from "../schedule/CourseList";
 
@@ -63,15 +64,18 @@ const SettingsPageContent = () => {
   const [defaultCampus, setDefaultCampus] = useState<CampusId | undefined>(
     undefined,
   );
+  const [instructors, setInstructors] = useState<string[]>([]);
 
   useEffect(() => {
     const loadSettings = async () => {
       const savedTheme = await storageManager.getTheme();
       const keyboardShortcuts = await storageManager.getKeyboardShortcuts();
       const campusSettings = await storageManager.getCampusSettings();
+      const instructorList = await storageManager.getInstructors();
       setTheme(savedTheme);
       setShortcuts(keyboardShortcuts);
       setDefaultCampus(campusSettings.defaultCampus);
+      setInstructors(instructorList);
     };
     loadSettings();
   }, [storageManager]);
@@ -79,6 +83,11 @@ const SettingsPageContent = () => {
   const handleThemeChange = async (newTheme: Theme) => {
     setTheme(newTheme);
     await storageManager.setTheme(newTheme);
+  };
+
+  const handleInstructorSave = async (updatedInstructors: string[]) => {
+    setInstructors(updatedInstructors);
+    await storageManager.saveInstructors(updatedInstructors);
   };
 
   const handleShortcutToggle = async (key: keyof KeyboardShortcutSettings) => {
@@ -142,7 +151,15 @@ const SettingsPageContent = () => {
           </>
         )}
 
-        {activeTab === "courses" && <CourseList />}
+        {activeTab === "courses" && (
+          <>
+            <InstructorSettings
+              instructors={instructors}
+              onSave={handleInstructorSave}
+            />
+            <CourseList />
+          </>
+        )}
 
         {activeTab === "schedule" && <ScheduleEditor />}
       </div>

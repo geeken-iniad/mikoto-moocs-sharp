@@ -118,9 +118,6 @@ export const CourseFormModal = ({
 }: CourseFormModalProps) => {
   const storageManager = useStorageManager();
   const [courseName, setCourseName] = useState(existingCourse?.name || "");
-  const [instructors, setInstructors] = useState(
-    existingCourse?.instructors.join(", ") || "",
-  );
   const [code, setCode] = useState(existingCourse?.code || "");
   const [syllabusUrl, setSyllabusUrl] = useState(
     existingCourse?.urls?.syllabus || "",
@@ -139,29 +136,49 @@ export const CourseFormModal = ({
   const [defaultCampus, setDefaultCampus] = useState<CampusId | undefined>(
     undefined,
   );
+  const [availableInstructors, setAvailableInstructors] = useState<string[]>(
+    [],
+  );
+  const [selectedInstructors, setSelectedInstructors] = useState<string[]>(
+    existingCourse?.instructors || [],
+  );
+  const [customInstructor, setCustomInstructor] = useState("");
 
   useEffect(() => {
-    const loadDefaultCampus = async () => {
+    const loadSettings = async () => {
       const settings = await storageManager.getCampusSettings();
+      const instructors = await storageManager.getInstructors();
       setDefaultCampus(settings.defaultCampus);
+      setAvailableInstructors(instructors);
     };
-    loadDefaultCampus();
+    loadSettings();
   }, [storageManager]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!courseName.trim()) {
       alert("科目名を入力してください");
       return;
     }
 
-    const instructorList = instructors
+    // カスタム入力から教員名を追加
+    const customInstructorList = customInstructor
       .split(",")
       .map((i) => i.trim())
       .filter((i) => i);
 
+    const instructorList = [
+      ...selectedInstructors,
+      ...customInstructorList,
+    ].filter((i) => i);
+
     if (instructorList.length === 0) {
-      alert("教員名を入力してください");
+      alert("教員名を選択または入力してください");
       return;
+    }
+
+    // 新しい教員名をリストに追加
+    if (customInstructorList.length > 0) {
+      await storageManager.addInstructors(customInstructorList);
     }
 
     const validRooms = rooms.filter((r) => r.number.trim());
@@ -214,6 +231,18 @@ export const CourseFormModal = ({
     }
   };
 
+  const handleInstructorSelect = (instructor: string) => {
+    if (!selectedInstructors.includes(instructor)) {
+      setSelectedInstructors([...selectedInstructors, instructor]);
+    }
+  };
+
+  const handleRemoveInstructor = (instructor: string) => {
+    setSelectedInstructors(
+      selectedInstructors.filter((i) => i !== instructor),
+    );
+  };
+
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
@@ -233,13 +262,74 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>教員名 * (複数の場合はカンマ区切り)</label>
+          <label style={styles.label}>教員名 *</label>
+
+          {/* 選択された教員名を表示 */}
+          {selectedInstructors.length > 0 && (
+            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.5rem" }}>
+              {selectedInstructors.map((instructor, index) => (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.25rem",
+                    padding: "0.25rem 0.5rem",
+                    backgroundColor: "#e5e7eb",
+                    borderRadius: "0.25rem",
+                    fontSize: "0.875rem",
+                  }}
+                >
+                  <span>{instructor}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveInstructor(instructor)}
+                    style={{
+                      border: "none",
+                      background: "none",
+                      cursor: "pointer",
+                      padding: "0",
+                      color: "#6b7280",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* ドロップダウンで教員名を選択 */}
+          {availableInstructors.length > 0 && (
+            <select
+              style={{ ...styles.select, marginBottom: "0.5rem" }}
+              value=""
+              onChange={(e) => {
+                if (e.target.value) {
+                  handleInstructorSelect(e.target.value);
+                  e.target.value = "";
+                }
+              }}
+            >
+              <option value="">リストから選択...</option>
+              {availableInstructors
+                .filter((i) => !selectedInstructors.includes(i))
+                .map((instructor) => (
+                  <option key={instructor} value={instructor}>
+                    {instructor}
+                  </option>
+                ))}
+            </select>
+          )}
+
+          {/* カスタム教員名入力 */}
           <input
             type="text"
             style={styles.input}
-            value={instructors}
-            onChange={(e) => setInstructors(e.target.value)}
-            placeholder="例: 山田太郎, 佐藤花子"
+            value={customInstructor}
+            onChange={(e) => setCustomInstructor(e.target.value)}
+            placeholder="新しい教員名を入力 (複数の場合はカンマ区切り)"
           />
         </div>
 

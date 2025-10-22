@@ -37,12 +37,32 @@ export class StorageManager {
         schemaVersion: 1,
         courses: {},
         schedules: {},
+        instructors: [],
       }
     );
   }
 
   async saveScheduleStore(store: ScheduleStore): Promise<void> {
     await this.adapter.setItem(STORAGE_KEYS.SCHEDULE_STORE, store);
+  }
+
+  async getInstructors(): Promise<string[]> {
+    const store = await this.getScheduleStore();
+    return store.instructors || [];
+  }
+
+  async saveInstructors(instructors: string[]): Promise<void> {
+    const store = await this.getScheduleStore();
+    store.instructors = instructors;
+    await this.saveScheduleStore(store);
+  }
+
+  async addInstructors(newInstructors: string[]): Promise<void> {
+    const existingInstructors = await this.getInstructors();
+    const mergedInstructors = [
+      ...new Set([...existingInstructors, ...newInstructors]),
+    ].sort();
+    await this.saveInstructors(mergedInstructors);
   }
 
   watchScheduleStore(callback: (newStore: ScheduleStore | null) => void) {
