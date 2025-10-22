@@ -101,6 +101,9 @@ export const ScheduleSelector = ({
 }: ScheduleSelectorProps) => {
 
   // Create new schedule form state
+  // The default year is initialized to the current year only once when the component mounts.
+  // If the component remains mounted across a year boundary, this value will not update automatically.
+  // This is intentional; users can manually change the year if needed.
   const [newYear, setNewYear] = useState(new Date().getFullYear().toString());
   const [newSemester, setNewSemester] = useState<Semester>("Spring");
   const [newDivision, setNewDivision] = useState<TermDivision>("Semester");
