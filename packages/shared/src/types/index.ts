@@ -33,10 +33,11 @@ export interface Room {
 }
 
 export interface CourseUrls {
-  syllabus?: string;
   moocs?: string;
+  classroom?: string;
   toyonet?: string;
   slack?: string;
+  syllabus?: string;
   other?: Array<{ label: string; url: string }>;
 }
 

@@ -123,14 +123,17 @@ export const CourseFormModal = ({
   const storageManager = useStorageManager();
   const [courseName, setCourseName] = useState(existingCourse?.name || "");
   const [code, setCode] = useState(existingCourse?.code || "");
-  const [syllabusUrl, setSyllabusUrl] = useState(
-    existingCourse?.urls?.syllabus || "",
-  );
   const [moocsUrl, setMoocsUrl] = useState(existingCourse?.urls?.moocs || "");
+  const [classroomUrl, setClassroomUrl] = useState(
+    existingCourse?.urls?.classroom || "",
+  );
   const [toyonetUrl, setToyonetUrl] = useState(
     existingCourse?.urls?.toyonet || "",
   );
   const [slackUrl, setSlackUrl] = useState(existingCourse?.urls?.slack || "");
+  const [syllabusUrl, setSyllabusUrl] = useState(
+    existingCourse?.urls?.syllabus || "",
+  );
 
   // Default rooms state
   const initialRooms = existingCourse?.defaultRooms || [];
@@ -193,10 +196,11 @@ export const CourseFormModal = ({
       instructors: instructorList,
       code: code.trim() || undefined,
       urls: {
-        syllabus: syllabusUrl.trim() || undefined,
         moocs: moocsUrl.trim() || undefined,
+        classroom: classroomUrl.trim() || undefined,
         toyonet: toyonetUrl.trim() || undefined,
         slack: slackUrl.trim() || undefined,
+        syllabus: syllabusUrl.trim() || undefined,
       },
       defaultRooms: validRooms.length > 0 ? validRooms : undefined,
     };
@@ -436,17 +440,6 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>シラバスURL</label>
-          <input
-            type="url"
-            style={styles.input}
-            value={syllabusUrl}
-            onChange={(e) => setSyllabusUrl(e.target.value)}
-            placeholder="https://..."
-          />
-        </div>
-
-        <div style={styles.formGroup}>
           <label style={styles.label}>MOOCS URL</label>
           <input
             type="url"
@@ -454,6 +447,17 @@ export const CourseFormModal = ({
             value={moocsUrl}
             onChange={(e) => setMoocsUrl(e.target.value)}
             placeholder="https://moocs.iniad.org/..."
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>Google Classroom URL</label>
+          <input
+            type="url"
+            style={styles.input}
+            value={classroomUrl}
+            onChange={(e) => setClassroomUrl(e.target.value)}
+            placeholder="https://classroom.google.com/..."
           />
         </div>
 
@@ -475,6 +479,17 @@ export const CourseFormModal = ({
             style={styles.input}
             value={slackUrl}
             onChange={(e) => setSlackUrl(e.target.value)}
+            placeholder="https://..."
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>シラバスURL</label>
+          <input
+            type="url"
+            style={styles.input}
+            value={syllabusUrl}
+            onChange={(e) => setSyllabusUrl(e.target.value)}
             placeholder="https://..."
           />
         </div>
