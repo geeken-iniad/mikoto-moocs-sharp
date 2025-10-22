@@ -1,16 +1,10 @@
 import { useState, useEffect, type CSSProperties } from "react";
-import type { Course, Offering, Schedule, Weekday, Period } from "../../types";
+import type { Course, ScheduleSlot, Schedule, Weekday, Period } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
-import { useStorageManager } from "../../storage/context";
 import { ScheduleSelector } from "./ScheduleSelector";
 import { ScheduleGrid } from "./ScheduleGrid";
-import { OfferingEditModal } from "./OfferingEditModal";
-import {
-  getOfferingsByWeekdayAndPeriod,
-  addCourse,
-  addOffering,
-  addOfferingToSchedule,
-} from "../../utils/schedule";
+import { SlotEditModal } from "./SlotEditModal";
+import { createTimeSlotKey } from "../../utils/schedule";
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -24,12 +18,12 @@ const styles: Record<string, CSSProperties> = {
   },
   loading: {
     padding: "2rem",
-    textAlign: "center",
+    textAlign: "center" as const,
     color: "#6b7280",
   },
   noSchedule: {
     padding: "2rem",
-    textAlign: "center",
+    textAlign: "center" as const,
     color: "#6b7280",
     backgroundColor: "#f9fafb",
     borderRadius: "0.5rem",
@@ -41,15 +35,11 @@ export const ScheduleEditor = () => {
   const {
     store,
     isLoading,
-    updateCourse,
-    deleteCourse,
-    updateOffering,
-    deleteOffering,
     createSchedule,
-    removeOfferingFromSchedule,
+    addSlot,
+    updateSlot,
+    removeSlot,
   } = useScheduleStore();
-
-  const storageManager = useStorageManager();
 
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
     null,
@@ -74,15 +64,6 @@ export const ScheduleEditor = () => {
     ? store.schedules[selectedScheduleId]
     : null;
 
-  console.log("[ScheduleEditor] Current state:", {
-    selectedScheduleId,
-    selectedSchedule,
-    selectedScheduleOfferingIds: selectedSchedule?.offeringIds,
-    storeSchedules: store.schedules,
-    storeCourses: Object.keys(store.courses),
-    storeOfferings: Object.keys(store.offerings),
-  });
-
   const handleCreateSchedule = async (schedule: Schedule) => {
     await createSchedule(schedule);
     setSelectedScheduleId(schedule.id);
@@ -92,112 +73,95 @@ export const ScheduleEditor = () => {
     setEditingCell({ weekday, period });
   };
 
-  const handleSave = async (course: Course, offering: Offering) => {
-    if (!selectedSchedule) {
-      console.error("No schedule selected");
-      alert("時間割が選択されていません");
+  const handleSaveSlot = async (slotData: Partial<Omit<ScheduleSlot, "id">>) => {
+    if (!selectedSchedule || !editingCell) {
+      console.error("No schedule or cell selected");
+      alert("時間割またはセルが選択されていません");
       return;
     }
 
+    if (!slotData.courseId) {
+      alert("科目を選択してください");
+      return;
+    }
+
+    const timeSlotKey = createTimeSlotKey(editingCell.weekday, editingCell.period);
+    const existingSlotId = selectedSchedule.grid[timeSlotKey];
+
     try {
-      console.log("Saving course and offering:", { course, offering, selectedSchedule });
-
-      // Check if this is an update or create
-      const existingOffering = getOfferingsByWeekdayAndPeriod(
-        store,
-        selectedSchedule.id,
-        editingCell!.weekday,
-        editingCell!.period,
-      );
-
-      if (existingOffering) {
-        console.log("Updating existing offering");
-        // Update existing course and offering
-        await updateCourse(course.id, course);
-        await updateOffering(offering.id, offering);
+      if (existingSlotId) {
+        // Update existing slot
+        await updateSlot(selectedSchedule.id, existingSlotId, slotData);
       } else {
-        console.log("Creating new course and offering");
-        // Create new course, offering, and add to schedule in one operation
-        // Build the complete new store state
-        let newStore = addCourse(store, course);
-        console.log("After addCourse:", newStore);
-        newStore = addOffering(newStore, offering);
-        console.log("After addOffering:", newStore);
-        newStore = addOfferingToSchedule(newStore, selectedSchedule.id, offering.id);
-        console.log("After addOfferingToSchedule:", newStore);
-
-        // Save the complete new store state
-        await storageManager.saveScheduleStore(newStore);
-        console.log("All changes saved to storage");
+        // Add new slot
+        await addSlot(
+          selectedSchedule.id,
+          timeSlotKey,
+          slotData.courseId,
+          {
+            rooms: slotData.rooms,
+            defaultDeliveryMode: slotData.defaultDeliveryMode,
+            memo: slotData.memo,
+            color: slotData.color,
+            customInstructors: slotData.customInstructors,
+          },
+        );
       }
-
-      console.log("Save completed successfully");
       setEditingCell(null);
     } catch (error) {
-      console.error("Save error:", error);
-      alert(
-        error instanceof Error ? error.message : "保存に失敗しました",
-      );
+      console.error("Failed to save slot:", error);
+      alert(`保存に失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`);
     }
   };
 
-  const handleDelete = async () => {
-    if (!selectedSchedule || !editingCell) return;
-
-    const offering = getOfferingsByWeekdayAndPeriod(
-      store,
-      selectedSchedule.id,
-      editingCell.weekday,
-      editingCell.period,
-    );
-
-    if (!offering) return;
-
-    if (
-      !confirm(
-        "この授業を削除してもよろしいですか？\n他の時間割でも使用している場合、そちらも削除されます。",
-      )
-    ) {
+  const handleDeleteSlot = async () => {
+    if (!selectedSchedule || !editingCell) {
       return;
     }
 
+    if (!confirm("この授業を削除してもよろしいですか？")) {
+      return;
+    }
+
+    const timeSlotKey = createTimeSlotKey(editingCell.weekday, editingCell.period);
+
     try {
-      await removeOfferingFromSchedule(selectedSchedule.id, offering.id);
-      await deleteOffering(offering.id);
-
-      // Check if this course is used in any other offering
-      const otherOfferings = Object.values(store.offerings).filter(
-        (o) => o.courseId === offering.courseId && o.id !== offering.id,
-      );
-
-      // If no other offerings use this course, delete it
-      if (otherOfferings.length === 0) {
-        await deleteCourse(offering.courseId);
-      }
-
+      await removeSlot(selectedSchedule.id, timeSlotKey);
       setEditingCell(null);
     } catch (error) {
-      alert(
-        error instanceof Error ? error.message : "削除に失敗しました",
-      );
+      console.error("Failed to delete slot:", error);
+      alert(`削除に失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`);
     }
-  };
-
-  const handleCloseModal = () => {
-    setEditingCell(null);
   };
 
   if (isLoading) {
     return <div style={styles.loading}>読み込み中...</div>;
   }
 
+  const courses = Object.values(store.courses);
+
+  // Get existing slot and course for editing
+  let existingSlot: ScheduleSlot | undefined;
+  let existingCourse: Course | undefined;
+
+  if (editingCell && selectedSchedule) {
+    const timeSlotKey = createTimeSlotKey(editingCell.weekday, editingCell.period);
+    const slotId = selectedSchedule.grid[timeSlotKey];
+    if (slotId) {
+      existingSlot = selectedSchedule.slots[slotId];
+      if (existingSlot) {
+        existingCourse = store.courses[existingSlot.courseId];
+      }
+    }
+  }
+
   return (
     <div style={styles.container}>
-      <h2 style={styles.header}>時間割編集</h2>
+      <h1 style={styles.header}>時間割管理</h1>
 
       <ScheduleSelector
-        store={store}
-        selectedSchedule={selectedSchedule}
+        schedules={schedules}
+        selectedScheduleId={selectedScheduleId}
         onSelectSchedule={setSelectedScheduleId}
         onCreateSchedule={handleCreateSchedule}
       />
@@ -210,41 +174,18 @@ export const ScheduleEditor = () => {
         />
       ) : (
         <div style={styles.noSchedule}>
-          時間割を選択または作成してください
+          時間割を作成してください
         </div>
       )}
 
-      {editingCell && selectedSchedule && (
-        <OfferingEditModal
-          store={store}
-          weekday={editingCell.weekday}
-          period={editingCell.period}
-          existingOffering={getOfferingsByWeekdayAndPeriod(
-            store,
-            selectedSchedule.id,
-            editingCell.weekday,
-            editingCell.period,
-          )}
-          existingCourse={
-            getOfferingsByWeekdayAndPeriod(
-              store,
-              selectedSchedule.id,
-              editingCell.weekday,
-              editingCell.period,
-            )
-              ? store.courses[
-                  getOfferingsByWeekdayAndPeriod(
-                    store,
-                    selectedSchedule.id,
-                    editingCell.weekday,
-                    editingCell.period,
-                  )!.courseId
-                ]
-              : undefined
-          }
-          onSave={handleSave}
-          onDelete={handleDelete}
-          onClose={handleCloseModal}
+      {editingCell && (
+        <SlotEditModal
+          courses={courses}
+          existingSlot={existingSlot}
+          existingCourse={existingCourse}
+          onSave={handleSaveSlot}
+          onDelete={existingSlot ? handleDeleteSlot : undefined}
+          onClose={() => setEditingCell(null)}
         />
       )}
     </div>

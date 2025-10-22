@@ -68,6 +68,29 @@ export const CAMPUS_LABELS: Record<CampusId, string> = {
   hakusan: "白山",
 };
 
+// Delivery Mode Labels
+export const DELIVERY_MODE_LABELS = {
+  "face-to-face": "対面",
+  online: "オンライン",
+  "on-demand": "オンデマンド",
+} as const;
+
+// Room Type Labels
+export const ROOM_TYPE_LABELS = {
+  physical: "対面教室",
+  online: "オンライン",
+  "on-demand": "オンデマンド",
+} as const;
+
+// Exception Type Labels
+export const EXCEPTION_TYPE_LABELS = {
+  "delivery-mode-change": "授業形態変更",
+  cancellation: "休講",
+  makeup: "補講",
+  "room-change": "教室変更",
+  other: "その他",
+} as const;
+
 // Z-Index Constants
 export const Z_INDEX = {
   SETTINGS_MODAL: 100000,

@@ -137,12 +137,19 @@ export const CourseList = () => {
   };
 
   const handleDeleteCourse = async (courseId: string) => {
-    // Check if course is used in any offering
-    const usedInOfferings = Object.values(store.offerings).some(
-      (o) => o.courseId === courseId,
-    );
+    // Check if course is used in any schedule slot
+    let usedInSlots = false;
+    for (const schedule of Object.values(store.schedules)) {
+      for (const slot of Object.values(schedule.slots)) {
+        if (slot.courseId === courseId) {
+          usedInSlots = true;
+          break;
+        }
+      }
+      if (usedInSlots) break;
+    }
 
-    if (usedInOfferings) {
+    if (usedInSlots) {
       if (
         !confirm(
           "このコースは時間割で使用されています。\n削除すると関連する時間割も削除されます。\n本当に削除しますか？",

@@ -13,13 +13,22 @@ export interface ExtendedHTMLTextAreaElement extends HTMLTextAreaElement {
 type UUID = string;
 export type Weekday = "Mon" | "Tue" | "Wed" | "Thu" | "Fri" | "Sat";
 export type Period = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+export type TimeSlotKey = `${Weekday}-${Period}`;
+type SlotId = UUID;
 
 export type CampusId = "akabanedai" | "asaka" | "kawagoe" | "hakusan";
 
+// 授業形態
+export type DeliveryMode = "face-to-face" | "online" | "on-demand";
+
+// 教室種別
+export type RoomType = "physical" | "online" | "on-demand";
+
 export interface Room {
-  campus?: CampusId;
-  building?: string;
-  number: string; // "A-402" など
+  type: RoomType;
+  campus?: CampusId; // physical の場合に指定
+  building?: string; // physical の場合に指定
+  number: string; // physical: 教室番号（"A-402"）、online/on-demand: プラットフォーム名（"Zoom", "Teams"等）
   note?: string; // 実験室/PC室 等
 }
 
@@ -31,24 +40,53 @@ export interface CourseUrls {
   other?: Array<{ label: string; url: string }>;
 }
 
+// 科目（恒久情報）
 export interface Course {
-  // 旧Class
   id: UUID;
-  code?: string; // シラバスの科目コード等
+  code?: string;
   name: string;
-  instructors: string[]; // 複数OK
+  instructors: string[];
   urls?: CourseUrls;
-  // 部分的に曜日で部屋が分かれるなら offering 側で上書きもできる
-  defaultRooms?: Room[]; // 共通の部屋(なければ offering.rooms を使う)
+  defaultRooms?: Room[];
 }
 
-export interface Offering {
-  // 開講(曜日×時限)
-  id: UUID;
+// 授業スロット（学期ごとの通常状態）
+export interface ScheduleSlot {
+  id: SlotId;
   courseId: UUID;
-  weekday: Weekday;
-  period: Period;
-  rooms?: Room[]; // ここで曜日別の部屋を指定
+  rooms?: Room[]; // Course.defaultRooms を完全置換
+  defaultDeliveryMode?: DeliveryMode; // 未指定の場合は face-to-face
+  memo?: string; // 学期全体の特記事項
+  color?: string; // 表示色
+  customInstructors?: string[]; // 担当教員の上書き
+}
+
+// 例外種別
+export type ExceptionType =
+  | "delivery-mode-change" // 授業形態変更
+  | "cancellation" // 休講
+  | "makeup" // 補講
+  | "room-change" // 教室変更
+  | "other"; // その他
+
+// 補講情報
+export interface MakeupInfo {
+  originalDate: string; // ISO 8601形式
+  makeupDate: string; // ISO 8601形式
+  makeupTimeSlotKey?: TimeSlotKey; // 振替先の時限
+  makeupRooms?: Room[]; // 振替先の教室
+}
+
+// 特例（特定日付の差分）
+export interface ExceptionEntry {
+  id: UUID;
+  slotId: SlotId;
+  date: string; // ISO 8601形式（例: "2025-04-15"）
+  type: ExceptionType;
+  changedDeliveryMode?: DeliveryMode; // 授業形態変更の場合
+  changedRooms?: Room[]; // 教室変更の場合
+  makeupInfo?: MakeupInfo; // 補講の場合
+  memo?: string; // 例外の詳細説明
 }
 
 export type Semester = "Spring" | "Fall";
@@ -60,18 +98,27 @@ export interface TermInfo {
   division: TermDivision;
 }
 
+// 時間割（学期ごと）
 export interface Schedule {
-  // 年度×学期の時間割
   id: UUID;
-  academicYear: number; // 2025 など
+  academicYear: number;
   term: TermInfo;
-  offeringIds: UUID[]; // その学期で有効な Offering 群
+  grid: Partial<Record<TimeSlotKey, SlotId>>; // セル配置
+  slots: Record<SlotId, ScheduleSlot>; // 実体辞書
+  exceptions: Record<string, ExceptionEntry[]>; // 日付 → 例外の配列
 }
 
+// ストレージ全体
 export interface ScheduleStore {
+  schemaVersion: number;
   courses: Record<UUID, Course>;
-  offerings: Record<UUID, Offering>;
   schedules: Record<UUID, Schedule>;
+}
+
+// 整合性検証エラー
+export interface ValidationError {
+  scheduleId?: UUID;
+  message: string;
 }
 
 // Theme Types

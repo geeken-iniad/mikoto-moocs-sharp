@@ -1,11 +1,11 @@
 import type { CSSProperties } from "react";
-import type { Offering, Course, Weekday, Period } from "../../types";
-import { getCampusLabel } from "../../utils/schedule";
+import type { ScheduleSlot, Course, Weekday, Period } from "../../types";
+import { getCampusLabel, resolveRooms, resolveInstructors } from "../../utils/schedule";
 
 interface ScheduleCellProps {
   weekday: Weekday;
   period: Period;
-  offering?: Offering;
+  slot?: ScheduleSlot;
   course?: Course;
   onClick: () => void;
 }
@@ -18,6 +18,7 @@ const styles: Record<string, CSSProperties> = {
     cursor: "pointer",
     backgroundColor: "#ffffff",
     transition: "all 0.2s",
+    position: "relative",
   },
   cellHover: {
     backgroundColor: "#f3f4f6",
@@ -48,14 +49,20 @@ const styles: Record<string, CSSProperties> = {
     color: "#9ca3af",
     lineHeight: "1.5",
   },
+  memo: {
+    fontSize: "0.8125rem",
+    color: "#6b7280",
+    marginTop: "0.25rem",
+    fontStyle: "italic",
+  },
 };
 
 export const ScheduleCell = ({
-  offering,
+  slot,
   course,
   onClick,
 }: ScheduleCellProps) => {
-  const isEmpty = !offering || !course;
+  const isEmpty = !slot || !course;
 
   const handleClick = () => {
     onClick();
@@ -66,7 +73,7 @@ export const ScheduleCell = ({
   };
 
   const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    e.currentTarget.style.backgroundColor = isEmpty ? "#fafafa" : "#ffffff";
+    e.currentTarget.style.backgroundColor = isEmpty ? "#fafafa" : (slot?.color || "#ffffff");
   };
 
   if (isEmpty) {
@@ -82,28 +89,40 @@ export const ScheduleCell = ({
     );
   }
 
-  // Get room information (offering rooms override course default rooms)
-  const rooms = offering.rooms || course.defaultRooms || [];
+  // Resolve display information
+  const rooms = resolveRooms(course, slot);
+  const instructors = resolveInstructors(course, slot);
+
   const roomText = rooms
     .map((r) => {
       const parts = [];
-      if (r.campus) parts.push(getCampusLabel(r.campus));
-      if (r.building) parts.push(r.building);
-      parts.push(r.number);
+      if (r.type === "physical") {
+        if (r.campus) parts.push(getCampusLabel(r.campus));
+        if (r.building) parts.push(r.building);
+        parts.push(r.number);
+      } else {
+        parts.push(r.number); // Online/On-demand platform name
+      }
       return parts.join(" ");
     })
     .join(", ");
 
+  const cellStyle: CSSProperties = {
+    ...styles.cell,
+    ...(slot.color ? { backgroundColor: slot.color } : {}),
+  };
+
   return (
     <div
-      style={styles.cell}
+      style={cellStyle}
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div style={styles.courseName}>{course.name}</div>
-      <div style={styles.instructors}>{course.instructors.join(", ")}</div>
+      <div style={styles.instructors}>{instructors.join(", ")}</div>
       {roomText && <div style={styles.room}>{roomText}</div>}
+      {slot.memo && <div style={styles.memo}>{slot.memo}</div>}
     </div>
   );
 };

@@ -1,23 +1,19 @@
 import { useState, type CSSProperties } from "react";
 import type {
   Course,
-  Offering,
+  ScheduleSlot,
   Room,
-  Weekday,
-  Period,
+  RoomType,
+  DeliveryMode,
   CampusId,
-  ScheduleStore,
 } from "../../types";
-import { DAY_LABELS, PERIODS, CAMPUS_LABELS } from "../../constants";
-import { generateUUID } from "../../utils/schedule";
+import { CAMPUS_LABELS, DELIVERY_MODE_LABELS, ROOM_TYPE_LABELS } from "../../constants";
 
-interface OfferingEditModalProps {
-  store: ScheduleStore;
-  weekday: Weekday;
-  period: Period;
-  existingOffering?: Offering;
+interface SlotEditModalProps {
+  courses: Course[];
+  existingSlot?: ScheduleSlot;
   existingCourse?: Course;
-  onSave: (course: Course, offering: Offering) => void;
+  onSave: (slotData: Partial<Omit<ScheduleSlot, "id">>) => void;
   onDelete?: () => void;
   onClose: () => void;
 }
@@ -61,14 +57,6 @@ const styles: Record<string, CSSProperties> = {
     marginBottom: "0.25rem",
     color: "#374151",
   },
-  input: {
-    width: "100%",
-    padding: "0.5rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
-    boxSizing: "border-box" as const,
-  },
   select: {
     width: "100%",
     padding: "0.5rem",
@@ -78,9 +66,23 @@ const styles: Record<string, CSSProperties> = {
     backgroundColor: "#ffffff",
     boxSizing: "border-box" as const,
   },
-  readOnly: {
-    backgroundColor: "#f9fafb",
-    color: "#6b7280",
+  input: {
+    width: "100%",
+    padding: "0.5rem",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    fontSize: "0.875rem",
+    boxSizing: "border-box" as const,
+  },
+  textarea: {
+    width: "100%",
+    padding: "0.5rem",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    fontSize: "0.875rem",
+    minHeight: "60px",
+    resize: "vertical" as const,
+    boxSizing: "border-box" as const,
   },
   buttonGroup: {
     display: "flex",
@@ -125,77 +127,53 @@ const styles: Record<string, CSSProperties> = {
     fontSize: "0.75rem",
     padding: "0.375rem 0.75rem",
   },
-  courseInfo: {
-    padding: "0.75rem",
-    backgroundColor: "#f3f4f6",
-    borderRadius: "0.375rem",
-    marginBottom: "1rem",
-  },
-  courseInfoLabel: {
-    fontSize: "0.75rem",
-    color: "#6b7280",
-    marginBottom: "0.25rem",
-  },
-  courseInfoValue: {
-    fontSize: "0.875rem",
-    color: "#1f2937",
-    fontWeight: 500,
-  },
 };
 
-export const OfferingEditModal = ({
-  store,
-  weekday,
-  period,
-  existingOffering,
+export const SlotEditModal = ({
+  courses,
+  existingSlot,
   existingCourse,
   onSave,
   onDelete,
   onClose,
-}: OfferingEditModalProps) => {
-  const courses = Object.values(store.courses);
-
-  const [selectedCourseId, setSelectedCourseId] = useState<string>(
-    existingCourse?.id || "",
+}: SlotEditModalProps) => {
+  const [courseId, setCourseId] = useState(
+    existingSlot?.courseId || existingCourse?.id || "",
   );
-
-  // Room state (for offering-specific rooms)
-  const initialRooms = existingOffering?.rooms || existingCourse?.defaultRooms || [];
-  const [rooms, setRooms] = useState<Room[]>(
-    initialRooms.length > 0 ? initialRooms : [{ number: "" }],
+  const [deliveryMode, setDeliveryMode] = useState<DeliveryMode | "">(
+    existingSlot?.defaultDeliveryMode || "",
   );
+  const [memo, setMemo] = useState(existingSlot?.memo || "");
+  const [color, setColor] = useState(existingSlot?.color || "");
 
-  const selectedCourse = selectedCourseId
-    ? store.courses[selectedCourseId]
-    : null;
+  const initialRooms =
+    existingSlot?.rooms ||
+    (existingCourse?.defaultRooms && existingCourse.defaultRooms.length > 0
+      ? existingCourse.defaultRooms
+      : [{ type: "physical" as RoomType, number: "" }]);
+  const [rooms, setRooms] = useState<Room[]>(initialRooms);
 
   const handleSave = () => {
-    if (!selectedCourseId) {
-      alert("コースを選択してください");
-      return;
-    }
-
-    const course = store.courses[selectedCourseId];
-    if (!course) {
-      alert("選択されたコースが見つかりません");
+    if (!courseId) {
+      alert("科目を選択してください");
       return;
     }
 
     const validRooms = rooms.filter((r) => r.number.trim());
 
-    const offering: Offering = {
-      id: existingOffering?.id || generateUUID(),
-      courseId: course.id,
-      weekday,
-      period,
+    const slotData: Partial<Omit<ScheduleSlot, "id">> = {
+      courseId,
+      defaultDeliveryMode: deliveryMode || undefined,
+      memo: memo.trim() || undefined,
+      color: color.trim() || undefined,
       rooms: validRooms.length > 0 ? validRooms : undefined,
     };
 
-    onSave(course, offering);
+    onSave(slotData);
   };
 
   const handleAddRoom = () => {
-    setRooms([...rooms, { number: "" }]);
+    setRooms([...rooms, { type: "physical", number: "" }]);
   };
 
   const handleRoomChange = (
@@ -204,7 +182,9 @@ export const OfferingEditModal = ({
     value: string,
   ) => {
     const newRooms = [...rooms];
-    if (field === "campus") {
+    if (field === "type") {
+      newRooms[index] = { ...newRooms[index], type: value as RoomType };
+    } else if (field === "campus") {
       newRooms[index] = { ...newRooms[index], campus: value as CampusId };
     } else {
       newRooms[index] = { ...newRooms[index], [field]: value };
@@ -222,102 +202,92 @@ export const OfferingEditModal = ({
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h2 style={styles.header}>
-          {existingOffering ? "授業を編集" : "授業を追加"} -{" "}
-          {DAY_LABELS[weekday]} {PERIODS[period].label}
+          {existingSlot ? "授業スロットを編集" : "授業スロットを追加"}
         </h2>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>曜日・時限</label>
-          <input
-            type="text"
-            style={{ ...styles.input, ...styles.readOnly }}
-            value={`${DAY_LABELS[weekday]} ${PERIODS[period].label}`}
-            readOnly
-          />
-        </div>
-
-        <div style={styles.formGroup}>
-          <label style={styles.label}>コース *</label>
+          <label style={styles.label}>科目 *</label>
           <select
             style={styles.select}
-            value={selectedCourseId}
-            onChange={(e) => setSelectedCourseId(e.target.value)}
-            disabled={!!existingOffering}
+            value={courseId}
+            onChange={(e) => setCourseId(e.target.value)}
           >
-            <option value="">コースを選択...</option>
+            <option value="">科目を選択...</option>
             {courses.map((course) => (
               <option key={course.id} value={course.id}>
                 {course.name} ({course.instructors.join(", ")})
-                {course.code ? ` - ${course.code}` : ""}
               </option>
             ))}
           </select>
         </div>
 
-        {selectedCourse && (
-          <div style={styles.courseInfo}>
-            <div style={styles.courseInfoLabel}>選択中のコース情報</div>
-            <div style={styles.courseInfoValue}>{selectedCourse.name}</div>
-            <div style={{ fontSize: "0.75rem", color: "#6b7280", marginTop: "0.25rem" }}>
-              教員: {selectedCourse.instructors.join(", ")}
-              {selectedCourse.code && ` | 科目コード: ${selectedCourse.code}`}
-            </div>
-            {selectedCourse.defaultRooms && selectedCourse.defaultRooms.length > 0 && (
-              <div style={{ fontSize: "0.75rem", color: "#6b7280", marginTop: "0.25rem" }}>
-                デフォルト教室:{" "}
-                {selectedCourse.defaultRooms
-                  .map((r) => {
-                    const parts = [];
-                    if (r.campus) parts.push(CAMPUS_LABELS[r.campus]);
-                    if (r.building) parts.push(r.building);
-                    parts.push(r.number);
-                    return parts.join(" ");
-                  })
-                  .join(", ")}
-              </div>
-            )}
-          </div>
-        )}
+        <div style={styles.formGroup}>
+          <label style={styles.label}>授業形態</label>
+          <select
+            style={styles.select}
+            value={deliveryMode}
+            onChange={(e) => setDeliveryMode(e.target.value as DeliveryMode | "")}
+          >
+            <option value="">デフォルト（対面）</option>
+            {Object.entries(DELIVERY_MODE_LABELS).map(([mode, label]) => (
+              <option key={mode} value={mode}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </div>
 
         <div style={styles.roomSection}>
-          <div style={styles.roomHeader}>
-            教室
-            {selectedCourse?.defaultRooms && (
-              <span style={{ fontWeight: 400, fontSize: "0.75rem", marginLeft: "0.5rem" }}>
-                (デフォルトの上書き)
-              </span>
-            )}
-          </div>
+          <div style={styles.roomHeader}>教室（科目のデフォルト教室を上書き）</div>
           {rooms.map((room, index) => (
             <div key={index} style={{ marginBottom: "0.5rem" }}>
-              <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.25rem" }}>
+              <div
+                style={{ display: "flex", gap: "0.5rem", marginBottom: "0.25rem" }}
+              >
                 <select
                   style={{ ...styles.select, flex: "1" }}
-                  value={room.campus || ""}
-                  onChange={(e) =>
-                    handleRoomChange(index, "campus", e.target.value)
-                  }
+                  value={room.type}
+                  onChange={(e) => handleRoomChange(index, "type", e.target.value)}
                 >
-                  <option value="">キャンパス</option>
-                  {Object.entries(CAMPUS_LABELS).map(([id, label]) => (
-                    <option key={id} value={id}>
+                  {Object.entries(ROOM_TYPE_LABELS).map(([type, label]) => (
+                    <option key={type} value={type}>
                       {label}
                     </option>
                   ))}
                 </select>
+                {room.type === "physical" && (
+                  <select
+                    style={{ ...styles.select, flex: "1" }}
+                    value={room.campus || ""}
+                    onChange={(e) =>
+                      handleRoomChange(index, "campus", e.target.value)
+                    }
+                  >
+                    <option value="">キャンパス</option>
+                    {Object.entries(CAMPUS_LABELS).map(([id, label]) => (
+                      <option key={id} value={id}>
+                        {label}
+                      </option>
+                    ))}
+                  </select>
+                )}
+                {room.type === "physical" && (
+                  <input
+                    type="text"
+                    style={{ ...styles.input, flex: "1" }}
+                    placeholder="建物"
+                    value={room.building || ""}
+                    onChange={(e) =>
+                      handleRoomChange(index, "building", e.target.value)
+                    }
+                  />
+                )}
                 <input
                   type="text"
                   style={{ ...styles.input, flex: "1" }}
-                  placeholder="建物"
-                  value={room.building || ""}
-                  onChange={(e) =>
-                    handleRoomChange(index, "building", e.target.value)
+                  placeholder={
+                    room.type === "physical" ? "部屋番号 *" : "プラットフォーム名"
                   }
-                />
-                <input
-                  type="text"
-                  style={{ ...styles.input, flex: "1" }}
-                  placeholder="部屋番号 *"
                   value={room.number}
                   onChange={(e) =>
                     handleRoomChange(index, "number", e.target.value)
@@ -348,15 +318,39 @@ export const OfferingEditModal = ({
           ))}
           <button
             type="button"
-            style={{ ...styles.button, ...styles.secondaryButton, ...styles.addButton }}
+            style={{
+              ...styles.button,
+              ...styles.secondaryButton,
+              ...styles.addButton,
+            }}
             onClick={handleAddRoom}
           >
             + 教室を追加
           </button>
         </div>
 
+        <div style={styles.formGroup}>
+          <label style={styles.label}>メモ（学期全体の特記事項）</label>
+          <textarea
+            style={styles.textarea}
+            value={memo}
+            onChange={(e) => setMemo(e.target.value)}
+            placeholder="例: 前半のみ、実験あり"
+          />
+        </div>
+
+        <div style={styles.formGroup}>
+          <label style={styles.label}>表示色</label>
+          <input
+            type="color"
+            style={styles.input}
+            value={color || "#3b82f6"}
+            onChange={(e) => setColor(e.target.value)}
+          />
+        </div>
+
         <div style={styles.buttonGroup}>
-          {existingOffering && onDelete && (
+          {existingSlot && onDelete && (
             <button
               type="button"
               style={{ ...styles.button, ...styles.dangerButton }}

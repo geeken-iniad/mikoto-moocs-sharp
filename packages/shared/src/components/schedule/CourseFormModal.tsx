@@ -1,6 +1,6 @@
 import { useState, type CSSProperties } from "react";
-import type { Course, Room, CampusId } from "../../types";
-import { CAMPUS_LABELS } from "../../constants";
+import type { Course, Room, CampusId, RoomType } from "../../types";
+import { CAMPUS_LABELS, ROOM_TYPE_LABELS } from "../../constants";
 import { generateUUID } from "../../utils/schedule";
 
 interface CourseFormModalProps {
@@ -132,7 +132,7 @@ export const CourseFormModal = ({
   // Default rooms state
   const initialRooms = existingCourse?.defaultRooms || [];
   const [rooms, setRooms] = useState<Room[]>(
-    initialRooms.length > 0 ? initialRooms : [{ number: "" }],
+    initialRooms.length > 0 ? initialRooms : [{ type: "physical", number: "" }],
   );
 
   const handleSave = () => {
@@ -171,7 +171,7 @@ export const CourseFormModal = ({
   };
 
   const handleAddRoom = () => {
-    setRooms([...rooms, { number: "" }]);
+    setRooms([...rooms, { type: "physical", number: "" }]);
   };
 
   const handleRoomChange = (
@@ -180,7 +180,9 @@ export const CourseFormModal = ({
     value: string,
   ) => {
     const newRooms = [...rooms];
-    if (field === "campus") {
+    if (field === "type") {
+      newRooms[index] = { ...newRooms[index], type: value as RoomType };
+    } else if (field === "campus") {
       newRooms[index] = { ...newRooms[index], campus: value as CampusId };
     } else {
       newRooms[index] = { ...newRooms[index], [field]: value };
@@ -241,31 +243,46 @@ export const CourseFormModal = ({
               <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.25rem" }}>
                 <select
                   style={{ ...styles.select, flex: "1" }}
-                  value={room.campus || ""}
-                  onChange={(e) =>
-                    handleRoomChange(index, "campus", e.target.value)
-                  }
+                  value={room.type}
+                  onChange={(e) => handleRoomChange(index, "type", e.target.value)}
                 >
-                  <option value="">キャンパス</option>
-                  {Object.entries(CAMPUS_LABELS).map(([id, label]) => (
-                    <option key={id} value={id}>
+                  {Object.entries(ROOM_TYPE_LABELS).map(([type, label]) => (
+                    <option key={type} value={type}>
                       {label}
                     </option>
                   ))}
                 </select>
+                {room.type === "physical" && (
+                  <>
+                    <select
+                      style={{ ...styles.select, flex: "1" }}
+                      value={room.campus || ""}
+                      onChange={(e) =>
+                        handleRoomChange(index, "campus", e.target.value)
+                      }
+                    >
+                      <option value="">キャンパス</option>
+                      {Object.entries(CAMPUS_LABELS).map(([id, label]) => (
+                        <option key={id} value={id}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="text"
+                      style={{ ...styles.input, flex: "1" }}
+                      placeholder="建物"
+                      value={room.building || ""}
+                      onChange={(e) =>
+                        handleRoomChange(index, "building", e.target.value)
+                      }
+                    />
+                  </>
+                )}
                 <input
                   type="text"
                   style={{ ...styles.input, flex: "1" }}
-                  placeholder="建物"
-                  value={room.building || ""}
-                  onChange={(e) =>
-                    handleRoomChange(index, "building", e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  style={{ ...styles.input, flex: "1" }}
-                  placeholder="部屋番号 *"
+                  placeholder={room.type === "physical" ? "部屋番号 *" : "プラットフォーム名"}
                   value={room.number}
                   onChange={(e) =>
                     handleRoomChange(index, "number", e.target.value)

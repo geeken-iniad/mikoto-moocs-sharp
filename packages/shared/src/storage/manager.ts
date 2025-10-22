@@ -29,8 +29,8 @@ export class StorageManager {
     );
     return (
       result || {
+        schemaVersion: 1,
         courses: {},
-        offerings: {},
         schedules: {},
       }
     );

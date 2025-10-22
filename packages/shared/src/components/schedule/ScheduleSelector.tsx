@@ -1,11 +1,11 @@
 import { useState, type CSSProperties } from "react";
-import type { Schedule, ScheduleStore, Semester, TermDivision } from "../../types";
+import type { Schedule, Semester, TermDivision } from "../../types";
 import { SEMESTER_LABELS, VALID_TERM_DIVISIONS } from "../../constants";
 import { createTermInfo, formatTermInfo, createSchedule } from "../../utils/schedule";
 
 interface ScheduleSelectorProps {
-  store: ScheduleStore;
-  selectedSchedule: Schedule | null;
+  schedules: Schedule[];
+  selectedScheduleId: string | null;
   onSelectSchedule: (scheduleId: string) => void;
   onCreateSchedule: (schedule: Schedule) => void;
 }
@@ -84,12 +84,11 @@ const styles: Record<string, CSSProperties> = {
 };
 
 export const ScheduleSelector = ({
-  store,
-  selectedSchedule,
+  schedules,
+  selectedScheduleId,
   onSelectSchedule,
   onCreateSchedule,
 }: ScheduleSelectorProps) => {
-  const schedules = Object.values(store.schedules);
 
   // Create new schedule form state
   const [newYear, setNewYear] = useState(new Date().getFullYear().toString());
@@ -97,7 +96,7 @@ export const ScheduleSelector = ({
   const [newDivision, setNewDivision] = useState<TermDivision>("Semester");
 
   const handleScheduleChange = (scheduleId: string) => {
-    if (scheduleId && store.schedules[scheduleId]) {
+    if (scheduleId) {
       onSelectSchedule(scheduleId);
     }
   };
@@ -131,7 +130,7 @@ export const ScheduleSelector = ({
         {schedules.length > 0 ? (
           <select
             style={styles.select}
-            value={selectedSchedule?.id || ""}
+            value={selectedScheduleId || ""}
             onChange={(e) => handleScheduleChange(e.target.value)}
           >
             <option value="">選択してください</option>

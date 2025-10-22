@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import type { ScheduleStore, Schedule, Weekday, Period } from "../../types";
 import { DAYS, DAY_LABELS, PERIODS } from "../../constants";
-import { getOfferingsByWeekdayAndPeriod } from "../../utils/schedule";
+import { createTimeSlotKey, getSlotByTimeSlot } from "../../utils/schedule";
 import { ScheduleCell } from "./ScheduleCell";
 
 interface ScheduleGridProps {
@@ -86,22 +86,16 @@ export const ScheduleGrid = ({
                 </div>
               </td>
               {DAYS.map((day) => {
-                const offering = getOfferingsByWeekdayAndPeriod(
-                  store,
-                  schedule.id,
-                  day,
-                  period,
-                );
-                const course = offering
-                  ? store.courses[offering.courseId]
-                  : undefined;
+                const timeSlotKey = createTimeSlotKey(day, period);
+                const slot = getSlotByTimeSlot(schedule, timeSlotKey);
+                const course = slot ? store.courses[slot.courseId] : undefined;
 
                 return (
                   <td key={`${day}-${period}`}>
                     <ScheduleCell
                       weekday={day}
                       period={period}
-                      offering={offering}
+                      slot={slot}
                       course={course}
                       onClick={() => onCellClick(day, period)}
                     />
