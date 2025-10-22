@@ -127,8 +127,8 @@ export const CourseFormModal = ({
   const [classroomUrl, setClassroomUrl] = useState(
     existingCourse?.urls?.classroom || "",
   );
-  const [toyonetUrl, setToyonetUrl] = useState(
-    existingCourse?.urls?.toyonet || "",
+  const [toyonetAceUrl, setToyonetAceUrl] = useState(
+    existingCourse?.urls?.toyonetAce || "",
   );
   const [slackUrl, setSlackUrl] = useState(existingCourse?.urls?.slack || "");
   const [syllabusUrl, setSyllabusUrl] = useState(
@@ -198,7 +198,7 @@ export const CourseFormModal = ({
       urls: {
         moocs: moocsUrl.trim() || undefined,
         classroom: classroomUrl.trim() || undefined,
-        toyonet: toyonetUrl.trim() || undefined,
+        toyonetAce: toyonetAceUrl.trim() || undefined,
         slack: slackUrl.trim() || undefined,
         syllabus: syllabusUrl.trim() || undefined,
       },
@@ -462,12 +462,12 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>ToyoNet URL</label>
+          <label style={styles.label}>ToyoNet-ACE URL</label>
           <input
             type="url"
             style={styles.input}
-            value={toyonetUrl}
-            onChange={(e) => setToyonetUrl(e.target.value)}
+            value={toyonetAceUrl}
+            onChange={(e) => setToyonetAceUrl(e.target.value)}
             placeholder="https://..."
           />
         </div>
