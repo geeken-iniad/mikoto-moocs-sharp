@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { useState, type CSSProperties } from "react";
 import type { ScheduleSlot, Course, Weekday, Period } from "../../types";
 import { getCampusLabel, resolveRooms, resolveInstructors } from "../../utils/schedule";
 
@@ -63,28 +63,35 @@ export const ScheduleCell = ({
   onClick,
 }: ScheduleCellProps) => {
   const isEmpty = !slot || !course;
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleClick = () => {
     onClick();
   };
 
-  const handleMouseEnter = (e: React.MouseEvent<HTMLDivElement>) => {
-    Object.assign(e.currentTarget.style, styles.cellHover);
+  const handleMouseEnter = () => {
+    setIsHovered(true);
   };
 
-  const handleMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isEmpty || !slot) {
-      e.currentTarget.style.backgroundColor = "#fafafa";
-      return;
-    }
-    const backgroundColor = slot.color || "#ffffff";
-    e.currentTarget.style.backgroundColor = backgroundColor;
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
+
+  const baseCellStyle: CSSProperties = isEmpty
+    ? { ...styles.cell, ...styles.cellEmpty }
+    : {
+        ...styles.cell,
+        ...(slot?.color ? { backgroundColor: slot.color } : {}),
+      };
+
+  const cellStyle: CSSProperties = isHovered
+    ? { ...baseCellStyle, ...styles.cellHover }
+    : baseCellStyle;
 
   if (isEmpty) {
     return (
       <div
-        style={{ ...styles.cell, ...styles.cellEmpty }}
+        style={cellStyle}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -111,11 +118,6 @@ export const ScheduleCell = ({
       return parts.join(" ");
     })
     .join(", ");
-
-  const cellStyle: CSSProperties = {
-    ...styles.cell,
-    ...(slot.color ? { backgroundColor: slot.color } : {}),
-  };
 
   return (
     <div
