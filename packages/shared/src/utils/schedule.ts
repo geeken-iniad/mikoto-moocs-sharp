@@ -19,6 +19,9 @@ import type {
 } from "../types";
 import { VALID_TERM_DIVISIONS, SEMESTER_LABELS, CAMPUS_LABELS } from "../constants";
 
+export const MIN_ACADEMIC_YEAR = 2000;
+export const MAX_ACADEMIC_YEAR = 2100;
+
 /**
  * Generate a new UUID
  */
@@ -912,10 +915,10 @@ export function validateStore(store: ScheduleStore): ValidationError[] {
     }
 
     // 5. Academic year validity
-    if (schedule.academicYear < 2000 || schedule.academicYear > 2100) {
+    if (schedule.academicYear < MIN_ACADEMIC_YEAR || schedule.academicYear > MAX_ACADEMIC_YEAR) {
       errors.push({
         scheduleId,
-        message: `Schedule[${scheduleId}]: academic year ${schedule.academicYear} is out of valid range (2000-2100)`,
+        message: `Schedule[${scheduleId}]: academic year ${schedule.academicYear} is out of valid range (${MIN_ACADEMIC_YEAR}-${MAX_ACADEMIC_YEAR})`,
       });
     }
   }

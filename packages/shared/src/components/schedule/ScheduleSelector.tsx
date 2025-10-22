@@ -2,7 +2,13 @@ import { useState, type CSSProperties } from "react";
 import { CalendarPlus } from "lucide-react";
 import type { Schedule, Semester, TermDivision } from "../../types";
 import { SEMESTER_LABELS, VALID_TERM_DIVISIONS } from "../../constants";
-import { createTermInfo, formatTermInfo, createSchedule } from "../../utils/schedule";
+import {
+  createTermInfo,
+  formatTermInfo,
+  createSchedule,
+  MIN_ACADEMIC_YEAR,
+  MAX_ACADEMIC_YEAR,
+} from "../../utils/schedule";
 
 interface ScheduleSelectorProps {
   schedules: Schedule[];
@@ -107,8 +113,8 @@ export const ScheduleSelector = ({
 
   const handleCreateSchedule = () => {
     const year = Number.parseInt(newYear, 10);
-    if (Number.isNaN(year) || year < 2000 || year > 2100) {
-      alert("有効な年度を入力してください（2000-2100）");
+    if (Number.isNaN(year) || year < MIN_ACADEMIC_YEAR || year > MAX_ACADEMIC_YEAR) {
+      alert(`有効な年度を入力してください（${MIN_ACADEMIC_YEAR}-${MAX_ACADEMIC_YEAR}）`);
       return;
     }
 
@@ -161,8 +167,8 @@ export const ScheduleSelector = ({
               style={styles.input}
               value={newYear}
               onChange={(e) => setNewYear(e.target.value)}
-              min="2000"
-              max="2100"
+              min={MIN_ACADEMIC_YEAR}
+              max={MAX_ACADEMIC_YEAR}
               placeholder="2024"
             />
           </div>
