@@ -173,6 +173,7 @@ export const CourseFormModal = ({
     existingCourse?.instructors || [],
   );
   const [customInstructor, setCustomInstructor] = useState("");
+  const [selectedInstructorOption, setSelectedInstructorOption] = useState("");
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -321,12 +322,15 @@ export const CourseFormModal = ({
           {availableInstructors.length > 0 && (
             <select
               style={{ ...styles.select, marginBottom: "0.5rem" }}
-              value=""
+              value={selectedInstructorOption}
               onChange={(e) => {
-                if (e.target.value) {
-                  handleInstructorSelect(e.target.value);
-                  e.target.value = "";
+                const value = e.target.value;
+                if (!value) {
+                  setSelectedInstructorOption(value);
+                  return;
                 }
+                handleInstructorSelect(value);
+                setSelectedInstructorOption("");
               }}
             >
               <option value="">リストから選択...</option>
