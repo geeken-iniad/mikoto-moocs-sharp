@@ -581,7 +581,10 @@ export function duplicateSchedule(
     newExceptions[date] = entries.map((entry) => {
       const newSlotId = idMap.get(entry.slotId);
       if (!newSlotId) {
-        throw new Error(`Failed to map slot ID: ${entry.slotId}`);
+        throw new Error(
+          `Failed to map slot ID '${entry.slotId}' during schedule duplication. ` +
+          `This may indicate the source slot is missing or corrupted.`
+        );
       }
       return {
         ...entry,
