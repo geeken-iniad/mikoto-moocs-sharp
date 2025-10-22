@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Plus, X } from "lucide-react";
 
 interface InstructorSettingsProps {
   instructors: string[];
@@ -58,8 +59,12 @@ export const InstructorSettings = ({
               border: "none",
               borderRadius: "7px",
               cursor: "pointer",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
             }}
           >
+            <Plus size={16} aria-hidden="true" />
             追加
           </button>
         </div>
@@ -116,10 +121,11 @@ export const InstructorSettings = ({
                     color: "#6b7280",
                     fontSize: "18px",
                     lineHeight: 1,
+                    display: "inline-flex",
                   }}
                   title="削除"
                 >
-                  ×
+                  <X size={16} aria-hidden="true" />
                 </button>
               </div>
             ))}

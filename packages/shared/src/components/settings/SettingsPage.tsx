@@ -1,4 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react";
+import { BookOpen, Calendar, Settings as SettingsIcon } from "lucide-react";
 import type {
   KeyboardShortcutSettings,
   Theme,
@@ -42,6 +43,9 @@ const styles: Record<string, CSSProperties> = {
     borderBottomColor: "transparent",
     marginBottom: "-2px",
     transition: "all 0.2s",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
   },
   activeTab: {
     color: "#3b82f6",
@@ -112,6 +116,7 @@ const SettingsPageContent = () => {
           }}
           onClick={() => setActiveTab("general")}
         >
+          <SettingsIcon size={16} aria-hidden="true" />
           一般設定
         </button>
         <button
@@ -122,6 +127,7 @@ const SettingsPageContent = () => {
           }}
           onClick={() => setActiveTab("courses")}
         >
+          <BookOpen size={16} aria-hidden="true" />
           コース管理
         </button>
         <button
@@ -132,6 +138,7 @@ const SettingsPageContent = () => {
           }}
           onClick={() => setActiveTab("schedule")}
         >
+          <Calendar size={16} aria-hidden="true" />
           時間割編集
         </button>
       </div>

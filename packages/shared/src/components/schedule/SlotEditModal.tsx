@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from "react";
+import { Plus, Trash2, XCircle, Check } from "lucide-react";
 import type {
   Course,
   ScheduleSlot,
@@ -97,6 +98,9 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: 500,
     cursor: "pointer",
     border: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
   },
   primaryButton: {
     backgroundColor: "#3b82f6",
@@ -303,6 +307,7 @@ export const SlotEditModal = ({
                     }}
                     onClick={() => handleRemoveRoom(index)}
                   >
+                    <Trash2 size={16} aria-hidden="true" />
                     削除
                   </button>
                 )}
@@ -325,7 +330,8 @@ export const SlotEditModal = ({
             }}
             onClick={handleAddRoom}
           >
-            + 教室を追加
+            <Plus size={16} aria-hidden="true" />
+            教室を追加
           </button>
         </div>
 
@@ -356,6 +362,7 @@ export const SlotEditModal = ({
               style={{ ...styles.button, ...styles.dangerButton }}
               onClick={onDelete}
             >
+              <Trash2 size={16} aria-hidden="true" />
               削除
             </button>
           )}
@@ -364,6 +371,7 @@ export const SlotEditModal = ({
             style={{ ...styles.button, ...styles.secondaryButton }}
             onClick={onClose}
           >
+            <XCircle size={16} aria-hidden="true" />
             キャンセル
           </button>
           <button
@@ -371,6 +379,7 @@ export const SlotEditModal = ({
             style={{ ...styles.button, ...styles.primaryButton }}
             onClick={handleSave}
           >
+            <Check size={16} aria-hidden="true" />
             保存
           </button>
         </div>

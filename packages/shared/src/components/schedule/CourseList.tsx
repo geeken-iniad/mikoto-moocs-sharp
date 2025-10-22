@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from "react";
+import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { Course } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { CourseFormModal } from "./CourseFormModal";
@@ -29,6 +30,9 @@ const styles: Record<string, CSSProperties> = {
     border: "none",
     backgroundColor: "#3b82f6",
     color: "#ffffff",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
   },
   searchBox: {
     marginBottom: "1rem",
@@ -85,6 +89,9 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: 500,
     cursor: "pointer",
     border: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.375rem",
   },
   editButton: {
     backgroundColor: "#3b82f6",
@@ -175,7 +182,8 @@ export const CourseList = () => {
           style={styles.button}
           onClick={() => setIsCreating(true)}
         >
-          + コースを作成
+          <Plus size={16} aria-hidden="true" />
+          コースを作成
         </button>
       </div>
 
@@ -223,6 +231,7 @@ export const CourseList = () => {
                     setEditingCourse(course);
                   }}
                 >
+                  <Pencil size={14} aria-hidden="true" />
                   編集
                 </button>
                 <button
@@ -233,6 +242,7 @@ export const CourseList = () => {
                     handleDeleteCourse(course.id);
                   }}
                 >
+                  <Trash2 size={14} aria-hidden="true" />
                   削除
                 </button>
               </div>

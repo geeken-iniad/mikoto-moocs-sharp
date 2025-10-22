@@ -1,4 +1,5 @@
 import { useState, type CSSProperties } from "react";
+import { CalendarPlus } from "lucide-react";
 import type { Schedule, Semester, TermDivision } from "../../types";
 import { SEMESTER_LABELS, VALID_TERM_DIVISIONS } from "../../constants";
 import { createTermInfo, formatTermInfo, createSchedule } from "../../utils/schedule";
@@ -47,6 +48,9 @@ const styles: Record<string, CSSProperties> = {
     border: "none",
     backgroundColor: "#3b82f6",
     color: "#ffffff",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
   },
   createSection: {
     marginTop: "1rem",
@@ -201,6 +205,7 @@ export const ScheduleSelector = ({
             </select>
           </div>
           <button type="button" style={styles.button} onClick={handleCreateSchedule}>
+            <CalendarPlus size={16} aria-hidden="true" />
             作成
           </button>
         </div>

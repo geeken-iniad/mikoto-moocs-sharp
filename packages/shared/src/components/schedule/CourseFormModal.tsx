@@ -1,4 +1,5 @@
 import { useState, useEffect, type CSSProperties } from "react";
+import { Plus, Trash2, X, XCircle, Check } from "lucide-react";
 import type { Course, Room, CampusId, RoomType } from "../../types";
 import { CAMPUS_LABELS, ROOM_TYPE_LABELS } from "../../constants";
 import { generateUUID } from "../../utils/schedule";
@@ -79,6 +80,9 @@ const styles: Record<string, CSSProperties> = {
     fontWeight: 500,
     cursor: "pointer",
     border: "none",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: "0.5rem",
   },
   primaryButton: {
     backgroundColor: "#3b82f6",
@@ -290,10 +294,11 @@ export const CourseFormModal = ({
                       cursor: "pointer",
                       padding: "0",
                       color: "#6b7280",
-                      fontSize: "1rem",
+                      display: "inline-flex",
                     }}
+                    aria-label="教員を削除"
                   >
-                    ×
+                    <X size={14} aria-hidden="true" />
                   </button>
                 </div>
               ))}
@@ -406,6 +411,7 @@ export const CourseFormModal = ({
                     }}
                     onClick={() => handleRemoveRoom(index)}
                   >
+                    <Trash2 size={16} aria-hidden="true" />
                     削除
                   </button>
                 )}
@@ -424,7 +430,8 @@ export const CourseFormModal = ({
             style={{ ...styles.button, ...styles.secondaryButton, ...styles.addButton }}
             onClick={handleAddRoom}
           >
-            + 教室を追加
+            <Plus size={16} aria-hidden="true" />
+            教室を追加
           </button>
         </div>
 
@@ -478,6 +485,7 @@ export const CourseFormModal = ({
             style={{ ...styles.button, ...styles.secondaryButton }}
             onClick={onClose}
           >
+            <XCircle size={16} aria-hidden="true" />
             キャンセル
           </button>
           <button
@@ -485,6 +493,7 @@ export const CourseFormModal = ({
             style={{ ...styles.button, ...styles.primaryButton }}
             onClick={handleSave}
           >
+            <Check size={16} aria-hidden="true" />
             保存
           </button>
         </div>
