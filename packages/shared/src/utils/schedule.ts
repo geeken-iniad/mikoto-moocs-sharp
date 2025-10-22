@@ -90,7 +90,9 @@ export function createTermInfo(
 export function formatTermInfo(academicYear: number, termInfo: TermInfo): string {
   const semesterLabel = SEMESTER_LABELS[termInfo.semester];
   const divisionLabel =
-    termInfo.division === "Semester" ? "" : `${termInfo.division}Q`;
+    typeof termInfo.division === "number" && termInfo.division >= 1 && termInfo.division <= 4
+      ? `${termInfo.division}Q`
+      : "";
   return `${academicYear}${semesterLabel}${divisionLabel}`;
 }
 
