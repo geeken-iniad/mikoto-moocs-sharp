@@ -57,7 +57,7 @@ export const ScheduleEditor = () => {
     if (!selectedScheduleId && schedules.length > 0 && !isLoading) {
       setSelectedScheduleId(schedules[0].id);
     }
-  }, [schedules.length, isLoading, selectedScheduleId]);
+  }, [schedules, isLoading, selectedScheduleId]);
 
   // Get the current selected schedule from store (always up-to-date)
   const selectedSchedule = selectedScheduleId
