@@ -3,8 +3,6 @@ import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { Course } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { CourseFormModal } from "./CourseFormModal";
-import { addCourse } from "../../utils/schedule";
-import { useStorageManager } from "../../storage/context";
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -112,8 +110,7 @@ const styles: Record<string, CSSProperties> = {
 };
 
 export const CourseList = () => {
-  const { store, deleteCourse } = useScheduleStore();
-  const storageManager = useStorageManager();
+  const { store, createCourse, updateCourse, deleteCourse } = useScheduleStore();
   const [searchQuery, setSearchQuery] = useState("");
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isCreating, setIsCreating] = useState(false);
@@ -132,14 +129,12 @@ export const CourseList = () => {
   });
 
   const handleCreateCourse = async (course: Course) => {
-    const newStore = addCourse(store, course);
-    await storageManager.saveScheduleStore(newStore);
+    await createCourse(course);
     setIsCreating(false);
   };
 
   const handleUpdateCourse = async (course: Course) => {
-    const newStore = addCourse(store, course);
-    await storageManager.saveScheduleStore(newStore);
+    await updateCourse(course.id, course);
     setEditingCourse(null);
   };
 
