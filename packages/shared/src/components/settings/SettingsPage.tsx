@@ -1,9 +1,14 @@
 import { useEffect, useState, type CSSProperties } from "react";
-import type { KeyboardShortcutSettings, Theme } from "../../types";
+import type {
+  KeyboardShortcutSettings,
+  Theme,
+  CampusId,
+} from "../../types";
 import type { StorageManager } from "../../storage/manager";
 import { StorageProvider, useStorageManager } from "../../storage/context";
 import { ThemeSettings } from "./ThemeSettings";
 import { ShortcutSettings } from "./KeyboardShortcutSettings";
+import { CampusSettings } from "./CampusSettings";
 import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { CourseList } from "../schedule/CourseList";
 
@@ -55,13 +60,18 @@ const SettingsPageContent = () => {
     numberKeyShortcut: false,
     arrowKeyShortcut: false,
   });
+  const [defaultCampus, setDefaultCampus] = useState<CampusId | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     const loadSettings = async () => {
       const savedTheme = await storageManager.getTheme();
       const keyboardShortcuts = await storageManager.getKeyboardShortcuts();
+      const campusSettings = await storageManager.getCampusSettings();
       setTheme(savedTheme);
       setShortcuts(keyboardShortcuts);
+      setDefaultCampus(campusSettings.defaultCampus);
     };
     loadSettings();
   }, [storageManager]);
@@ -75,6 +85,11 @@ const SettingsPageContent = () => {
     const newShortcuts = { ...shortcuts, [key]: !shortcuts[key] };
     setShortcuts(newShortcuts);
     await storageManager.setKeyboardShortcuts(newShortcuts);
+  };
+
+  const handleCampusChange = async (newCampus: CampusId | undefined) => {
+    setDefaultCampus(newCampus);
+    await storageManager.setCampusSettings({ defaultCampus: newCampus });
   };
 
   return (
@@ -116,6 +131,10 @@ const SettingsPageContent = () => {
         {activeTab === "general" && (
           <>
             <ThemeSettings theme={theme} onThemeChange={handleThemeChange} />
+            <CampusSettings
+              defaultCampus={defaultCampus}
+              onCampusChange={handleCampusChange}
+            />
             <ShortcutSettings
               shortcuts={shortcuts}
               onShortcutToggle={handleShortcutToggle}

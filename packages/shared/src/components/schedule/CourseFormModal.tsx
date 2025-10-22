@@ -1,7 +1,8 @@
-import { useState, type CSSProperties } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import type { Course, Room, CampusId, RoomType } from "../../types";
 import { CAMPUS_LABELS, ROOM_TYPE_LABELS } from "../../constants";
 import { generateUUID } from "../../utils/schedule";
+import { useStorageManager } from "../../storage/context";
 
 interface CourseFormModalProps {
   existingCourse?: Course;
@@ -115,6 +116,7 @@ export const CourseFormModal = ({
   onSave,
   onClose,
 }: CourseFormModalProps) => {
+  const storageManager = useStorageManager();
   const [courseName, setCourseName] = useState(existingCourse?.name || "");
   const [instructors, setInstructors] = useState(
     existingCourse?.instructors.join(", ") || "",
@@ -134,6 +136,17 @@ export const CourseFormModal = ({
   const [rooms, setRooms] = useState<Room[]>(
     initialRooms.length > 0 ? initialRooms : [{ type: "physical", number: "" }],
   );
+  const [defaultCampus, setDefaultCampus] = useState<CampusId | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    const loadDefaultCampus = async () => {
+      const settings = await storageManager.getCampusSettings();
+      setDefaultCampus(settings.defaultCampus);
+    };
+    loadDefaultCampus();
+  }, [storageManager]);
 
   const handleSave = () => {
     if (!courseName.trim()) {
@@ -171,7 +184,12 @@ export const CourseFormModal = ({
   };
 
   const handleAddRoom = () => {
-    setRooms([...rooms, { type: "physical", number: "" }]);
+    const newRoom: Room = {
+      type: "physical",
+      number: "",
+      campus: defaultCampus,
+    };
+    setRooms([...rooms, newRoom]);
   };
 
   const handleRoomChange = (

@@ -1,4 +1,8 @@
-import type { ScheduleStore, KeyboardShortcutSettings } from "../types";
+import type {
+  ScheduleStore,
+  KeyboardShortcutSettings,
+  CampusSettings,
+} from "../types";
 import type { IStorageAdapter } from "./interface";
 
 /**
@@ -10,6 +14,7 @@ export const STORAGE_KEYS = {
   DUAL_VIEW: "mikoto-dual-view",
   THEME: "mikoto-theme",
   KEYBOARD_SHORTCUTS: "mikoto-keyboard-shortcuts",
+  CAMPUS_SETTINGS: "mikoto-campus-settings",
 } as const;
 
 /**
@@ -128,6 +133,24 @@ export class StorageManager {
   ) {
     return this.adapter.watch<KeyboardShortcutSettings>(
       STORAGE_KEYS.KEYBOARD_SHORTCUTS,
+      callback,
+    );
+  }
+
+  async getCampusSettings(): Promise<CampusSettings> {
+    const result = await this.adapter.getItem<CampusSettings>(
+      STORAGE_KEYS.CAMPUS_SETTINGS,
+    );
+    return result || {};
+  }
+
+  async setCampusSettings(settings: CampusSettings): Promise<void> {
+    await this.adapter.setItem(STORAGE_KEYS.CAMPUS_SETTINGS, settings);
+  }
+
+  watchCampusSettings(callback: (settings: CampusSettings | null) => void) {
+    return this.adapter.watch<CampusSettings>(
+      STORAGE_KEYS.CAMPUS_SETTINGS,
       callback,
     );
   }

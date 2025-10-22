@@ -130,3 +130,8 @@ export interface KeyboardShortcutSettings {
   numberKeyShortcut: boolean; // 数字キー (1-9) でページネーション
   arrowKeyShortcut: boolean; // Shift+左右矢印 でページ移動
 }
+
+// Campus Settings Types
+export interface CampusSettings {
+  defaultCampus?: CampusId; // デフォルトキャンパス
+}
