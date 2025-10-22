@@ -113,8 +113,11 @@ export function parseTermString(termString: string): {
   if (!divisionStr) {
     division = "Semester";
   } else {
-    const quarterNum = Number.parseInt(divisionStr[0], 10) as Quarter;
-    division = quarterNum;
+    const quarterNum = Number.parseInt(divisionStr[0], 10);
+    if (Number.isNaN(quarterNum) || quarterNum < 1 || quarterNum > 4) {
+      return null;
+    }
+    division = quarterNum as Quarter;
   }
 
   try {
