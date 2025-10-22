@@ -113,6 +113,29 @@ const styles: Record<string, CSSProperties> = {
     fontSize: "0.75rem",
     padding: "0.375rem 0.75rem",
   },
+  selectedInstructorList: {
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "0.5rem",
+    marginBottom: "0.5rem",
+  },
+  selectedInstructorChip: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.25rem",
+    padding: "0.25rem 0.5rem",
+    backgroundColor: "#e5e7eb",
+    borderRadius: "0.25rem",
+    fontSize: "0.875rem",
+  },
+  removeInstructorButton: {
+    border: "none",
+    background: "none",
+    cursor: "pointer",
+    padding: "0",
+    color: "#6b7280",
+    display: "inline-flex",
+  },
 };
 
 export const CourseFormModal = ({
@@ -274,32 +297,17 @@ export const CourseFormModal = ({
 
           {/* 選択された教員名を表示 */}
           {selectedInstructors.length > 0 && (
-            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", marginBottom: "0.5rem" }}>
+            <div style={styles.selectedInstructorList}>
               {selectedInstructors.map((instructor, index) => (
                 <div
                   key={index}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.25rem",
-                    padding: "0.25rem 0.5rem",
-                    backgroundColor: "#e5e7eb",
-                    borderRadius: "0.25rem",
-                    fontSize: "0.875rem",
-                  }}
+                  style={styles.selectedInstructorChip}
                 >
                   <span>{instructor}</span>
                   <button
                     type="button"
                     onClick={() => handleRemoveInstructor(instructor)}
-                    style={{
-                      border: "none",
-                      background: "none",
-                      cursor: "pointer",
-                      padding: "0",
-                      color: "#6b7280",
-                      display: "inline-flex",
-                    }}
+                    style={styles.removeInstructorButton}
                     aria-label="教員を削除"
                   >
                     <X size={14} aria-hidden="true" />
