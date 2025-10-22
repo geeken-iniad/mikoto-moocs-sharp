@@ -56,7 +56,7 @@ const styles: Record<string, CSSProperties> = {
   },
   courseCardHover: {
     backgroundColor: "#f9fafb",
-    borderColor: "#3b82f6",
+    border: "1px solid #3b82f6",
   },
   courseName: {
     fontSize: "1.125rem",
