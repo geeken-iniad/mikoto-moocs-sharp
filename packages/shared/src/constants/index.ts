@@ -73,6 +73,7 @@ export const DELIVERY_MODE_LABELS = {
   "face-to-face": "対面",
   online: "オンライン",
   "on-demand": "オンデマンド",
+  "online-on-demand": "非対面+オンデマンド",
 } as const;
 
 // Room Type Labels
