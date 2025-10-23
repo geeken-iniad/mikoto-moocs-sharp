@@ -1,8 +1,7 @@
-import { createStorageManager } from "./utils/storage";
+import { storageManager } from "./utils/storage";
 import { getNextClass, shouldNotify, createNotificationMessage } from "@mikoto-moocs-sharp/shared/utils/notification";
 
 export default defineBackground(() => {
-  const storageManager = createStorageManager();
   const sentNotifications = new Set<string>();
 
   // 通知チェック関数
@@ -38,7 +37,7 @@ export default defineBackground(() => {
         // ブラウザ通知を送信
         await browser.notifications.create({
           type: "basic",
-          iconUrl: browser.runtime.getURL("icon/128.png"),
+          iconUrl: "/icon/128.png",
           title,
           message: body,
         });
