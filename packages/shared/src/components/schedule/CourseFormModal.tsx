@@ -207,7 +207,7 @@ export const CourseFormModal = ({
       return;
     }
 
-    // 新しい教員名をリストに追加
+    // Add new instructor names to the list
     if (customInstructorList.length > 0) {
       await storageManager.addInstructors(customInstructorList);
     }
