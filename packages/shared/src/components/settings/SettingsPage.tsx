@@ -4,6 +4,7 @@ import type {
   KeyboardShortcutSettings,
   Theme,
   CampusId,
+  NotificationSettings as NotificationSettingsType,
 } from "../../types";
 import type { StorageManager } from "../../storage/manager";
 import { StorageProvider, useStorageManager } from "../../storage/context";
@@ -11,6 +12,7 @@ import { ThemeSettings } from "./ThemeSettings";
 import { ShortcutSettings } from "./KeyboardShortcutSettings";
 import { CampusSettings } from "./CampusSettings";
 import { InstructorSettings } from "./InstructorSettings";
+import { NotificationSettings } from "./NotificationSettings";
 import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { CourseList } from "../schedule/CourseList";
 
@@ -69,6 +71,11 @@ const SettingsPageContent = () => {
     undefined,
   );
   const [instructors, setInstructors] = useState<string[]>([]);
+  const [notificationSettings, setNotificationSettings] =
+    useState<NotificationSettingsType>({
+      enabled: false,
+      timings: [-10],
+    });
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -76,10 +83,12 @@ const SettingsPageContent = () => {
       const keyboardShortcuts = await storageManager.getKeyboardShortcuts();
       const campusSettings = await storageManager.getCampusSettings();
       const instructorList = await storageManager.getInstructors();
+      const notifications = await storageManager.getNotificationSettings();
       setTheme(savedTheme);
       setShortcuts(keyboardShortcuts);
       setDefaultCampus(campusSettings.defaultCampus);
       setInstructors(instructorList);
+      setNotificationSettings(notifications);
     };
     loadSettings();
   }, [storageManager]);
@@ -103,6 +112,13 @@ const SettingsPageContent = () => {
   const handleCampusChange = async (newCampus: CampusId | undefined) => {
     setDefaultCampus(newCampus);
     await storageManager.setCampusSettings({ defaultCampus: newCampus });
+  };
+
+  const handleNotificationSettingsChange = async (
+    newSettings: NotificationSettingsType,
+  ) => {
+    setNotificationSettings(newSettings);
+    await storageManager.setNotificationSettings(newSettings);
   };
 
   return (
@@ -150,6 +166,10 @@ const SettingsPageContent = () => {
             <CampusSettings
               defaultCampus={defaultCampus}
               onCampusChange={handleCampusChange}
+            />
+            <NotificationSettings
+              settings={notificationSettings}
+              onSettingsChange={handleNotificationSettingsChange}
             />
             <ShortcutSettings
               shortcuts={shortcuts}

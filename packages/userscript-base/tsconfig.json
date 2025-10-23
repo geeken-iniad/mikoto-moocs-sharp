@@ -15,6 +15,13 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path mappings */
+    "baseUrl": ".",
+    "paths": {
+      "@mikoto-moocs-sharp/shared": ["../shared/src/index.ts"],
+      "@mikoto-moocs-sharp/shared/*": ["../shared/src/*"]
+    },
+
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
