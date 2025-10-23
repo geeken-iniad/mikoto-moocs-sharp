@@ -2,6 +2,7 @@ import { useState, type CSSProperties } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { Course } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
+import { isCourseUsed } from "../../utils/schedule";
 import { CourseFormModal } from "./CourseFormModal";
 
 const styles: Record<string, CSSProperties> = {
@@ -140,17 +141,7 @@ export const CourseList = () => {
 
   const handleDeleteCourse = async (courseId: string) => {
     // Check if course is used in any schedule slot
-    let usedInSlots = false;
-    for (const schedule of Object.values(store.schedules)) {
-      for (const slot of Object.values(schedule.slots)) {
-        if (slot.courseId === courseId) {
-          usedInSlots = true;
-          break;
-        }
-      }
-      if (usedInSlots) break;
-    }
-
+    const usedInSlots = isCourseUsed(store, courseId);
     if (usedInSlots) {
       if (
         !confirm(

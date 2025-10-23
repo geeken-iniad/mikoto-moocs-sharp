@@ -265,6 +265,15 @@ export function deleteCourse(
   return newStore;
 }
 
+/**
+ * Check if a course is used in any schedule slot
+ */
+export function isCourseUsed(store: ScheduleStore, courseId: string): boolean {
+  return Object.values(store.schedules).some((schedule) =>
+    Object.values(schedule.slots).some((slot) => slot.courseId === courseId),
+  );
+}
+
 // ========================================
 // ScheduleSlot Operations
 // ========================================
