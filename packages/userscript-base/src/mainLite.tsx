@@ -1,4 +1,4 @@
-import contentCssContent from "@mikoto-moocs-sharp/shared/styles/content.scss?raw";
+import contentStyle from "@mikoto-moocs-sharp/shared/styles/content.scss?inline";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { GM_registerMenuCommand } from "$";
@@ -23,7 +23,7 @@ export function initializeMikotoLite() {
       // 静的CSSを手動で注入
       const style = document.createElement("style");
       style.setAttribute("data-mikoto-styles", "true");
-      style.textContent = contentCssContent;
+      style.textContent = contentStyle;
       document.head.appendChild(style);
 
       // アプリケーションをマウントするコンテナを作成
