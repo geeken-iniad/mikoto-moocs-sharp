@@ -74,7 +74,20 @@ export function getNextClass(
       if (!weekdayIndex) continue;
 
       const targetDay = Number(weekdayIndex);
-      const dayDiff = targetDay - currentDay;
+      let dayDiff = targetDay - currentDay;
+
+      // 過去の曜日または同じ曜日で授業開始時刻が過ぎている場合は来週
+      if (dayDiff < 0) {
+        dayDiff += 7;
+      } else if (dayDiff === 0) {
+        // 同じ曜日の場合、時刻をチェック
+        const tempDate = new Date(now);
+        tempDate.setHours(startHour, startMinute, 0, 0);
+        if (tempDate.getTime() <= currentTime) {
+          // 授業開始時刻が過ぎていたら来週
+          dayDiff = 7;
+        }
+      }
 
       classDate.setDate(classDate.getDate() + dayDiff);
       classDate.setHours(startHour, startMinute, 0, 0);
