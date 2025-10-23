@@ -296,7 +296,7 @@ export const CourseFormModal = ({
         <div style={styles.formGroup}>
           <label style={styles.label}>教員名 *</label>
 
-          {/* 選択された教員名を表示 */}
+          {/* Display selected instructors */}
           {selectedInstructors.length > 0 && (
             <div style={styles.selectedInstructorList}>
               {selectedInstructors.map((instructor, index) => (
