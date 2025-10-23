@@ -63,6 +63,8 @@ export default defineBackground(() => {
   browser.alarms.onAlarm.addListener((alarm) => {
     if (alarm.name === "mikoto-notification-check") {
       checkAndNotify();
+    } else if (alarm.name === "mikoto-clear-sent-notifications") {
+      sentNotifications.clear();
     }
   });
 
@@ -76,12 +78,6 @@ export default defineBackground(() => {
   browser.alarms.create("mikoto-clear-sent-notifications", {
     when: Date.now() + getMillisecondsUntilMidnight(),
     periodInMinutes: 24 * 60,
-  });
-
-  browser.alarms.onAlarm.addListener((alarm) => {
-    if (alarm.name === "mikoto-clear-sent-notifications") {
-      sentNotifications.clear();
-    }
   });
 });
 
