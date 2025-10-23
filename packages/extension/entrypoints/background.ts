@@ -1,3 +1,85 @@
+import { createStorageManager } from "./utils/storage";
+import { getNextClass, shouldNotify, createNotificationMessage } from "@mikoto-moocs-sharp/shared/utils/notification";
+
 export default defineBackground(() => {
-  // Background script initialized
+  const storageManager = createStorageManager();
+  const sentNotifications = new Set<string>();
+
+  // 通知チェック関数
+  const checkAndNotify = async () => {
+    try {
+      // 通知設定を取得
+      const notificationSettings = await storageManager.getNotificationSettings();
+      if (!notificationSettings.enabled) {
+        return;
+      }
+
+      // スケジュールストアを取得
+      const store = await storageManager.getScheduleStore();
+
+      // 次の授業を取得
+      const nextClass = getNextClass(store);
+      if (!nextClass) {
+        return;
+      }
+
+      // 通知すべきタイミングかチェック
+      const timing = shouldNotify(
+        nextClass,
+        notificationSettings.timings,
+        new Date(),
+        sentNotifications
+      );
+
+      if (timing !== null) {
+        // 通知メッセージを作成
+        const { title, body } = createNotificationMessage(nextClass, timing);
+
+        // ブラウザ通知を送信
+        await browser.notifications.create({
+          type: "basic",
+          iconUrl: browser.runtime.getURL("icon/128.png"),
+          title,
+          message: body,
+        });
+      }
+    } catch (error) {
+      console.error("[Mikoto Background] Notification check failed:", error);
+    }
+  };
+
+  // アラームリスナーを設定
+  browser.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === "mikoto-notification-check") {
+      checkAndNotify();
+    }
+  });
+
+  // 初回チェックとアラーム設定
+  checkAndNotify();
+  browser.alarms.create("mikoto-notification-check", {
+    periodInMinutes: 1,
+  });
+
+  // 1日1回送信済み通知をクリア(午前0時にリセット)
+  browser.alarms.create("mikoto-clear-sent-notifications", {
+    when: Date.now() + getMillisecondsUntilMidnight(),
+    periodInMinutes: 24 * 60,
+  });
+
+  browser.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === "mikoto-clear-sent-notifications") {
+      sentNotifications.clear();
+    }
+  });
 });
+
+/**
+ * 次の午前0時までのミリ秒数を取得
+ */
+function getMillisecondsUntilMidnight(): number {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  return midnight.getTime() - now.getTime();
+}
