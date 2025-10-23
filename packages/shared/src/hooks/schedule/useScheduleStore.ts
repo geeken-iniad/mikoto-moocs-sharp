@@ -40,9 +40,16 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
 
       // Check if store has old format (missing grid/slots/exceptions)
       let storeToUse = savedStore;
-      const hasOldFormat = Object.values(savedStore.schedules).some(
-        (schedule) => !schedule.grid || !schedule.slots || !schedule.exceptions
-      );
+      const hasOldFormat = Object.values(savedStore.schedules).some((schedule) => {
+        const { grid, slots, exceptions } = schedule;
+        const isInvalidRecord = (value: unknown) =>
+          !value || typeof value !== "object" || value === null || Array.isArray(value);
+        return (
+          isInvalidRecord(grid) ||
+          isInvalidRecord(slots) ||
+          isInvalidRecord(exceptions)
+        );
+      });
 
       if (hasOldFormat) {
         console.warn("[useScheduleStore] Old format detected, resetting to empty store");
