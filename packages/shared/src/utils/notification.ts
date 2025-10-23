@@ -161,8 +161,12 @@ export function createNotificationMessage(
   const absMinutes = Math.abs(minutesBefore);
   const periodInfo = PERIODS[nextClass.period];
 
+  // 教員名を取得(カスタム教員 or デフォルト教員)
+  const instructors = nextClass.slot.customInstructors ?? nextClass.course.instructors;
+  const instructorNames = instructors.length > 0 ? instructors.join(", ") : "";
+
   return {
     title: `${absMinutes}分後に授業があります`,
-    body: `${nextClass.course.name}\n${periodInfo.label} (${periodInfo.start}〜${periodInfo.end})`,
+    body: `${nextClass.course.name}(${instructorNames})\n${periodInfo.label}(${periodInfo.start}〜${periodInfo.end})`,
   };
 }
