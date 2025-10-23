@@ -9,7 +9,7 @@ export default defineConfig({
   modules: ["@wxt-dev/module-react"],
   manifest: {
     name: "Mikoto (MOOCs#)",
-    permissions: ["storage"],
+    permissions: ["storage", "notifications", "alarms"],
   },
   vite: () => ({
     resolve: {
