@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, type CSSProperties } from "react";
 import type { Course, ScheduleSlot, Schedule, Weekday, Period } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
+import { useStorageManager } from "../../storage/context";
 import { ScheduleSelector } from "./ScheduleSelector";
 import { ScheduleGrid } from "./ScheduleGrid";
 import { SlotEditModal } from "./SlotEditModal";
@@ -41,7 +42,12 @@ export const ScheduleEditor = () => {
     removeSlot,
   } = useScheduleStore();
 
+  const storageManager = useStorageManager();
+
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
+    null,
+  );
+  const [activeScheduleId, setActiveScheduleId] = useState<string | null>(
     null,
   );
   const [editingCell, setEditingCell] = useState<{
@@ -51,6 +57,23 @@ export const ScheduleEditor = () => {
 
   // Auto-select first schedule if none selected
   const schedules = useMemo(() => Object.values(store.schedules), [store.schedules]);
+
+  // Load active schedule ID on mount
+  useEffect(() => {
+    const loadActiveSchedule = async () => {
+      const activeId = await storageManager.getActiveScheduleId();
+      setActiveScheduleId(activeId);
+    };
+    loadActiveSchedule();
+  }, [storageManager]);
+
+  // Watch for changes to active schedule ID
+  useEffect(() => {
+    const unwatch = storageManager.watchActiveScheduleId((newActiveId) => {
+      setActiveScheduleId(newActiveId);
+    });
+    return unwatch;
+  }, [storageManager]);
 
   // Use useEffect to avoid infinite loop
   useEffect(() => {
@@ -67,6 +90,11 @@ export const ScheduleEditor = () => {
   const handleCreateSchedule = async (schedule: Schedule) => {
     await createSchedule(schedule);
     setSelectedScheduleId(schedule.id);
+  };
+
+  const handleSetActive = async (scheduleId: string) => {
+    await storageManager.setActiveScheduleId(scheduleId);
+    // setActiveScheduleId will be called automatically by the watch callback
   };
 
   const handleCellClick = (weekday: Weekday, period: Period) => {
@@ -162,7 +190,9 @@ export const ScheduleEditor = () => {
       <ScheduleSelector
         schedules={schedules}
         selectedScheduleId={selectedScheduleId}
+        activeScheduleId={activeScheduleId}
         onSelectSchedule={setSelectedScheduleId}
+        onSetActive={handleSetActive}
         onCreateSchedule={handleCreateSchedule}
       />
 

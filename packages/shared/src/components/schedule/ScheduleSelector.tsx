@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from "react";
-import { CalendarPlus } from "lucide-react";
+import { CalendarPlus, Star } from "lucide-react";
 import type { Schedule, Semester, TermDivision } from "../../types";
 import { SEMESTER_LABELS, VALID_TERM_DIVISIONS } from "../../constants";
 import {
@@ -13,7 +13,9 @@ import {
 interface ScheduleSelectorProps {
   schedules: Schedule[];
   selectedScheduleId: string | null;
+  activeScheduleId: string | null;
   onSelectSchedule: (scheduleId: string) => void;
+  onSetActive: (scheduleId: string) => void;
   onCreateSchedule: (schedule: Schedule) => void;
 }
 
@@ -91,12 +93,62 @@ const styles: Record<string, CSSProperties> = {
     fontSize: "0.875rem",
     width: "100px",
   },
+  scheduleList: {
+    display: "flex",
+    flexDirection: "column" as const,
+    gap: "0.5rem",
+  },
+  scheduleItem: {
+    display: "flex",
+    alignItems: "center",
+    gap: "0.75rem",
+    padding: "0.75rem",
+    backgroundColor: "#ffffff",
+    border: "1px solid #d1d5db",
+    borderRadius: "0.375rem",
+    cursor: "pointer",
+    transition: "all 0.2s",
+  },
+  scheduleItemSelected: {
+    borderColor: "#3b82f6",
+    backgroundColor: "#eff6ff",
+  },
+  scheduleItemContent: {
+    flex: 1,
+    fontSize: "0.875rem",
+    fontWeight: 500,
+    color: "#374151",
+  },
+  starButton: {
+    padding: "0.25rem",
+    border: "none",
+    background: "transparent",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    borderRadius: "0.25rem",
+    transition: "background-color 0.2s",
+  },
+  starIcon: {
+    width: "20px",
+    height: "20px",
+  },
+  starActive: {
+    fill: "#fbbf24",
+    color: "#fbbf24",
+  },
+  starInactive: {
+    fill: "none",
+    color: "#d1d5db",
+  },
 };
 
 export const ScheduleSelector = ({
   schedules,
   selectedScheduleId,
+  activeScheduleId,
   onSelectSchedule,
+  onSetActive,
   onCreateSchedule,
 }: ScheduleSelectorProps) => {
 
@@ -107,12 +159,6 @@ export const ScheduleSelector = ({
   const [newYear, setNewYear] = useState(new Date().getFullYear().toString());
   const [newSemester, setNewSemester] = useState<Semester>("Spring");
   const [newDivision, setNewDivision] = useState<TermDivision>("Semester");
-
-  const handleScheduleChange = (scheduleId: string) => {
-    if (scheduleId) {
-      onSelectSchedule(scheduleId);
-    }
-  };
 
   const handleCreateSchedule = () => {
     const year = Number.parseInt(newYear, 10);
@@ -139,20 +185,54 @@ export const ScheduleSelector = ({
   return (
     <div style={styles.container}>
       <div style={styles.header}>時間割を選択</div>
-      <div style={styles.selectGroup}>
+      <div style={styles.scheduleList}>
         {schedules.length > 0 ? (
-          <select
-            style={styles.select}
-            value={selectedScheduleId || ""}
-            onChange={(e) => handleScheduleChange(e.target.value)}
-          >
-            <option value="">選択してください</option>
-            {schedules.map((schedule) => (
-              <option key={schedule.id} value={schedule.id}>
-                {formatTermInfo(schedule.academicYear, schedule.term)}
-              </option>
-            ))}
-          </select>
+          schedules.map((schedule) => {
+            const isSelected = schedule.id === selectedScheduleId;
+            const isActive = schedule.id === activeScheduleId;
+            return (
+              <div
+                key={schedule.id}
+                style={{
+                  ...styles.scheduleItem,
+                  ...(isSelected ? styles.scheduleItemSelected : {}),
+                }}
+                onClick={() => onSelectSchedule(schedule.id)}
+              >
+                <div style={styles.scheduleItemContent}>
+                  {formatTermInfo(schedule.academicYear, schedule.term)}
+                  {isActive && (
+                    <span style={{ marginLeft: "0.5rem", fontSize: "0.75rem", color: "#6b7280" }}>
+                      (通知対象)
+                    </span>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  style={styles.starButton}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSetActive(schedule.id);
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#f3f4f6";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "transparent";
+                  }}
+                  aria-label={isActive ? "通知対象から外す" : "通知対象に設定"}
+                  title={isActive ? "通知対象から外す" : "通知対象に設定"}
+                >
+                  <Star
+                    style={{
+                      ...styles.starIcon,
+                      ...(isActive ? styles.starActive : styles.starInactive),
+                    }}
+                  />
+                </button>
+              </div>
+            );
+          })
         ) : (
           <div style={{ fontSize: "0.875rem", color: "#6b7280" }}>
             時間割がありません。新規作成してください。
