@@ -91,7 +91,7 @@ export const ScheduleGrid = ({
                 const course = slot ? store.courses[slot.courseId] : undefined;
 
                 return (
-                  <td key={`${day}-${period}`}>
+                  <td key={timeSlotKey}>
                     <ScheduleCell
                       weekday={day}
                       period={period}
