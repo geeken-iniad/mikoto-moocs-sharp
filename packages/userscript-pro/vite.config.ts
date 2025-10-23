@@ -41,7 +41,7 @@ export default defineConfig({
       ),
       "@mikoto-moocs-sharp/shared": path.resolve(
         __dirname,
-        "../shared/src/index.ts",
+        "../shared/src",
       ),
       "@mikoto-moocs-sharp/userscript-base/main": path.resolve(
         __dirname,
@@ -49,7 +49,7 @@ export default defineConfig({
       ),
       "@mikoto-moocs-sharp/userscript-base": path.resolve(
         __dirname,
-        "../userscript-base/src/index.ts",
+        "../userscript-base/src",
       ),
     },
   },
