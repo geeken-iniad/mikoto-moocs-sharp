@@ -1,22 +1,20 @@
-import type { Schedule, KeyboardShortcutSettings } from "../types";
+import type {
+  ScheduleStore,
+  KeyboardShortcutSettings,
+  CampusSettings,
+} from "../types";
 import type { IStorageAdapter } from "./interface";
-
-export interface ScheduleHistory {
-  subjects: string[];
-  teachers: string[];
-  rooms: string[];
-}
 
 /**
  * ストレージキー定数
  */
 export const STORAGE_KEYS = {
-  SCHEDULE: "mikoto-schedule",
-  HISTORY: "mikoto-schedule-history",
+  SCHEDULE_STORE: "mikoto-schedule-store",
   SUBJECTS: "mikoto-extracted-subjects",
   DUAL_VIEW: "mikoto-dual-view",
   THEME: "mikoto-theme",
   KEYBOARD_SHORTCUTS: "mikoto-keyboard-shortcuts",
+  CAMPUS_SETTINGS: "mikoto-campus-settings",
 } as const;
 
 /**
@@ -30,62 +28,48 @@ export class StorageManager {
   // スケジュール関連
   // ========================================
 
-  async getSchedule(): Promise<Schedule> {
-    const result = await this.adapter.getItem<Schedule>(STORAGE_KEYS.SCHEDULE);
-    return result || {};
-  }
-
-  async saveSchedule(schedule: Schedule): Promise<void> {
-    await this.adapter.setItem(STORAGE_KEYS.SCHEDULE, schedule);
-  }
-
-  watchSchedule(callback: (newSchedule: Schedule | null) => void) {
-    return this.adapter.watch<Schedule>(STORAGE_KEYS.SCHEDULE, callback);
-  }
-
-  // ========================================
-  // スケジュール履歴関連
-  // ========================================
-
-  async getHistory(): Promise<ScheduleHistory> {
-    const result = await this.adapter.getItem<ScheduleHistory>(
-      STORAGE_KEYS.HISTORY,
+  async getScheduleStore(): Promise<ScheduleStore> {
+    const result = await this.adapter.getItem<ScheduleStore>(
+      STORAGE_KEYS.SCHEDULE_STORE,
     );
     return (
       result || {
-        subjects: [],
-        teachers: [],
-        rooms: [],
+        schemaVersion: 1,
+        courses: {},
+        schedules: {},
+        instructors: [],
       }
     );
   }
 
-  async saveHistory(history: ScheduleHistory): Promise<void> {
-    await this.adapter.setItem(STORAGE_KEYS.HISTORY, history);
+  async saveScheduleStore(store: ScheduleStore): Promise<void> {
+    await this.adapter.setItem(STORAGE_KEYS.SCHEDULE_STORE, store);
   }
 
-  async addToHistory(
-    subject?: string,
-    teacher?: string,
-    room?: string,
-  ): Promise<void> {
-    const history = await this.getHistory();
-
-    if (subject && subject.trim() && !history.subjects.includes(subject)) {
-      history.subjects = [...history.subjects, subject];
-    }
-    if (teacher && teacher.trim() && !history.teachers.includes(teacher)) {
-      history.teachers = [...history.teachers, teacher];
-    }
-    if (room && room.trim() && !history.rooms.includes(room)) {
-      history.rooms = [...history.rooms, room];
-    }
-
-    await this.saveHistory(history);
+  async getInstructors(): Promise<string[]> {
+    const store = await this.getScheduleStore();
+    return store.instructors || [];
   }
 
-  watchHistory(callback: (newHistory: ScheduleHistory | null) => void) {
-    return this.adapter.watch<ScheduleHistory>(STORAGE_KEYS.HISTORY, callback);
+  async saveInstructors(instructors: string[]): Promise<void> {
+    const store = await this.getScheduleStore();
+    store.instructors = instructors;
+    await this.saveScheduleStore(store);
+  }
+
+  async addInstructors(newInstructors: string[]): Promise<void> {
+    const existingInstructors = await this.getInstructors();
+    const mergedInstructors = [
+      ...new Set([...existingInstructors, ...newInstructors]),
+    ].sort();
+    await this.saveInstructors(mergedInstructors);
+  }
+
+  watchScheduleStore(callback: (newStore: ScheduleStore | null) => void) {
+    return this.adapter.watch<ScheduleStore>(
+      STORAGE_KEYS.SCHEDULE_STORE,
+      callback,
+    );
   }
 
   // ========================================
@@ -169,6 +153,24 @@ export class StorageManager {
   ) {
     return this.adapter.watch<KeyboardShortcutSettings>(
       STORAGE_KEYS.KEYBOARD_SHORTCUTS,
+      callback,
+    );
+  }
+
+  async getCampusSettings(): Promise<CampusSettings> {
+    const result = await this.adapter.getItem<CampusSettings>(
+      STORAGE_KEYS.CAMPUS_SETTINGS,
+    );
+    return result || {};
+  }
+
+  async setCampusSettings(settings: CampusSettings): Promise<void> {
+    await this.adapter.setItem(STORAGE_KEYS.CAMPUS_SETTINGS, settings);
+  }
+
+  watchCampusSettings(callback: (settings: CampusSettings | null) => void) {
+    return this.adapter.watch<CampusSettings>(
+      STORAGE_KEYS.CAMPUS_SETTINGS,
       callback,
     );
   }
