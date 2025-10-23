@@ -27,6 +27,7 @@ export default defineConfig({
           "GM_addValueChangeListener",
           "GM_removeValueChangeListener",
           "GM_registerMenuCommand",
+          "GM_notification",
         ],
       },
     }),

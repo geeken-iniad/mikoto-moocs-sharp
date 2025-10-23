@@ -5,6 +5,7 @@ import { GM_registerMenuCommand } from "$";
 import { MikotoApp } from "./components/MikotoApp";
 import { openSettingsModal } from "./settings/modalController";
 import { createStorageManager } from "./utils/storage";
+import { NotificationManager } from "./utils/notificationManager";
 
 /**
  * Initialize Mikoto MOOCs# application
@@ -33,6 +34,10 @@ export function initializeMikoto() {
 
       // StorageManagerを作成
       const storageManager = createStorageManager();
+
+      // 通知マネージャーを作成して起動
+      const notificationManager = new NotificationManager(storageManager);
+      notificationManager.start();
 
       // Reactアプリケーションをマウント
       ReactDOM.createRoot(mountContainer).render(
