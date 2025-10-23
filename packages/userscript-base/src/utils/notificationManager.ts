@@ -55,8 +55,20 @@ export class NotificationManager {
       // スケジュールストアを取得
       const store = await this.storageManager.getScheduleStore();
 
+      // アクティブなスケジュールIDを取得
+      let activeScheduleId = await this.storageManager.getActiveScheduleId();
+
+      // アクティブなスケジュールが設定されていない場合、最初のスケジュールを使用
+      if (!activeScheduleId) {
+        const scheduleIds = Object.keys(store.schedules);
+        if (scheduleIds.length === 0) {
+          return; // スケジュールが1つもない
+        }
+        activeScheduleId = scheduleIds[0];
+      }
+
       // 次の授業を取得
-      const nextClass = getNextClass(store);
+      const nextClass = getNextClass(store, activeScheduleId);
       if (!nextClass) {
         return;
       }

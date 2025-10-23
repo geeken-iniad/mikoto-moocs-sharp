@@ -25,9 +25,13 @@ export interface NextClass {
 
 /**
  * 現在時刻から次の授業を取得
+ * @param store スケジュールストア
+ * @param scheduleId 対象のスケジュールID
+ * @param now 現在時刻(省略時は現在時刻)
  */
 export function getNextClass(
   store: ScheduleStore,
+  scheduleId: string,
   now: Date = new Date(),
 ): NextClass | null {
   const currentTime = now.getTime();
@@ -48,10 +52,14 @@ export function getNextClass(
   let closestClass: NextClass | null = null;
   let closestTimeDiff = Number.POSITIVE_INFINITY;
 
-  // 全スケジュールをチェック
-  for (const schedule of Object.values(store.schedules)) {
-    // グリッド内の全授業をチェック
-    for (const [timeSlotKey, slotId] of Object.entries(schedule.grid)) {
+  // 指定されたスケジュールを取得
+  const schedule = store.schedules[scheduleId];
+  if (!schedule) {
+    return null;
+  }
+
+  // グリッド内の全授業をチェック
+  for (const [timeSlotKey, slotId] of Object.entries(schedule.grid)) {
       const parsed = parseTimeSlotKey(timeSlotKey as TimeSlotKey);
       if (!parsed) continue;
 
@@ -95,19 +103,18 @@ export function getNextClass(
       const classTime = classDate.getTime();
       const timeDiff = classTime - currentTime;
 
-      // 未来の授業のみを対象とし、最も近いものを保持
-      if (timeDiff > 0 && timeDiff < closestTimeDiff) {
-        closestTimeDiff = timeDiff;
-        closestClass = {
-          schedule,
-          slot,
-          course,
-          timeSlotKey: timeSlotKey as TimeSlotKey,
-          startTime: classDate,
-          weekday,
-          period,
-        };
-      }
+    // 未来の授業のみを対象とし、最も近いものを保持
+    if (timeDiff > 0 && timeDiff < closestTimeDiff) {
+      closestTimeDiff = timeDiff;
+      closestClass = {
+        schedule,
+        slot,
+        course,
+        timeSlotKey: timeSlotKey as TimeSlotKey,
+        startTime: classDate,
+        weekday,
+        period,
+      };
     }
   }
 

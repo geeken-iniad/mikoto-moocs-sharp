@@ -17,6 +17,7 @@ export const STORAGE_KEYS = {
   KEYBOARD_SHORTCUTS: "mikoto-keyboard-shortcuts",
   CAMPUS_SETTINGS: "mikoto-campus-settings",
   NOTIFICATION_SETTINGS: "mikoto-notification-settings",
+  ACTIVE_SCHEDULE_ID: "mikoto-active-schedule-id",
 } as const;
 
 /**
@@ -195,5 +196,24 @@ export class StorageManager {
       STORAGE_KEYS.NOTIFICATION_SETTINGS,
       callback,
     );
+  }
+
+  async getActiveScheduleId(): Promise<string | null> {
+    const result = await this.adapter.getItem<string>(
+      STORAGE_KEYS.ACTIVE_SCHEDULE_ID,
+    );
+    return result;
+  }
+
+  async setActiveScheduleId(scheduleId: string | null): Promise<void> {
+    if (scheduleId === null) {
+      await this.adapter.removeItem(STORAGE_KEYS.ACTIVE_SCHEDULE_ID);
+    } else {
+      await this.adapter.setItem(STORAGE_KEYS.ACTIVE_SCHEDULE_ID, scheduleId);
+    }
+  }
+
+  watchActiveScheduleId(callback: (scheduleId: string | null) => void) {
+    return this.adapter.watch<string>(STORAGE_KEYS.ACTIVE_SCHEDULE_ID, callback);
   }
 }
