@@ -60,48 +60,48 @@ export function getNextClass(
 
   // グリッド内の全授業をチェック
   for (const [timeSlotKey, slotId] of Object.entries(schedule.grid)) {
-      const parsed = parseTimeSlotKey(timeSlotKey as TimeSlotKey);
-      if (!parsed) continue;
+    const parsed = parseTimeSlotKey(timeSlotKey as TimeSlotKey);
+    if (!parsed) continue;
 
-      const { weekday, period } = parsed;
-      const slot = schedule.slots[slotId];
-      if (!slot) continue;
+    const { weekday, period } = parsed;
+    const slot = schedule.slots[slotId];
+    if (!slot) continue;
 
-      const course = store.courses[slot.courseId];
-      if (!course) continue;
+    const course = store.courses[slot.courseId];
+    if (!course) continue;
 
-      // 授業の開始時刻を取得
-      const periodInfo = PERIODS[period];
-      const [startHour, startMinute] = periodInfo.start.split(":").map(Number);
+    // 授業の開始時刻を取得
+    const periodInfo = PERIODS[period];
+    const [startHour, startMinute] = periodInfo.start.split(":").map(Number);
 
-      // 今週のその曜日・時限の授業の開始時刻を計算
-      const classDate = new Date(now);
-      const weekdayIndex = Object.keys(weekdayMap).find(
-        (key) => weekdayMap[Number(key)] === weekday,
-      );
-      if (!weekdayIndex) continue;
+    // 今週のその曜日・時限の授業の開始時刻を計算
+    const classDate = new Date(now);
+    const weekdayIndex = Object.keys(weekdayMap).find(
+      (key) => weekdayMap[Number(key)] === weekday,
+    );
+    if (!weekdayIndex) continue;
 
-      const targetDay = Number(weekdayIndex);
-      let dayDiff = targetDay - currentDay;
+    const targetDay = Number(weekdayIndex);
+    let dayDiff = targetDay - currentDay;
 
-      // 過去の曜日または同じ曜日で授業開始時刻が過ぎている場合は来週
-      if (dayDiff < 0) {
-        dayDiff += 7;
-      } else if (dayDiff === 0) {
-        // 同じ曜日の場合、時刻をチェック
-        const tempDate = new Date(now);
-        tempDate.setHours(startHour, startMinute, 0, 0);
-        if (tempDate.getTime() <= currentTime) {
-          // 授業開始時刻が過ぎていたら来週
-          dayDiff = 7;
-        }
+    // 過去の曜日または同じ曜日で授業開始時刻が過ぎている場合は来週
+    if (dayDiff < 0) {
+      dayDiff += 7;
+    } else if (dayDiff === 0) {
+      // 同じ曜日の場合、時刻をチェック
+      const tempDate = new Date(now);
+      tempDate.setHours(startHour, startMinute, 0, 0);
+      if (tempDate.getTime() <= currentTime) {
+        // 授業開始時刻が過ぎていたら来週
+        dayDiff = 7;
       }
+    }
 
-      classDate.setDate(classDate.getDate() + dayDiff);
-      classDate.setHours(startHour, startMinute, 0, 0);
+    classDate.setDate(classDate.getDate() + dayDiff);
+    classDate.setHours(startHour, startMinute, 0, 0);
 
-      const classTime = classDate.getTime();
-      const timeDiff = classTime - currentTime;
+    const classTime = classDate.getTime();
+    const timeDiff = classTime - currentTime;
 
     // 未来の授業のみを対象とし、最も近いものを保持
     if (timeDiff > 0 && timeDiff < closestTimeDiff) {
@@ -169,7 +169,8 @@ export function createNotificationMessage(
   const periodInfo = PERIODS[nextClass.period];
 
   // 教員名を取得(カスタム教員 or デフォルト教員)
-  const instructors = nextClass.slot.customInstructors ?? nextClass.course.instructors;
+  const instructors =
+    nextClass.slot.customInstructors ?? nextClass.course.instructors;
   const instructorNames = instructors.length > 0 ? instructors.join(", ") : "";
 
   return {
