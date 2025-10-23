@@ -2,6 +2,7 @@ import type {
   ScheduleStore,
   KeyboardShortcutSettings,
   CampusSettings,
+  NotificationSettings,
 } from "../types";
 import type { IStorageAdapter } from "./interface";
 
@@ -15,6 +16,7 @@ export const STORAGE_KEYS = {
   THEME: "mikoto-theme",
   KEYBOARD_SHORTCUTS: "mikoto-keyboard-shortcuts",
   CAMPUS_SETTINGS: "mikoto-campus-settings",
+  NOTIFICATION_SETTINGS: "mikoto-notification-settings",
 } as const;
 
 /**
@@ -171,6 +173,26 @@ export class StorageManager {
   watchCampusSettings(callback: (settings: CampusSettings | null) => void) {
     return this.adapter.watch<CampusSettings>(
       STORAGE_KEYS.CAMPUS_SETTINGS,
+      callback,
+    );
+  }
+
+  async getNotificationSettings(): Promise<NotificationSettings> {
+    const result = await this.adapter.getItem<NotificationSettings>(
+      STORAGE_KEYS.NOTIFICATION_SETTINGS,
+    );
+    return result || { enabled: false, timings: [-10] };
+  }
+
+  async setNotificationSettings(settings: NotificationSettings): Promise<void> {
+    await this.adapter.setItem(STORAGE_KEYS.NOTIFICATION_SETTINGS, settings);
+  }
+
+  watchNotificationSettings(
+    callback: (settings: NotificationSettings | null) => void,
+  ) {
+    return this.adapter.watch<NotificationSettings>(
+      STORAGE_KEYS.NOTIFICATION_SETTINGS,
       callback,
     );
   }

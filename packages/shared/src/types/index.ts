@@ -137,3 +137,9 @@ export interface KeyboardShortcutSettings {
 export interface CampusSettings {
   defaultCampus?: CampusId; // デフォルトキャンパス
 }
+
+// Notification Settings Types
+export interface NotificationSettings {
+  enabled: boolean; // 通知機能のオンオフ
+  timings: number[]; // 通知を送る時刻(分単位、負の数で「何分前」を表現。例: [-30, -10])
+}
