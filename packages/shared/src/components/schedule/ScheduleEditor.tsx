@@ -1,4 +1,4 @@
-import { useState, useEffect, type CSSProperties } from "react";
+import { useState, useEffect, useMemo, type CSSProperties } from "react";
 import type { Course, ScheduleSlot, Schedule, Weekday, Period } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { ScheduleSelector } from "./ScheduleSelector";
@@ -50,7 +50,7 @@ export const ScheduleEditor = () => {
   } | null>(null);
 
   // Auto-select first schedule if none selected
-  const schedules = Object.values(store.schedules);
+  const schedules = useMemo(() => Object.values(store.schedules), [store.schedules]);
 
   // Use useEffect to avoid infinite loop
   useEffect(() => {
