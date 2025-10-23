@@ -344,7 +344,7 @@ export const CourseFormModal = ({
             </select>
           )}
 
-          {/* カスタム教員名入力 */}
+          {/* Custom instructor name input */}
           <input
             type="text"
             style={styles.input}
