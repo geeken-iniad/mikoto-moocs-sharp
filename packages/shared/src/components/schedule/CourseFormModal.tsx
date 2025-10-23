@@ -318,7 +318,7 @@ export const CourseFormModal = ({
             </div>
           )}
 
-          {/* ドロップダウンで教員名を選択 */}
+          {/* Select instructor from dropdown */}
           {availableInstructors.length > 0 && (
             <select
               style={{ ...styles.select, marginBottom: "0.5rem" }}
