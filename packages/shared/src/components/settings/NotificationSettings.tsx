@@ -139,7 +139,7 @@ export const NotificationSettings = ({
   const handleAddTiming = () => {
     const minutes = Number.parseInt(newTiming, 10);
     if (Number.isNaN(minutes) || minutes <= 0) {
-      alert("正の数値を入力してください");
+      alert("正の整数を入力してください");
       return;
     }
 
