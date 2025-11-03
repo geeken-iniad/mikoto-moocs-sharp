@@ -1,8 +1,11 @@
-import { useState, type CSSProperties } from "react";
+import { useState, useEffect, type CSSProperties } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { Course } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
+import { useStorageManager } from "../../storage/context";
+import { useCurrentTime } from "../../hooks/useCurrentTime";
 import { isCourseUsed } from "../../utils/schedule";
+import { getClassStatusForCourse, type ClassStatus } from "../../utils/currentClass";
 import { CourseFormModal } from "./CourseFormModal";
 
 const styles: Record<string, CSSProperties> = {
@@ -108,14 +111,64 @@ const styles: Record<string, CSSProperties> = {
     borderRadius: "0.5rem",
     border: "1px solid #e5e7eb",
   },
+  currentClassCard: {
+    backgroundColor: "#eff6ff",
+    border: "2px solid #3b82f6",
+    boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
+  },
+  nextClassCard: {
+    backgroundColor: "#f0fdf4",
+    border: "2px solid #22c55e",
+    boxShadow: "0 2px 8px rgba(34, 197, 94, 0.2)",
+  },
+  classBadge: {
+    position: "absolute" as const,
+    top: "0.5rem",
+    right: "0.5rem",
+    padding: "0.25rem 0.5rem",
+    borderRadius: "0.25rem",
+    fontSize: "0.75rem",
+    fontWeight: 600,
+  },
+  currentBadge: {
+    backgroundColor: "#3b82f6",
+    color: "#ffffff",
+  },
+  nextBadge: {
+    backgroundColor: "#22c55e",
+    color: "#ffffff",
+  },
+  courseCardWrapper: {
+    position: "relative" as const,
+  },
 };
 
 export const CourseList = () => {
   const { store, createCourse, updateCourse, deleteCourse } = useScheduleStore();
+  const storageManager = useStorageManager();
+  const currentTime = useCurrentTime();
   const [searchQuery, setSearchQuery] = useState("");
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const [activeScheduleId, setActiveScheduleId] = useState<string | null>(null);
+
+  // Load active schedule ID on mount
+  useEffect(() => {
+    const loadActiveSchedule = async () => {
+      const activeId = await storageManager.getActiveScheduleId();
+      setActiveScheduleId(activeId);
+    };
+    loadActiveSchedule();
+  }, [storageManager]);
+
+  // Watch for changes to active schedule ID
+  useEffect(() => {
+    const unwatch = storageManager.watchActiveScheduleId((newActiveId) => {
+      setActiveScheduleId(newActiveId);
+    });
+    return unwatch;
+  }, [storageManager]);
 
   const courses = Object.values(store.courses);
 
@@ -191,49 +244,80 @@ export const CourseList = () => {
         </div>
       ) : (
         <div style={styles.list}>
-          {filteredCourses.map((course, index) => (
-            <div
-              key={course.id}
-              style={{
-                ...styles.courseCard,
-                ...(hoverIndex === index ? styles.courseCardHover : {}),
-              }}
-              onMouseEnter={() => setHoverIndex(index)}
-              onMouseLeave={() => setHoverIndex(null)}
-            >
-              <div style={styles.courseName}>{course.name}</div>
-              <div style={styles.courseInstructors}>
-                {course.instructors.join(", ")}
-              </div>
-              {course.code && (
-                <div style={styles.courseCode}>科目コード: {course.code}</div>
-              )}
-              <div style={styles.courseActions}>
-                <button
-                  type="button"
-                  style={{ ...styles.actionButton, ...styles.editButton }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEditingCourse(course);
+          {filteredCourses.map((course, index) => {
+            const classStatus = getClassStatusForCourse(
+              store,
+              activeScheduleId,
+              course.id,
+              currentTime,
+            );
+
+            let statusStyle = {};
+            if (classStatus === "current") {
+              statusStyle = styles.currentClassCard;
+            } else if (classStatus === "next") {
+              statusStyle = styles.nextClassCard;
+            }
+
+            return (
+              <div key={course.id} style={styles.courseCardWrapper}>
+                <div
+                  style={{
+                    ...styles.courseCard,
+                    ...(hoverIndex === index ? styles.courseCardHover : {}),
+                    ...statusStyle,
+                    transition: "all 0.3s ease",
                   }}
+                  onMouseEnter={() => setHoverIndex(index)}
+                  onMouseLeave={() => setHoverIndex(null)}
                 >
-                  <Pencil size={14} aria-hidden="true" />
-                  編集
-                </button>
-                <button
-                  type="button"
-                  style={{ ...styles.actionButton, ...styles.deleteButton }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteCourse(course.id);
-                  }}
-                >
-                  <Trash2 size={14} aria-hidden="true" />
-                  削除
-                </button>
+                  {classStatus && (
+                    <div
+                      style={{
+                        ...styles.classBadge,
+                        ...(classStatus === "current"
+                          ? styles.currentBadge
+                          : styles.nextBadge),
+                      }}
+                    >
+                      {classStatus === "current" ? "今" : "次"}
+                    </div>
+                  )}
+                  <div style={styles.courseName}>{course.name}</div>
+                  <div style={styles.courseInstructors}>
+                    {course.instructors.join(", ")}
+                  </div>
+                  {course.code && (
+                    <div style={styles.courseCode}>科目コード: {course.code}</div>
+                  )}
+                  <div style={styles.courseActions}>
+                    <button
+                      type="button"
+                      style={{ ...styles.actionButton, ...styles.editButton }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditingCourse(course);
+                      }}
+                    >
+                      <Pencil size={14} aria-hidden="true" />
+                      編集
+                    </button>
+                    <button
+                      type="button"
+                      style={{ ...styles.actionButton, ...styles.deleteButton }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteCourse(course.id);
+                      }}
+                    >
+                      <Trash2 size={14} aria-hidden="true" />
+                      削除
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 
