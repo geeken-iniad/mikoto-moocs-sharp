@@ -1,5 +1,5 @@
-import type { ScheduleStore, Weekday, Period, TimeSlotKey } from "../types";
-import { PERIODS, DAYS } from "../constants";
+import type { ScheduleStore, Schedule, Weekday, Period, TimeSlotKey } from "../types";
+import { PERIODS } from "../constants";
 import { getExceptionForSlot } from "./schedule";
 
 export type ClassStatus = "current" | "next" | null;
@@ -46,31 +46,69 @@ function getPeriodForTime(time: Date): Period | null {
 }
 
 /**
- * Get the next period after the current time
- * This includes periods later in the day or the first period of the next day
+ * Find the next scheduled class after the current time
  */
-function getNextPeriod(
+function findNextClass(
+  activeSchedule: Schedule,
   currentWeekday: Weekday,
   currentTime: Date,
-): { weekday: Weekday; period: Period } | null {
-  const hours = currentTime.getHours();
-  const minutes = currentTime.getMinutes();
-  const timeStr = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+): CurrentClassInfo | null {
+  const orderedPeriods = Object.keys(PERIODS)
+    .map((key) => Number(key) as Period)
+    .sort((a, b) => a - b);
+  const currentTimeStr = `${String(currentTime.getHours()).padStart(2, "0")}:${String(
+    currentTime.getMinutes(),
+  ).padStart(2, "0")}`;
 
-  // Check for next period today
-  const periods = Object.entries(PERIODS) as [string, { label: string; start: string; end: string }][];
-  for (const [period, { start }] of periods) {
-    if (timeStr < start) {
-      return { weekday: currentWeekday, period: Number(period) as Period };
+  const dateCursor = new Date(currentTime);
+
+  for (let dayOffset = 0; dayOffset < 7; dayOffset++) {
+    const weekday = getCurrentWeekday(dateCursor);
+
+    // Skip days without classes (e.g. Sunday)
+    if (!weekday) {
+      dateCursor.setDate(dateCursor.getDate() + 1);
+      continue;
     }
+
+    const dateStr = dateCursor.toISOString().split("T")[0];
+    const isSameDay = dayOffset === 0 && weekday === currentWeekday;
+
+    for (const period of orderedPeriods) {
+      if (isSameDay) {
+        const periodStart = PERIODS[period].start;
+        if (periodStart <= currentTimeStr) {
+          continue;
+        }
+      }
+
+      const timeSlotKey = `${weekday}-${period}` as TimeSlotKey;
+      const slotId = activeSchedule.grid[timeSlotKey];
+      if (!slotId) {
+        continue;
+      }
+
+      const slot = activeSchedule.slots[slotId];
+      if (!slot) {
+        continue;
+      }
+
+      const exception = getExceptionForSlot(activeSchedule, slotId, dateStr);
+      if (exception && exception.type === "cancellation") {
+        continue;
+      }
+
+      return {
+        courseId: slot.courseId,
+        timeSlotKey,
+        status: "next",
+      };
+    }
+
+    dateCursor.setDate(dateCursor.getDate() + 1);
   }
 
-  // No more periods today, get first period of next day
-  const currentDayIndex = DAYS.indexOf(currentWeekday);
-  const nextDayIndex = (currentDayIndex + 1) % DAYS.length;
-  const nextWeekday = DAYS[nextDayIndex];
-
-  return { weekday: nextWeekday, period: 1 };
+  return null;
 }
 
 /**
@@ -149,35 +187,9 @@ export function getCurrentAndNextClass(
 
   // Find next class
   let nextClass: CurrentClassInfo | null = null;
-  const nextPeriodInfo = getNextPeriod(currentWeekday, currentTime);
-
-  if (nextPeriodInfo) {
-    const { weekday: nextWeekday, period: nextPeriod } = nextPeriodInfo;
-    const timeSlotKey = `${nextWeekday}-${nextPeriod}` as TimeSlotKey;
-    const slotId = activeSchedule.grid[timeSlotKey];
-
-    if (slotId) {
-      const slot = activeSchedule.slots[slotId];
-      if (slot) {
-        // For next day, we need to calculate the date
-        let checkDate = todayStr;
-        if (nextWeekday !== currentWeekday) {
-          const nextDate = new Date(currentTime);
-          nextDate.setDate(nextDate.getDate() + 1);
-          checkDate = nextDate.toISOString().split("T")[0];
-        }
-
-        // Check for exceptions (cancellations)
-        const exception = getExceptionForSlot(activeSchedule, slotId, checkDate);
-        if (!exception || exception.type !== "cancellation") {
-          nextClass = {
-            courseId: slot.courseId,
-            timeSlotKey,
-            status: "next",
-          };
-        }
-      }
-    }
+  const nextClassInfo = findNextClass(activeSchedule, currentWeekday, currentTime);
+  if (nextClassInfo) {
+    nextClass = nextClassInfo;
   }
 
   return { current: currentClass, next: nextClass };
