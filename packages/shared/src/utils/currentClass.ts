@@ -1,6 +1,6 @@
 import type { ScheduleStore, Schedule, Weekday, Period, TimeSlotKey } from "../types";
 import { PERIODS, DAYS } from "../constants";
-import { parseTimeSlotKey, getExceptionForSlot } from "./schedule";
+import { getExceptionForSlot } from "./schedule";
 
 export type ClassStatus = "current" | "next" | null;
 
