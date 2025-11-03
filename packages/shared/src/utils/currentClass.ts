@@ -1,4 +1,4 @@
-import type { ScheduleStore, Schedule, Weekday, Period, TimeSlotKey } from "../types";
+import type { ScheduleStore, Weekday, Period, TimeSlotKey } from "../types";
 import { PERIODS, DAYS } from "../constants";
 import { getExceptionForSlot } from "./schedule";
 

@@ -5,7 +5,7 @@ import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useStorageManager } from "../../storage/context";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
 import { isCourseUsed } from "../../utils/schedule";
-import { getClassStatusForCourse, type ClassStatus } from "../../utils/currentClass";
+import { getClassStatusForCourse } from "../../utils/currentClass";
 import { CourseFormModal } from "./CourseFormModal";
 
 const styles: Record<string, CSSProperties> = {
