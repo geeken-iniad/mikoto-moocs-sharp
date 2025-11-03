@@ -11,6 +11,16 @@ export interface CurrentClassInfo {
 }
 
 /**
+ * Format a date string (YYYY-MM-DD) in local time
+ */
+function formatLocalDate(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+/**
  * Get the current weekday as a Weekday type
  */
 function getCurrentWeekday(date: Date): Weekday | null {
@@ -71,7 +81,7 @@ function findNextClass(
       continue;
     }
 
-    const dateStr = dateCursor.toISOString().split("T")[0];
+    const dateStr = formatLocalDate(dateCursor);
     const isSameDay = dayOffset === 0 && weekday === currentWeekday;
 
     for (const period of orderedPeriods) {
@@ -156,7 +166,7 @@ export function getCurrentAndNextClass(
     return { current: null, next: null };
   }
 
-  const todayStr = currentTime.toISOString().split("T")[0];
+  const todayStr = formatLocalDate(currentTime);
 
   // Find current class
   let currentClass: CurrentClassInfo | null = null;
