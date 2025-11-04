@@ -1,11 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { useStorageManager } from "../../storage/context";
 import { createSubjectExtractor } from "../../utils/subjectExtractor";
+import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
+import { useCurrentTime } from "../../hooks/useCurrentTime";
+import { getClassStatusByUrl } from "../../utils/currentClass";
 
 interface ExtendedHTMLElement extends HTMLElement {
   __mikotoCleanup?: boolean;
   __mikotoHandler?: (e: Event) => void;
+  __mikotoClassBadge?: HTMLDivElement;
 }
 
 const setupWellClickHandler = (well: HTMLElement): void => {
@@ -36,8 +40,55 @@ const setupWellClickHandler = (well: HTMLElement): void => {
   extendedWell.__mikotoCleanup = true;
 };
 
+const applyClassHighlight = (
+  well: HTMLElement,
+  status: "current" | "next" | null,
+): void => {
+  const extendedWell = well as ExtendedHTMLElement;
+
+  // Remove existing classes and badge
+  well.classList.remove("mikoto-current-class", "mikoto-next-class");
+  if (extendedWell.__mikotoClassBadge) {
+    extendedWell.__mikotoClassBadge.remove();
+    extendedWell.__mikotoClassBadge = undefined;
+  }
+
+  if (!status) return;
+
+  // Apply new class
+  well.classList.add(status === "current" ? "mikoto-current-class" : "mikoto-next-class");
+
+  // Add badge
+  const badge = document.createElement("div");
+  badge.className = `mikoto-class-badge mikoto-class-badge-${status}`;
+  badge.textContent = status === "current" ? "今" : "次";
+  well.style.position = "relative";
+  well.appendChild(badge);
+  extendedWell.__mikotoClassBadge = badge;
+};
+
 export const CourseListEnhancer = () => {
   const storageManager = useStorageManager();
+  const { store } = useScheduleStore();
+  const currentTime = useCurrentTime();
+  const [activeScheduleId, setActiveScheduleId] = useState<string | null>(null);
+
+  // Load active schedule ID
+  useEffect(() => {
+    const loadActiveSchedule = async () => {
+      const activeId = await storageManager.getActiveScheduleId();
+      setActiveScheduleId(activeId);
+    };
+    loadActiveSchedule();
+  }, [storageManager]);
+
+  // Watch for changes to active schedule ID
+  useEffect(() => {
+    const unwatch = storageManager.watchActiveScheduleId((newActiveId) => {
+      setActiveScheduleId(newActiveId);
+    });
+    return unwatch;
+  }, [storageManager]);
 
   useEffect(() => {
     const extractAndSaveSubjects = createSubjectExtractor(storageManager);
@@ -48,6 +99,15 @@ export const CourseListEnhancer = () => {
         const extendedWell = well as ExtendedHTMLElement;
         if (!extendedWell.__mikotoCleanup) {
           setupWellClickHandler(well as HTMLElement);
+        }
+
+        // Apply class highlighting based on URL
+        const link = well.querySelector("a.btn-primary") as HTMLAnchorElement;
+        if (link && link.href) {
+          const status = getClassStatusByUrl(store, activeScheduleId, link.href, currentTime);
+          applyClassHighlight(well as HTMLElement, status);
+        } else {
+          applyClassHighlight(well as HTMLElement, null);
         }
       });
 
@@ -87,7 +147,7 @@ export const CourseListEnhancer = () => {
       window.removeEventListener("pageshow", handlePageShow);
       observer.disconnect();
     };
-  }, [storageManager]);
+  }, [storageManager, store, activeScheduleId, currentTime]);
 
   return null;
 };
