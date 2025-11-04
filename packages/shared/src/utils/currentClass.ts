@@ -93,7 +93,7 @@ function findNextClass(
     for (const period of orderedPeriods) {
       if (isSameDay) {
         const periodStart = PERIODS[period].start;
-        if (periodStart <= currentTimeStr) {
+        if (periodStart < currentTimeStr) {
           continue;
         }
       }
