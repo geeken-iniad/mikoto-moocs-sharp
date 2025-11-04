@@ -140,8 +140,8 @@ function isInCurrentClassWindow(time: Date, period: Period): boolean {
   if (!periodInfo) return false;
 
   // Get the next period to determine the break time
-  const nextPeriod = (period + 1) as Period;
-  const nextPeriodInfo = PERIODS[nextPeriod];
+  const nextPeriod = period < 7 ? ((period + 1) as Period) : null;
+  const nextPeriodInfo = nextPeriod ? PERIODS[nextPeriod] : null;
 
   // If there's a next period, the window extends until the next period starts
   const windowEnd = nextPeriodInfo ? nextPeriodInfo.start : periodInfo.end;
