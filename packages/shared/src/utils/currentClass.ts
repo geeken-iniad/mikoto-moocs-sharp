@@ -1,4 +1,10 @@
-import type { ScheduleStore, Schedule, Weekday, Period, TimeSlotKey } from "../types";
+import type {
+  ScheduleStore,
+  Schedule,
+  Weekday,
+  Period,
+  TimeSlotKey,
+} from "../types";
 import { PERIODS } from "../constants";
 import { getExceptionForSlot } from "./schedule";
 
@@ -182,7 +188,11 @@ export function getCurrentAndNextClass(
         const slot = activeSchedule.slots[slotId];
         if (slot) {
           // Check for exceptions (cancellations)
-          const exception = getExceptionForSlot(activeSchedule, slotId, todayStr);
+          const exception = getExceptionForSlot(
+            activeSchedule,
+            slotId,
+            todayStr,
+          );
           if (!exception || exception.type !== "cancellation") {
             currentClass = {
               courseId: slot.courseId,
@@ -197,7 +207,11 @@ export function getCurrentAndNextClass(
 
   // Find next class
   let nextClass: CurrentClassInfo | null = null;
-  const nextClassInfo = findNextClass(activeSchedule, currentWeekday, currentTime);
+  const nextClassInfo = findNextClass(
+    activeSchedule,
+    currentWeekday,
+    currentTime,
+  );
   if (nextClassInfo) {
     nextClass = nextClassInfo;
   }
@@ -214,7 +228,11 @@ export function getClassStatusForCourse(
   courseId: string,
   currentTime: Date = new Date(),
 ): ClassStatus {
-  const { current, next } = getCurrentAndNextClass(store, activeScheduleId, currentTime);
+  const { current, next } = getCurrentAndNextClass(
+    store,
+    activeScheduleId,
+    currentTime,
+  );
 
   if (current?.courseId === courseId) {
     return "current";
@@ -226,23 +244,31 @@ export function getClassStatusForCourse(
 }
 
 /**
- * Get the MOOCS URLs for current and next classes
+ * Get the MOOCs URLs for current and next classes
  */
 export function getCurrentAndNextClassUrls(
   store: ScheduleStore,
   activeScheduleId: string | null,
   currentTime: Date = new Date(),
 ): { current: string | null; next: string | null } {
-  const { current, next } = getCurrentAndNextClass(store, activeScheduleId, currentTime);
+  const { current, next } = getCurrentAndNextClass(
+    store,
+    activeScheduleId,
+    currentTime,
+  );
 
-  const currentUrl = current ? store.courses[current.courseId]?.urls?.moocs ?? null : null;
-  const nextUrl = next ? store.courses[next.courseId]?.urls?.moocs ?? null : null;
+  const currentUrl = current
+    ? (store.courses[current.courseId]?.urls?.moocs ?? null)
+    : null;
+  const nextUrl = next
+    ? (store.courses[next.courseId]?.urls?.moocs ?? null)
+    : null;
 
   return { current: currentUrl, next: nextUrl };
 }
 
 /**
- * Normalize MOOCS URL to compare URLs
+ * Normalize MOOCs URL to compare URLs
  * Removes protocol, trailing slashes, and query parameters
  */
 function normalizeMoocsUrl(url: string): string {
@@ -261,7 +287,11 @@ export function getClassStatusByUrl(
   moocsUrl: string,
   currentTime: Date = new Date(),
 ): ClassStatus {
-  const { current, next } = getCurrentAndNextClassUrls(store, activeScheduleId, currentTime);
+  const { current, next } = getCurrentAndNextClassUrls(
+    store,
+    activeScheduleId,
+    currentTime,
+  );
 
   const normalizedInput = normalizeMoocsUrl(moocsUrl);
 

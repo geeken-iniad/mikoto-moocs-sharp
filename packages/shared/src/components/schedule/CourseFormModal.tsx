@@ -270,9 +270,7 @@ export const CourseFormModal = ({
   };
 
   const handleRemoveInstructor = (instructor: string) => {
-    setSelectedInstructors(
-      selectedInstructors.filter((i) => i !== instructor),
-    );
+    setSelectedInstructors(selectedInstructors.filter((i) => i !== instructor));
   };
 
   return (
@@ -300,10 +298,7 @@ export const CourseFormModal = ({
           {selectedInstructors.length > 0 && (
             <div style={styles.selectedInstructorList}>
               {selectedInstructors.map((instructor, index) => (
-                <div
-                  key={index}
-                  style={styles.selectedInstructorChip}
-                >
+                <div key={index} style={styles.selectedInstructorChip}>
                   <span>{instructor}</span>
                   <button
                     type="button"
@@ -369,11 +364,19 @@ export const CourseFormModal = ({
           <div style={styles.roomHeader}>デフォルト教室（任意）</div>
           {rooms.map((room, index) => (
             <div key={index} style={{ marginBottom: "0.5rem" }}>
-              <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.25rem" }}>
+              <div
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  marginBottom: "0.25rem",
+                }}
+              >
                 <select
                   style={{ ...styles.select, flex: "1" }}
                   value={room.type}
-                  onChange={(e) => handleRoomChange(index, "type", e.target.value)}
+                  onChange={(e) =>
+                    handleRoomChange(index, "type", e.target.value)
+                  }
                 >
                   {Object.entries(ROOM_TYPE_LABELS).map(([type, label]) => (
                     <option key={type} value={type}>
@@ -411,7 +414,11 @@ export const CourseFormModal = ({
                 <input
                   type="text"
                   style={{ ...styles.input, flex: "1" }}
-                  placeholder={room.type === "physical" ? "部屋番号 *" : "プラットフォーム名"}
+                  placeholder={
+                    room.type === "physical"
+                      ? "部屋番号 *"
+                      : "プラットフォーム名"
+                  }
                   value={room.number}
                   onChange={(e) =>
                     handleRoomChange(index, "number", e.target.value)
@@ -437,13 +444,19 @@ export const CourseFormModal = ({
                 style={styles.input}
                 placeholder="備考（例: 実験室、PC室）"
                 value={room.note || ""}
-                onChange={(e) => handleRoomChange(index, "note", e.target.value)}
+                onChange={(e) =>
+                  handleRoomChange(index, "note", e.target.value)
+                }
               />
             </div>
           ))}
           <button
             type="button"
-            style={{ ...styles.button, ...styles.secondaryButton, ...styles.addButton }}
+            style={{
+              ...styles.button,
+              ...styles.secondaryButton,
+              ...styles.addButton,
+            }}
             onClick={handleAddRoom}
           >
             <Plus size={16} aria-hidden="true" />
@@ -452,7 +465,7 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
-          <label style={styles.label}>MOOCS URL</label>
+          <label style={styles.label}>MOOCs URL</label>
           <input
             type="url"
             style={styles.input}
