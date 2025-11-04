@@ -54,7 +54,7 @@ function getPeriodForTime(time: Date): Period | null {
   const timeStr = `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 
   for (const [period, { start, end }] of Object.entries(PERIODS)) {
-    if (timeStr >= start && timeStr <= end) {
+    if (timeStr >= start && timeStr < end) {
       return Number(period) as Period;
     }
   }
