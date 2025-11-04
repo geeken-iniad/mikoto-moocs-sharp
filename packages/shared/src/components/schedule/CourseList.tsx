@@ -1,11 +1,11 @@
-import { useState, useEffect, type CSSProperties } from "react";
+import { useState, useEffect, useMemo, type CSSProperties } from "react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import type { Course } from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useStorageManager } from "../../storage/context";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
 import { isCourseUsed } from "../../utils/schedule";
-import { getClassStatusForCourse } from "../../utils/currentClass";
+import { getCurrentAndNextClass } from "../../utils/currentClass";
 import { CourseFormModal } from "./CourseFormModal";
 
 const styles: Record<string, CSSProperties> = {
@@ -182,6 +182,11 @@ export const CourseList = () => {
     );
   });
 
+  const { current: currentClassInfo, next: nextClassInfo } = useMemo(
+    () => getCurrentAndNextClass(store, activeScheduleId, currentTime),
+    [store, activeScheduleId, currentTime],
+  );
+
   const handleCreateCourse = async (course: Course) => {
     await createCourse(course);
     setIsCreating(false);
@@ -245,12 +250,12 @@ export const CourseList = () => {
       ) : (
         <div style={styles.list}>
           {filteredCourses.map((course, index) => {
-            const classStatus = getClassStatusForCourse(
-              store,
-              activeScheduleId,
-              course.id,
-              currentTime,
-            );
+            const classStatus =
+              currentClassInfo?.courseId === course.id
+                ? "current"
+                : nextClassInfo?.courseId === course.id
+                  ? "next"
+                  : null;
 
             let statusStyle = {};
             if (classStatus === "current") {
