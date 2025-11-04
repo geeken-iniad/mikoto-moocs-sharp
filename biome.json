@@ -1,4 +1,7 @@
 {
+  "files": {
+    "includes": ["**", "!**/.wxt/**", "!**/.output/**", "!**/dist/**"]
+  },
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2
