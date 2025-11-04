@@ -18,10 +18,7 @@ export default defineConfig({
           __dirname,
           "../shared/src/styles",
         ),
-        "@mikoto-moocs-sharp/shared": path.resolve(
-          __dirname,
-          "../shared/src",
-        ),
+        "@mikoto-moocs-sharp/shared": path.resolve(__dirname, "../shared/src"),
       },
     },
   }),

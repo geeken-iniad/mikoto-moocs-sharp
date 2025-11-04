@@ -40,19 +40,26 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
 
       // Check if store has old format (missing grid/slots/exceptions)
       let storeToUse = savedStore;
-      const hasOldFormat = Object.values(savedStore.schedules).some((schedule) => {
-        const { grid, slots, exceptions } = schedule;
-        const isInvalidRecord = (value: unknown) =>
-          !value || typeof value !== "object" || value === null || Array.isArray(value);
-        return (
-          isInvalidRecord(grid) ||
-          isInvalidRecord(slots) ||
-          isInvalidRecord(exceptions)
-        );
-      });
+      const hasOldFormat = Object.values(savedStore.schedules).some(
+        (schedule) => {
+          const { grid, slots, exceptions } = schedule;
+          const isInvalidRecord = (value: unknown) =>
+            !value ||
+            typeof value !== "object" ||
+            value === null ||
+            Array.isArray(value);
+          return (
+            isInvalidRecord(grid) ||
+            isInvalidRecord(slots) ||
+            isInvalidRecord(exceptions)
+          );
+        },
+      );
 
       if (hasOldFormat) {
-        console.warn("[useScheduleStore] Old format detected, resetting to empty store");
+        console.warn(
+          "[useScheduleStore] Old format detected, resetting to empty store",
+        );
         storeToUse = {
           schemaVersion: 1,
           courses: {},
@@ -91,8 +98,13 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
     // Validate before saving
     const errors = validateStore(newStore);
     if (errors.length > 0) {
-      console.error("[useScheduleStore] Validation errors before save:", errors);
-      throw new Error(`Validation failed: ${errors.map((e) => e.message).join(", ")}`);
+      console.error(
+        "[useScheduleStore] Validation errors before save:",
+        errors,
+      );
+      throw new Error(
+        `Validation failed: ${errors.map((e) => e.message).join(", ")}`,
+      );
     }
 
     setStore(newStore);
@@ -112,7 +124,10 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
     return course;
   };
 
-  const updateCourseById = async (courseId: string, updates: Partial<Course>) => {
+  const updateCourseById = async (
+    courseId: string,
+    updates: Partial<Course>,
+  ) => {
     console.log("[useScheduleStore] Updating course:", courseId, updates);
     const newStore = updateCourse(store, courseId, updates);
     await saveStore(newStore);
@@ -153,7 +168,10 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
   const duplicateScheduleById = async (
     sourceScheduleId: string,
     newAcademicYear: number,
-    newTermInfo: { semester: "Spring" | "Fall"; division: "Semester" | 1 | 2 | 3 | 4 },
+    newTermInfo: {
+      semester: "Spring" | "Fall";
+      division: "Semester" | 1 | 2 | 3 | 4;
+    },
   ) => {
     console.log("[useScheduleStore] Duplicating schedule:", sourceScheduleId);
     const newStore = duplicateSchedule(
@@ -199,7 +217,11 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
     slotId: string,
     updates: Partial<Omit<ScheduleSlot, "id">>,
   ) => {
-    console.log("[useScheduleStore] Updating slot:", { scheduleId, slotId, updates });
+    console.log("[useScheduleStore] Updating slot:", {
+      scheduleId,
+      slotId,
+      updates,
+    });
     const newStore = updateSlot(store, scheduleId, slotId, updates);
     await saveStore(newStore);
   };
@@ -221,7 +243,10 @@ const useScheduleStoreInternal = (storageManager: StorageManager) => {
     scheduleId: string,
     exception: ExceptionEntry,
   ) => {
-    console.log("[useScheduleStore] Adding exception:", { scheduleId, exception });
+    console.log("[useScheduleStore] Adding exception:", {
+      scheduleId,
+      exception,
+    });
     const newStore = addException(store, scheduleId, exception);
     await saveStore(newStore);
   };

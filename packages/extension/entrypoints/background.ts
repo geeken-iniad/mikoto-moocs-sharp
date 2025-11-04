@@ -1,5 +1,9 @@
 import { storageManager } from "./utils/storage";
-import { getNextClass, shouldNotify, createNotificationMessage } from "@mikoto-moocs-sharp/shared/utils/notification";
+import {
+  getNextClass,
+  shouldNotify,
+  createNotificationMessage,
+} from "@mikoto-moocs-sharp/shared/utils/notification";
 
 export default defineBackground(() => {
   const sentNotifications = new Set<string>();
@@ -8,7 +12,8 @@ export default defineBackground(() => {
   const checkAndNotify = async () => {
     try {
       // 通知設定を取得
-      const notificationSettings = await storageManager.getNotificationSettings();
+      const notificationSettings =
+        await storageManager.getNotificationSettings();
       if (!notificationSettings.enabled) {
         return;
       }
@@ -39,7 +44,7 @@ export default defineBackground(() => {
         nextClass,
         notificationSettings.timings,
         new Date(),
-        sentNotifications
+        sentNotifications,
       );
 
       if (timing !== null) {

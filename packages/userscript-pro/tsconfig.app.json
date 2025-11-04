@@ -20,7 +20,9 @@
     "paths": {
       "@mikoto-moocs-sharp/shared": ["../shared/src/index.ts"],
       "@mikoto-moocs-sharp/shared/*": ["../shared/src/*"],
-      "@mikoto-moocs-sharp/userscript-base": ["../userscript-base/src/index.ts"],
+      "@mikoto-moocs-sharp/userscript-base": [
+        "../userscript-base/src/index.ts"
+      ],
       "@mikoto-moocs-sharp/userscript-base/*": ["../userscript-base/src/*"]
     },
 

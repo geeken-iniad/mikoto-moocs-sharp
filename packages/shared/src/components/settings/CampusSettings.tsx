@@ -30,7 +30,9 @@ export const CampusSettings = ({
           id="default-campus"
           value={defaultCampus || ""}
           onChange={(e) =>
-            onCampusChange(e.target.value ? (e.target.value as CampusId) : undefined)
+            onCampusChange(
+              e.target.value ? (e.target.value as CampusId) : undefined,
+            )
           }
           style={{
             padding: "10px",

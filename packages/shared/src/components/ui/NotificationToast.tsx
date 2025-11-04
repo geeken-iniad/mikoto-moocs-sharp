@@ -17,7 +17,8 @@ const styles: Record<string, CSSProperties> = {
     maxWidth: "400px",
     backgroundColor: "white",
     borderRadius: "0.5rem",
-    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    boxShadow:
+      "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
     padding: "1rem",
     display: "flex",
     gap: "0.75rem",
@@ -118,7 +119,9 @@ export const NotificationToast = ({
     <div
       style={{
         ...styles.container,
-        animation: isClosing ? "slideOut 0.3s ease-in" : "slideIn 0.3s ease-out",
+        animation: isClosing
+          ? "slideOut 0.3s ease-in"
+          : "slideIn 0.3s ease-out",
       }}
     >
       <div style={styles.iconContainer}>
