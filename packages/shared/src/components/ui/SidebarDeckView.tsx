@@ -108,7 +108,10 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
 }) => {
   const [sections, setSections] = useState<SidebarSection[]>([]);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
-  const [dimensions, setDimensions] = useState({ headerHeight: 50, sidebarWidth: 50 });
+  const [dimensions, setDimensions] = useState({
+    headerHeight: 50,
+    sidebarWidth: 50,
+  });
   const dialogRef = useRef<HTMLDivElement>(null);
   const previousActiveElementRef = useRef<HTMLElement | null>(null);
 
@@ -124,8 +127,14 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       setDimensions({ headerHeight, sidebarWidth });
 
       // CSS変数も更新して他の要素でも使えるようにする
-      document.body.style.setProperty("--mikoto-header-height", `${headerHeight}px`);
-      document.body.style.setProperty("--mikoto-sidebar-width", `${sidebarWidth}px`);
+      document.body.style.setProperty(
+        "--mikoto-header-height",
+        `${headerHeight}px`,
+      );
+      document.body.style.setProperty(
+        "--mikoto-sidebar-width",
+        `${sidebarWidth}px`,
+      );
     };
 
     calculateDimensions();
@@ -228,7 +237,10 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
       }
     } else {
       // ダイアログが閉じられた時、元の要素にフォーカスを復元
-      if (previousActiveElementRef.current && typeof previousActiveElementRef.current.focus === 'function') {
+      if (
+        previousActiveElementRef.current &&
+        typeof previousActiveElementRef.current.focus === "function"
+      ) {
         previousActiveElementRef.current.focus();
       }
       previousActiveElementRef.current = null;
@@ -443,7 +455,10 @@ export const SidebarDeckView: React.FC<SidebarDeckViewProps> = ({
                           }}
                         >
                           {item.icon && (
-                            <i className={item.icon} style={inlineStyles.icon} />
+                            <i
+                              className={item.icon}
+                              style={inlineStyles.icon}
+                            />
                           )}
                           <span>{item.text}</span>
                         </a>

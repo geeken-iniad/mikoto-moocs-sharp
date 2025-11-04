@@ -214,6 +214,9 @@ export class StorageManager {
   }
 
   watchActiveScheduleId(callback: (scheduleId: string | null) => void) {
-    return this.adapter.watch<string>(STORAGE_KEYS.ACTIVE_SCHEDULE_ID, callback);
+    return this.adapter.watch<string>(
+      STORAGE_KEYS.ACTIVE_SCHEDULE_ID,
+      callback,
+    );
   }
 }

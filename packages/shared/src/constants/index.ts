@@ -1,4 +1,10 @@
-import type { Weekday, Period, CampusId, Semester, TermDivision } from "../types";
+import type {
+  Weekday,
+  Period,
+  CampusId,
+  Semester,
+  TermDivision,
+} from "../types";
 
 // App Config
 export const CONFIG = {

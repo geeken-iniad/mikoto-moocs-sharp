@@ -8,7 +8,11 @@ import type {
   DeliveryMode,
   CampusId,
 } from "../../types";
-import { CAMPUS_LABELS, DELIVERY_MODE_LABELS, ROOM_TYPE_LABELS } from "../../constants";
+import {
+  CAMPUS_LABELS,
+  DELIVERY_MODE_LABELS,
+  ROOM_TYPE_LABELS,
+} from "../../constants";
 
 interface SlotEditModalProps {
   courses: Course[];
@@ -230,7 +234,9 @@ export const SlotEditModal = ({
           <select
             style={styles.select}
             value={deliveryMode}
-            onChange={(e) => setDeliveryMode(e.target.value as DeliveryMode | "")}
+            onChange={(e) =>
+              setDeliveryMode(e.target.value as DeliveryMode | "")
+            }
           >
             <option value="">デフォルト（対面）</option>
             {Object.entries(DELIVERY_MODE_LABELS).map(([mode, label]) => (
@@ -242,16 +248,24 @@ export const SlotEditModal = ({
         </div>
 
         <div style={styles.roomSection}>
-          <div style={styles.roomHeader}>教室（科目のデフォルト教室を上書き）</div>
+          <div style={styles.roomHeader}>
+            教室（科目のデフォルト教室を上書き）
+          </div>
           {rooms.map((room, index) => (
             <div key={index} style={{ marginBottom: "0.5rem" }}>
               <div
-                style={{ display: "flex", gap: "0.5rem", marginBottom: "0.25rem" }}
+                style={{
+                  display: "flex",
+                  gap: "0.5rem",
+                  marginBottom: "0.25rem",
+                }}
               >
                 <select
                   style={{ ...styles.select, flex: "1" }}
                   value={room.type}
-                  onChange={(e) => handleRoomChange(index, "type", e.target.value)}
+                  onChange={(e) =>
+                    handleRoomChange(index, "type", e.target.value)
+                  }
                 >
                   {Object.entries(ROOM_TYPE_LABELS).map(([type, label]) => (
                     <option key={type} value={type}>
@@ -290,7 +304,9 @@ export const SlotEditModal = ({
                   type="text"
                   style={{ ...styles.input, flex: "1" }}
                   placeholder={
-                    room.type === "physical" ? "部屋番号 *" : "プラットフォーム名"
+                    room.type === "physical"
+                      ? "部屋番号 *"
+                      : "プラットフォーム名"
                   }
                   value={room.number}
                   onChange={(e) =>
@@ -317,7 +333,9 @@ export const SlotEditModal = ({
                 style={styles.input}
                 placeholder="備考（例: 実験室、PC室）"
                 value={room.note || ""}
-                onChange={(e) => handleRoomChange(index, "note", e.target.value)}
+                onChange={(e) =>
+                  handleRoomChange(index, "note", e.target.value)
+                }
               />
             </div>
           ))}

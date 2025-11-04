@@ -70,7 +70,10 @@ export const ScheduleGrid = ({
               時限
             </th>
             {DAYS.map((day) => (
-              <th key={day} style={{ ...styles.headerCell, ...styles.dayHeader }}>
+              <th
+                key={day}
+                style={{ ...styles.headerCell, ...styles.dayHeader }}
+              >
                 {DAY_LABELS[day]}
               </th>
             ))}

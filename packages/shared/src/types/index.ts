@@ -19,7 +19,11 @@ type SlotId = UUID;
 export type CampusId = "akabanedai" | "asaka" | "kawagoe" | "hakusan";
 
 // 授業形態
-export type DeliveryMode = "face-to-face" | "online" | "on-demand" | "online-on-demand";
+export type DeliveryMode =
+  | "face-to-face"
+  | "online"
+  | "on-demand"
+  | "online-on-demand";
 
 // 教室種別
 export type RoomType = "physical" | "online" | "on-demand";

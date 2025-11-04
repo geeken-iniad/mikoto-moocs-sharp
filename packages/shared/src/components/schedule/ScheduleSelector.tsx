@@ -151,7 +151,6 @@ export const ScheduleSelector = ({
   onSetActive,
   onCreateSchedule,
 }: ScheduleSelectorProps) => {
-
   // Create new schedule form state
   // The default year is initialized to the current year only once when the component mounts.
   // If the component remains mounted across a year boundary, this value will not update automatically.
@@ -162,8 +161,14 @@ export const ScheduleSelector = ({
 
   const handleCreateSchedule = () => {
     const year = Number.parseInt(newYear, 10);
-    if (Number.isNaN(year) || year < MIN_ACADEMIC_YEAR || year > MAX_ACADEMIC_YEAR) {
-      alert(`有効な年度を入力してください（${MIN_ACADEMIC_YEAR}-${MAX_ACADEMIC_YEAR}）`);
+    if (
+      Number.isNaN(year) ||
+      year < MIN_ACADEMIC_YEAR ||
+      year > MAX_ACADEMIC_YEAR
+    ) {
+      alert(
+        `有効な年度を入力してください（${MIN_ACADEMIC_YEAR}-${MAX_ACADEMIC_YEAR}）`,
+      );
       return;
     }
 
@@ -173,9 +178,7 @@ export const ScheduleSelector = ({
       onCreateSchedule(schedule);
     } catch (error) {
       alert(
-        error instanceof Error
-          ? error.message
-          : "時間割の作成に失敗しました",
+        error instanceof Error ? error.message : "時間割の作成に失敗しました",
       );
     }
   };
@@ -202,7 +205,13 @@ export const ScheduleSelector = ({
                 <div style={styles.scheduleItemContent}>
                   {formatTermInfo(schedule.academicYear, schedule.term)}
                   {isActive && (
-                    <span style={{ marginLeft: "0.5rem", fontSize: "0.75rem", color: "#6b7280" }}>
+                    <span
+                      style={{
+                        marginLeft: "0.5rem",
+                        fontSize: "0.75rem",
+                        color: "#6b7280",
+                      }}
+                    >
                       (通知対象)
                     </span>
                   )}
@@ -282,7 +291,9 @@ export const ScheduleSelector = ({
               onChange={(e) => {
                 const value = e.target.value;
                 setNewDivision(
-                  value === "Semester" ? "Semester" : (Number.parseInt(value) as TermDivision),
+                  value === "Semester"
+                    ? "Semester"
+                    : (Number.parseInt(value) as TermDivision),
                 );
               }}
             >
@@ -293,7 +304,11 @@ export const ScheduleSelector = ({
               ))}
             </select>
           </div>
-          <button type="button" style={styles.button} onClick={handleCreateSchedule}>
+          <button
+            type="button"
+            style={styles.button}
+            onClick={handleCreateSchedule}
+          >
             <CalendarPlus size={16} aria-hidden="true" />
             作成
           </button>

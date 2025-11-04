@@ -173,9 +173,7 @@ export const NotificationSettings = ({
         <h3 style={styles.title}>授業前通知</h3>
       </div>
 
-      <p style={styles.description}>
-        次の授業の指定時刻前に通知を送信します
-      </p>
+      <p style={styles.description}>次の授業の指定時刻前に通知を送信します</p>
 
       <div style={styles.toggleContainer}>
         <span style={styles.label}>通知を有効にする</span>
@@ -186,7 +184,9 @@ export const NotificationSettings = ({
             ...(settings.enabled ? styles.switchActive : {}),
           }}
           onClick={handleToggle}
-          aria-label={settings.enabled ? "通知を無効にする" : "通知を有効にする"}
+          aria-label={
+            settings.enabled ? "通知を無効にする" : "通知を有効にする"
+          }
         >
           <div
             style={{

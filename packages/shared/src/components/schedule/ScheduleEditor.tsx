@@ -1,5 +1,11 @@
 import { useState, useEffect, useMemo, type CSSProperties } from "react";
-import type { Course, ScheduleSlot, Schedule, Weekday, Period } from "../../types";
+import type {
+  Course,
+  ScheduleSlot,
+  Schedule,
+  Weekday,
+  Period,
+} from "../../types";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useStorageManager } from "../../storage/context";
 import { ScheduleSelector } from "./ScheduleSelector";
@@ -33,30 +39,25 @@ const styles: Record<string, CSSProperties> = {
 };
 
 export const ScheduleEditor = () => {
-  const {
-    store,
-    isLoading,
-    createSchedule,
-    addSlot,
-    updateSlot,
-    removeSlot,
-  } = useScheduleStore();
+  const { store, isLoading, createSchedule, addSlot, updateSlot, removeSlot } =
+    useScheduleStore();
 
   const storageManager = useStorageManager();
 
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
     null,
   );
-  const [activeScheduleId, setActiveScheduleId] = useState<string | null>(
-    null,
-  );
+  const [activeScheduleId, setActiveScheduleId] = useState<string | null>(null);
   const [editingCell, setEditingCell] = useState<{
     weekday: Weekday;
     period: Period;
   } | null>(null);
 
   // Auto-select first schedule if none selected
-  const schedules = useMemo(() => Object.values(store.schedules), [store.schedules]);
+  const schedules = useMemo(
+    () => Object.values(store.schedules),
+    [store.schedules],
+  );
 
   // Load active schedule ID on mount
   useEffect(() => {
@@ -101,7 +102,9 @@ export const ScheduleEditor = () => {
     setEditingCell({ weekday, period });
   };
 
-  const handleSaveSlot = async (slotData: Partial<Omit<ScheduleSlot, "id">>) => {
+  const handleSaveSlot = async (
+    slotData: Partial<Omit<ScheduleSlot, "id">>,
+  ) => {
     if (!selectedSchedule || !editingCell) {
       console.error("No schedule or cell selected");
       alert("時間割またはセルが選択されていません");
@@ -113,7 +116,10 @@ export const ScheduleEditor = () => {
       return;
     }
 
-    const timeSlotKey = createTimeSlotKey(editingCell.weekday, editingCell.period);
+    const timeSlotKey = createTimeSlotKey(
+      editingCell.weekday,
+      editingCell.period,
+    );
     const existingSlotId = selectedSchedule.grid[timeSlotKey];
 
     try {
@@ -122,23 +128,20 @@ export const ScheduleEditor = () => {
         await updateSlot(selectedSchedule.id, existingSlotId, slotData);
       } else {
         // Add new slot
-        await addSlot(
-          selectedSchedule.id,
-          timeSlotKey,
-          slotData.courseId,
-          {
-            rooms: slotData.rooms,
-            defaultDeliveryMode: slotData.defaultDeliveryMode,
-            memo: slotData.memo,
-            color: slotData.color,
-            customInstructors: slotData.customInstructors,
-          },
-        );
+        await addSlot(selectedSchedule.id, timeSlotKey, slotData.courseId, {
+          rooms: slotData.rooms,
+          defaultDeliveryMode: slotData.defaultDeliveryMode,
+          memo: slotData.memo,
+          color: slotData.color,
+          customInstructors: slotData.customInstructors,
+        });
       }
       setEditingCell(null);
     } catch (error) {
       console.error("Failed to save slot:", error);
-      alert(`保存に失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`);
+      alert(
+        `保存に失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`,
+      );
     }
   };
 
@@ -151,14 +154,19 @@ export const ScheduleEditor = () => {
       return;
     }
 
-    const timeSlotKey = createTimeSlotKey(editingCell.weekday, editingCell.period);
+    const timeSlotKey = createTimeSlotKey(
+      editingCell.weekday,
+      editingCell.period,
+    );
 
     try {
       await removeSlot(selectedSchedule.id, timeSlotKey);
       setEditingCell(null);
     } catch (error) {
       console.error("Failed to delete slot:", error);
-      alert(`削除に失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`);
+      alert(
+        `削除に失敗しました: ${error instanceof Error ? error.message : "不明なエラー"}`,
+      );
     }
   };
 
@@ -173,7 +181,10 @@ export const ScheduleEditor = () => {
   let existingCourse: Course | undefined;
 
   if (editingCell && selectedSchedule) {
-    const timeSlotKey = createTimeSlotKey(editingCell.weekday, editingCell.period);
+    const timeSlotKey = createTimeSlotKey(
+      editingCell.weekday,
+      editingCell.period,
+    );
     const slotId = selectedSchedule.grid[timeSlotKey];
     if (slotId) {
       existingSlot = selectedSchedule.slots[slotId];
@@ -203,9 +214,7 @@ export const ScheduleEditor = () => {
           onCellClick={handleCellClick}
         />
       ) : (
-        <div style={styles.noSchedule}>
-          時間割を作成してください
-        </div>
+        <div style={styles.noSchedule}>時間割を作成してください</div>
       )}
 
       {editingCell && (

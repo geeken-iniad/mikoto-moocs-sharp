@@ -17,7 +17,11 @@ import type {
   ExceptionType,
   ValidationError,
 } from "../types";
-import { VALID_TERM_DIVISIONS, SEMESTER_LABELS, CAMPUS_LABELS } from "../constants";
+import {
+  VALID_TERM_DIVISIONS,
+  SEMESTER_LABELS,
+  CAMPUS_LABELS,
+} from "../constants";
 
 export const MIN_ACADEMIC_YEAR = 2000;
 export const MAX_ACADEMIC_YEAR = 2100;
@@ -36,7 +40,10 @@ export function generateUUID(): string {
 /**
  * Create a TimeSlotKey from weekday and period
  */
-export function createTimeSlotKey(weekday: Weekday, period: Period): TimeSlotKey {
+export function createTimeSlotKey(
+  weekday: Weekday,
+  period: Period,
+): TimeSlotKey {
   return `${weekday}-${period}` as TimeSlotKey;
 }
 
@@ -44,7 +51,9 @@ export function createTimeSlotKey(weekday: Weekday, period: Period): TimeSlotKey
  * Parse a TimeSlotKey into weekday and period
  * Returns null if parsing fails
  */
-export function parseTimeSlotKey(key: TimeSlotKey): { weekday: Weekday; period: Period } | null {
+export function parseTimeSlotKey(
+  key: TimeSlotKey,
+): { weekday: Weekday; period: Period } | null {
   const match = key.match(/^(Mon|Tue|Wed|Thu|Fri|Sat)-([1-7])$/);
   if (!match) return null;
 
@@ -90,10 +99,15 @@ export function createTermInfo(
  * Format TermInfo for display
  * Examples: "2024春学期1Q", "2024秋学期", "2025春学期2Q"
  */
-export function formatTermInfo(academicYear: number, termInfo: TermInfo): string {
+export function formatTermInfo(
+  academicYear: number,
+  termInfo: TermInfo,
+): string {
   const semesterLabel = SEMESTER_LABELS[termInfo.semester];
   const divisionLabel =
-    typeof termInfo.division === "number" && termInfo.division >= 1 && termInfo.division <= 4
+    typeof termInfo.division === "number" &&
+    termInfo.division >= 1 &&
+    termInfo.division <= 4
       ? `${termInfo.division}Q`
       : "";
   return `${academicYear}${semesterLabel}${divisionLabel}`;
@@ -167,10 +181,7 @@ export function createCourse(
 /**
  * Add a course to the store
  */
-export function addCourse(
-  store: ScheduleStore,
-  course: Course,
-): ScheduleStore {
+export function addCourse(store: ScheduleStore, course: Course): ScheduleStore {
   return {
     ...store,
     courses: {
@@ -592,7 +603,7 @@ export function duplicateSchedule(
       if (!newSlotId) {
         throw new Error(
           `Failed to map slot ID '${entry.slotId}' during schedule duplication. ` +
-          `This may indicate the source slot is missing or corrupted.`
+            `This may indicate the source slot is missing or corrupted.`,
         );
       }
       return {
@@ -927,7 +938,10 @@ export function validateStore(store: ScheduleStore): ValidationError[] {
     }
 
     // 5. Academic year validity
-    if (schedule.academicYear < MIN_ACADEMIC_YEAR || schedule.academicYear > MAX_ACADEMIC_YEAR) {
+    if (
+      schedule.academicYear < MIN_ACADEMIC_YEAR ||
+      schedule.academicYear > MAX_ACADEMIC_YEAR
+    ) {
       errors.push({
         scheduleId,
         message: `Schedule[${scheduleId}]: academic year ${schedule.academicYear} is out of valid range (${MIN_ACADEMIC_YEAR}-${MAX_ACADEMIC_YEAR})`,

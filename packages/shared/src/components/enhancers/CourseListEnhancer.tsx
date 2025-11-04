@@ -56,7 +56,9 @@ const applyClassHighlight = (
   if (!status) return;
 
   // Apply new class
-  well.classList.add(status === "current" ? "mikoto-current-class" : "mikoto-next-class");
+  well.classList.add(
+    status === "current" ? "mikoto-current-class" : "mikoto-next-class",
+  );
 
   // Add badge
   const badge = document.createElement("div");
@@ -104,7 +106,12 @@ export const CourseListEnhancer = () => {
         // Apply class highlighting based on URL
         const link = well.querySelector("a.btn-primary") as HTMLAnchorElement;
         if (link && link.href) {
-          const status = getClassStatusByUrl(store, activeScheduleId, link.href, currentTime);
+          const status = getClassStatusByUrl(
+            store,
+            activeScheduleId,
+            link.href,
+            currentTime,
+          );
           applyClassHighlight(well as HTMLElement, status);
         } else {
           applyClassHighlight(well as HTMLElement, null);

@@ -1,6 +1,10 @@
 import { useState, type CSSProperties } from "react";
 import type { ScheduleSlot, Course, Weekday, Period } from "../../types";
-import { getCampusLabel, resolveRooms, resolveInstructors } from "../../utils/schedule";
+import {
+  getCampusLabel,
+  resolveRooms,
+  resolveInstructors,
+} from "../../utils/schedule";
 
 interface ScheduleCellProps {
   weekday: Weekday;
@@ -57,11 +61,7 @@ const styles: Record<string, CSSProperties> = {
   },
 };
 
-export const ScheduleCell = ({
-  slot,
-  course,
-  onClick,
-}: ScheduleCellProps) => {
+export const ScheduleCell = ({ slot, course, onClick }: ScheduleCellProps) => {
   const isEmpty = !slot || !course;
   const [isHovered, setIsHovered] = useState(false);
 

@@ -1,6 +1,10 @@
 import { GM_notification } from "$";
 import type { StorageManager } from "@mikoto-moocs-sharp/shared";
-import { getNextClass, shouldNotify, createNotificationMessage } from "@mikoto-moocs-sharp/shared/utils/notification";
+import {
+  getNextClass,
+  shouldNotify,
+  createNotificationMessage,
+} from "@mikoto-moocs-sharp/shared/utils/notification";
 
 /**
  * Userscript向け通知マネージャー
@@ -47,7 +51,8 @@ export class NotificationManager {
   private async checkAndNotify() {
     try {
       // 通知設定を取得
-      const notificationSettings = await this.storageManager.getNotificationSettings();
+      const notificationSettings =
+        await this.storageManager.getNotificationSettings();
       if (!notificationSettings.enabled) {
         return;
       }
@@ -78,7 +83,7 @@ export class NotificationManager {
         nextClass,
         notificationSettings.timings,
         new Date(),
-        this.sentNotifications
+        this.sentNotifications,
       );
 
       if (timing !== null) {

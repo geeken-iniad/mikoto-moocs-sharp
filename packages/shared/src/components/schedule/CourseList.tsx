@@ -144,7 +144,8 @@ const styles: Record<string, CSSProperties> = {
 };
 
 export const CourseList = () => {
-  const { store, createCourse, updateCourse, deleteCourse } = useScheduleStore();
+  const { store, createCourse, updateCourse, deleteCourse } =
+    useScheduleStore();
   const storageManager = useStorageManager();
   const currentTime = useCurrentTime();
   const [searchQuery, setSearchQuery] = useState("");
@@ -293,7 +294,9 @@ export const CourseList = () => {
                     {course.instructors.join(", ")}
                   </div>
                   {course.code && (
-                    <div style={styles.courseCode}>科目コード: {course.code}</div>
+                    <div style={styles.courseCode}>
+                      科目コード: {course.code}
+                    </div>
                   )}
                   <div style={styles.courseActions}>
                     <button
