@@ -8,17 +8,32 @@
 
 const STYLE_ID = "mikoto-hover-submit-style";
 const VISIBLE_CLASS = "submit-mikoto-visible";
+const INVISIBLE_CLASS = "submit-mikoto-button-invisible";
 const CONTAINER_SELECTOR = ".problem-contentpage";
 const SUBMIT_SELECTOR = ".submit-answer";
 
 function addVisibleClassToSubmits(container: Element): void {
   const submits = container.querySelectorAll(SUBMIT_SELECTOR);
-  submits.forEach((s) => { s.classList.add(VISIBLE_CLASS); });
+  submits.forEach((s) => {
+    s.classList.add(VISIBLE_CLASS);
+    // ensure invisible class state is computed/observed when visible marker applied
+    try {
+      // watcher may be installed later; for now compute display
+      if (!elementLooksDisplayed(s)) s.classList.add(INVISIBLE_CLASS);
+      else s.classList.remove(INVISIBLE_CLASS);
+    } catch {
+      // ignore
+    }
+  });
 }
 
 function removeVisibleClassFromSubmits(container: Element): void {
   const submits = container.querySelectorAll(SUBMIT_SELECTOR);
-  submits.forEach((s) => { s.classList.remove(VISIBLE_CLASS); });
+  submits.forEach((s) => {
+    s.classList.remove(VISIBLE_CLASS);
+    // when no longer marked visible, also remove the invisible marker
+    s.classList.remove(INVISIBLE_CLASS);
+  });
 }
 
 function elementLooksDisplayed(el: Element): boolean {
@@ -55,6 +70,8 @@ export function initHoverSubmit(): void {
   // Fallback: if IntersectionObserver is not available, fall back to checking
   // computed styles on mutation.
   const observed = new WeakSet<Element>();
+  // Track per-submit observation to toggle invisible class when off-screen
+  const observedSubmit = new WeakSet<Element>();
 
   let io: IntersectionObserver | null = null;
 
@@ -66,6 +83,22 @@ export function initHoverSubmit(): void {
           addVisibleClassToSubmits(container);
         } else {
           removeVisibleClassFromSubmits(container);
+        }
+      });
+    }, { root: null, threshold: [0, 0.01] });
+  }
+
+  // Intersection observer for individual submit buttons to mark them invisible
+  let submitIo: IntersectionObserver | null = null;
+  if (typeof IntersectionObserver !== "undefined") {
+    submitIo = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const el = entry.target as Element;
+        if (entry.isIntersecting && entry.intersectionRatio > 0) {
+          el.classList.remove(INVISIBLE_CLASS);
+        } else {
+          // Only mark invisible if it also has the visible marker
+          if (el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
         }
       });
     }, { root: null, threshold: [0, 0.01] });
@@ -85,6 +118,62 @@ export function initHoverSubmit(): void {
     } catch {
       // ignore
     }
+
+    // Observe submit elements inside this container so we can toggle the
+    // invisible helper class when an individual button scrolls out of view.
+    function watchSubmit(el: Element) {
+      if (observedSubmit.has(el)) return;
+      observedSubmit.add(el);
+      if (submitIo) submitIo.observe(el);
+      // initial state
+      try {
+        if (!elementLooksDisplayed(el) && el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
+        else el.classList.remove(INVISIBLE_CLASS);
+      } catch {
+        // ignore
+      }
+    }
+
+    function unwatchSubmit(el: Element) {
+      if (!observedSubmit.has(el)) return;
+      observedSubmit.delete(el);
+      if (submitIo) submitIo.unobserve(el);
+      el.classList.remove(INVISIBLE_CLASS);
+    }
+
+    // watch current submits
+    const currentSubmits = Array.from(container.querySelectorAll(SUBMIT_SELECTOR));
+    currentSubmits.forEach(watchSubmit);
+
+    // track dynamic submit additions/removals within this container
+    if (typeof MutationObserver !== "undefined") {
+      const innerMo = new MutationObserver((mutations) => {
+        mutations.forEach((m) => {
+          m.addedNodes.forEach((n) => {
+            if (!(n instanceof Element)) return;
+            if ((n as Element).matches?.(SUBMIT_SELECTOR)) watchSubmit(n as Element);
+            const nested = Array.from((n as Element).querySelectorAll ? (n as Element).querySelectorAll(SUBMIT_SELECTOR) : []);
+            nested.forEach(watchSubmit);
+          });
+          m.removedNodes.forEach((n) => {
+            if (!(n instanceof Element)) return;
+            if ((n as Element).matches?.(SUBMIT_SELECTOR)) unwatchSubmit(n as Element);
+            const nested = Array.from((n as Element).querySelectorAll ? (n as Element).querySelectorAll(SUBMIT_SELECTOR) : []);
+            nested.forEach(unwatchSubmit);
+          });
+        });
+      });
+      innerMo.observe(container, { childList: true, subtree: true });
+
+      // store a reference so we can disconnect on unobserveContainer
+      // attach to the DOM element via a property with a narrow type
+      try {
+        const elWithProp = container as Element & { __mikoto_inner_mo?: MutationObserver };
+        elWithProp.__mikoto_inner_mo = innerMo;
+      } catch {
+        // ignore
+      }
+    }
   }
 
   function unobserveContainer(container: Element) {
@@ -95,6 +184,15 @@ export function initHoverSubmit(): void {
     }
     // Clean up class when container is removed
     removeVisibleClassFromSubmits(container);
+    // disconnect any inner mutation observer
+    try {
+      const elWithProp = container as Element & { __mikoto_inner_mo?: MutationObserver };
+      const innerMo = elWithProp.__mikoto_inner_mo;
+      if (innerMo && typeof innerMo.disconnect === 'function') innerMo.disconnect();
+      delete elWithProp.__mikoto_inner_mo;
+    } catch {
+      // ignore
+    }
   }
 
   // Observe existing containers
@@ -160,7 +258,6 @@ export const HoverSubmit: React.FC = () => {
       initHoverSubmit();
     } catch (e) {
       // defensive: don't let this break the React tree
-      // eslint-disable-next-line no-console
       console.error("[mikoto] initHoverSubmit failed:", e);
     }
   }, []);
