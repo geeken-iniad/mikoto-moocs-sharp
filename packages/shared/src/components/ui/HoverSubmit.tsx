@@ -36,12 +36,7 @@ export function initHoverSubmit(): void {
   if (document.getElementById(STYLE_ID)) return;
 
   const css = `
-.panel.pad-form.problem-container .btn.btn-success.submit-answer {
-  background-color: #d9534f !important;
-  border-color: #d43f3a !important;
-  color: #ffffff !important;
-}
-.submit-answer {
+.submit-mikoto-visible {
   background-color: #d9534f !important;
 }
 .${VISIBLE_CLASS} {
