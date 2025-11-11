@@ -70,8 +70,29 @@ export function initHoverSubmit(): void {
   // Fallback: if IntersectionObserver is not available, fall back to checking
   // computed styles on mutation.
   const observed = new WeakSet<Element>();
-  // Track per-submit observation to toggle invisible class when off-screen
-  const observedSubmit = new WeakSet<Element>();
+    // Track known submit elements so we can re-evaluate their on-screen state
+    // with a simple check. Use Set so we can iterate when handling scroll/resize.
+    const observedSubmit = new Set<Element>();
+
+  // Ensure submit elements inside a container are tracked and
+  // have their invisible state computed immediately.
+  function ensureObservedSubmits(container: Element) {
+    try {
+      const submits = Array.from(container.querySelectorAll(SUBMIT_SELECTOR));
+      submits.forEach((s) => {
+        // track for later re-evaluation and compute initial state
+        observedSubmit.add(s);
+        try {
+          if (!elementLooksDisplayed(s) && s.classList.contains(VISIBLE_CLASS)) s.classList.add(INVISIBLE_CLASS);
+          else s.classList.remove(INVISIBLE_CLASS);
+        } catch {
+          // ignore
+        }
+      });
+    } catch {
+      // ignore
+    }
+  }
 
   let io: IntersectionObserver | null = null;
 
@@ -80,6 +101,8 @@ export function initHoverSubmit(): void {
       entries.forEach((entry) => {
         const container = entry.target as Element;
         if (entry.isIntersecting && entry.intersectionRatio > 0) {
+          // Ensure submit buttons are observed and their state computed
+          ensureObservedSubmits(container);
           addVisibleClassToSubmits(container);
         } else {
           removeVisibleClassFromSubmits(container);
@@ -88,21 +111,45 @@ export function initHoverSubmit(): void {
     }, { root: null, threshold: [0, 0.01] });
   }
 
-  // Intersection observer for individual submit buttons to mark them invisible
-  let submitIo: IntersectionObserver | null = null;
-  if (typeof IntersectionObserver !== "undefined") {
-    submitIo = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const el = entry.target as Element;
-        if (entry.isIntersecting && entry.intersectionRatio > 0) {
-          el.classList.remove(INVISIBLE_CLASS);
-        } else {
-          // Only mark invisible if it also has the visible marker
-          if (el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
-        }
+    // No per-button IntersectionObserver here — we'll use a simple check
+    // that tests whether the element is displayed and intersects the viewport.
+
+    function isElementActuallyVisible(el: Element): boolean {
+      try {
+        if (!elementLooksDisplayed(el)) return false;
+        const rect = el.getBoundingClientRect();
+        const vw = (window.innerWidth || document.documentElement.clientWidth);
+        const vh = (window.innerHeight || document.documentElement.clientHeight);
+        return rect.bottom > 0 && rect.top < vh && rect.right > 0 && rect.left < vw;
+      } catch {
+        return false;
+      }
+    }
+
+    function checkSubmitVisibility(el: Element) {
+      try {
+        if (isElementActuallyVisible(el)) el.classList.remove(INVISIBLE_CLASS);
+        else if (el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
+      } catch {
+        // ignore
+      }
+    }
+
+    // Debounced re-evaluation triggered on scroll/resize/orientationchange
+    let scheduledReeval = false;
+    function scheduleReevaluate() {
+      if (scheduledReeval) return;
+      scheduledReeval = true;
+      requestAnimationFrame(() => {
+        scheduledReeval = false;
+        observedSubmit.forEach((el) => { checkSubmitVisibility(el); });
       });
-    }, { root: null, threshold: [0, 0.01] });
-  }
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', scheduleReevaluate, { passive: true });
+      window.addEventListener('resize', scheduleReevaluate, { passive: true });
+      window.addEventListener('orientationchange', scheduleReevaluate, { passive: true });
+    }
 
   function observeContainer(container: Element) {
     if (observed.has(container)) return;
@@ -124,7 +171,6 @@ export function initHoverSubmit(): void {
     function watchSubmit(el: Element) {
       if (observedSubmit.has(el)) return;
       observedSubmit.add(el);
-      if (submitIo) submitIo.observe(el);
       // initial state
       try {
         if (!elementLooksDisplayed(el) && el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
@@ -137,7 +183,6 @@ export function initHoverSubmit(): void {
     function unwatchSubmit(el: Element) {
       if (!observedSubmit.has(el)) return;
       observedSubmit.delete(el);
-      if (submitIo) submitIo.unobserve(el);
       el.classList.remove(INVISIBLE_CLASS);
     }
 
