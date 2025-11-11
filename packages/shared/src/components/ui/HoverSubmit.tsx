@@ -57,6 +57,25 @@ export function initHoverSubmit(): void {
 .${VISIBLE_CLASS} {
   /* marker class — styling can be used elsewhere if needed */
 }
+
+/* When a visible submit is computed to be offscreen, add this helper
+   class and float the button so the user can still access it. */
+.${INVISIBLE_CLASS} {
+  position: fixed !important;
+  right: 12px !important;
+  bottom: 12px !important;
+  z-index: 2147483647 !important;
+  display: inline-block !important;
+  opacity: 0.98 !important;
+  pointer-events: auto !important;
+  transition: transform 160ms ease, opacity 160ms ease;
+  transform: translateY(0) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+  border-radius: 6px;
+}
+.${VISIBLE_CLASS}.${INVISIBLE_CLASS} {
+  /* When both marker and helper are present, keep visual consistency. */
+}
 `;
 
   const style = document.createElement("style");
