@@ -67,7 +67,6 @@ export function initHoverSubmit(): void {
 
   const css = `
 .submit-mikoto-visible {
-  background-color: #d9534f !important;
   /*  Highlight submit buttons when their container is visible */
 }
 .${VISIBLE_CLASS} {
