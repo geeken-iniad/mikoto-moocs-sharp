@@ -29,7 +29,6 @@ function elementLooksDisplayed(el: Element): boolean {
 }
 
 export function initHoverSubmit(): void {
-  console.log("[mikoto] initHoverSubmit called");
 
   if (typeof document === "undefined") return;
 
