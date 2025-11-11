@@ -18,9 +18,9 @@ function addVisibleClassToSubmits(container: Element): void {
     s.classList.add(VISIBLE_CLASS);
     // ensure invisible class state is computed/observed when visible marker applied
     try {
-      // watcher may be installed later; for now compute display
-      if (!elementLooksDisplayed(s)) s.classList.add(INVISIBLE_CLASS);
-      else s.classList.remove(INVISIBLE_CLASS);
+  // watcher may be installed later; for now compute display (ignore floating class)
+  if (!elementLooksDisplayedIgnoringFloating(s)) s.classList.add(INVISIBLE_CLASS);
+  else s.classList.remove(INVISIBLE_CLASS);
     } catch {
       // ignore
     }
@@ -43,6 +43,21 @@ function elementLooksDisplayed(el: Element): boolean {
   return rect.width > 0 && rect.height > 0;
 }
 
+// Compute "looks displayed" while temporarily ignoring the floating helper
+// class so callers can decide whether to float the element without the
+// floating class interfering with the measurement.
+function elementLooksDisplayedIgnoringFloating(el: Element): boolean {
+  try {
+    const had = el.classList.contains(INVISIBLE_CLASS);
+    if (had) el.classList.remove(INVISIBLE_CLASS);
+    const looks = elementLooksDisplayed(el);
+    if (had) el.classList.add(INVISIBLE_CLASS);
+    return looks;
+  } catch {
+    return false;
+  }
+}
+
 export function initHoverSubmit(): void {
 
   if (typeof document === "undefined") return;
@@ -53,6 +68,7 @@ export function initHoverSubmit(): void {
   const css = `
 .submit-mikoto-visible {
   background-color: #d9534f !important;
+  /*  Highlight submit buttons when their container is visible */
 }
 .${VISIBLE_CLASS} {
   /* marker class — styling can be used elsewhere if needed */
@@ -62,7 +78,6 @@ export function initHoverSubmit(): void {
    class and float the button so the user can still access it. */
 .${INVISIBLE_CLASS} {
   position: fixed !important;
-  right: 12px !important;
   bottom: 12px !important;
   z-index: 2147483647 !important;
   display: inline-block !important;
@@ -102,7 +117,7 @@ export function initHoverSubmit(): void {
         // track for later re-evaluation and compute initial state
         observedSubmit.add(s);
         try {
-          if (!elementLooksDisplayed(s) && s.classList.contains(VISIBLE_CLASS)) s.classList.add(INVISIBLE_CLASS);
+          if (!elementLooksDisplayedIgnoringFloating(s) && s.classList.contains(VISIBLE_CLASS)) s.classList.add(INVISIBLE_CLASS);
           else s.classList.remove(INVISIBLE_CLASS);
         } catch {
           // ignore
@@ -147,12 +162,32 @@ export function initHoverSubmit(): void {
 
     function checkSubmitVisibility(el: Element) {
       try {
-        if (isElementActuallyVisible(el)) el.classList.remove(INVISIBLE_CLASS);
-        else if (el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
+            // Measure the element's natural/original visibility while ignoring
+            // the floating helper class; otherwise applying the floating class
+            // makes the element 'visible' and we immediately remove the class,
+            // causing a flicker loop.
+            if (isElementActuallyVisibleIgnoringFloating(el)) el.classList.remove(INVISIBLE_CLASS);
+            else if (el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
       } catch {
         // ignore
       }
     }
+
+        // Measure visibility while temporarily removing the floating helper
+        // class so the check reflects the element's original position.
+        function isElementActuallyVisibleIgnoringFloating(el: Element): boolean {
+          try {
+            const had = el.classList.contains(INVISIBLE_CLASS);
+            if (had) el.classList.remove(INVISIBLE_CLASS);
+            const visible = isElementActuallyVisible(el);
+            if (had) el.classList.add(INVISIBLE_CLASS);
+            return visible;
+          } catch {
+            return false;
+          }
+        }
+
+        
 
     // Debounced re-evaluation triggered on scroll/resize/orientationchange
     let scheduledReeval = false;
@@ -192,7 +227,7 @@ export function initHoverSubmit(): void {
       observedSubmit.add(el);
       // initial state
       try {
-        if (!elementLooksDisplayed(el) && el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
+        if (!elementLooksDisplayedIgnoringFloating(el) && el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
         else el.classList.remove(INVISIBLE_CLASS);
       } catch {
         // ignore
