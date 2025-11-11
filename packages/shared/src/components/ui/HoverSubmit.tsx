@@ -90,6 +90,31 @@ export function initHoverSubmit(): void {
 .${VISIBLE_CLASS}.${INVISIBLE_CLASS} {
   /* When both marker and helper are present, keep visual consistency. */
 }
+
+/* Disabled state for submit buttons: visually de-emphasize and prevent interaction.
+   Covers attribute, class, and ARIA-based disabled indicators. Use !important
+   for pointer-events so the floating helper can't re-enable clicks for disabled
+   buttons. */
+.submit-answer:disabled,
+.submit-answer[disabled],
+.submit-answer.disabled,
+.submit-answer[aria-disabled="true"] {
+  opacity: 0.55 !important;
+  filter: grayscale(24%) !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  transition: opacity 120ms ease, filter 120ms ease;
+}
+
+/* If the floating helper is applied to a disabled button, keep it visibly
+   faded and non-interactive as well. */
+.${INVISIBLE_CLASS} .submit-answer:disabled,
+.${INVISIBLE_CLASS} .submit-answer[disabled],
+.${INVISIBLE_CLASS} .submit-answer.disabled,
+.${INVISIBLE_CLASS} .submit-answer[aria-disabled="true"] {
+  opacity: 0.55 !important;
+  pointer-events: none !important;
+}
 `;
 
   const style = document.createElement("style");
