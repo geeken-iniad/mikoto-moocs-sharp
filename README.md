@@ -1,4 +1,6 @@
 # Mikoto (MOOCs Sharp): MOOCsを便利に
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgeeken-iniad%2Fmikoto-moocs-sharp.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgeeken-iniad%2Fmikoto-moocs-sharp?ref=badge_shield)
+
 
 > [!WARNING]
 > このプロジェクトはまだ不安定です。バグや予期しない動作が発生する可能性があります。
@@ -58,3 +60,6 @@ packages/
 This project is licensed under the [MIT License](LICENSE).
 
 It also includes third-party software components, which are listed in the [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md) file.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fgeeken-iniad%2Fmikoto-moocs-sharp.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fgeeken-iniad%2Fmikoto-moocs-sharp?ref=badge_large)
