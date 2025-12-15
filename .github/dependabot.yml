@@ -1,7 +1,7 @@
 version: 2
 
 updates:
-  # Root workspace
+  # pnpm workspace - single lockfile at root
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
@@ -9,90 +9,10 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 50
     labels:
       - "dependencies"
       - "automated"
-    commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
-
-  # Shared package
-  - package-ecosystem: "npm"
-    directory: "/packages/shared"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "shared"
-    commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
-
-  # Extension package
-  - package-ecosystem: "npm"
-    directory: "/packages/extension"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "extension"
-    commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
-
-  # Userscript base package
-  - package-ecosystem: "npm"
-    directory: "/packages/userscript-base"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "userscript"
-    commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
-
-  # Userscript lite package
-  - package-ecosystem: "npm"
-    directory: "/packages/userscript-lite"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "userscript"
-    commit-message:
-      prefix: "chore(deps)"
-      include: "scope"
-
-  # Userscript pro package
-  - package-ecosystem: "npm"
-    directory: "/packages/userscript-pro"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
-      timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "userscript"
     commit-message:
       prefix: "chore(deps)"
       include: "scope"
@@ -105,7 +25,7 @@ updates:
       day: "monday"
       time: "09:00"
       timezone: "Asia/Tokyo"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 50
     labels:
       - "dependencies"
       - "github-actions"
