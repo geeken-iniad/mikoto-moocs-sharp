@@ -32,8 +32,16 @@ export const SlideTextEditor: React.FC<SlideTextEditorProps> = ({
   if (typeof document === "undefined") return null;
 
   return createPortal(
-    <div className="mikoto-slide-editor-overlay" role="dialog" aria-modal="true">
-      <div className="mikoto-slide-editor-container">
+    <div
+      className="mikoto-slide-editor-overlay"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div
+        className="mikoto-slide-editor-container"
+        onClick={(event) => event.stopPropagation()}
+      >
         <textarea
           className="mikoto-slide-editor-textarea"
           value={value}
