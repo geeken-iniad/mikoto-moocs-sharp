@@ -6,6 +6,7 @@ import {
   HoverSubmit,
   SidebarDeckButton,
   SidebarEnhancer,
+  SlideEnhancer,
   StorageProvider,
   TextareaCounter,
   TextareaResizer,
@@ -20,6 +21,7 @@ export const MikotoApp = () => (
     <KeyboardShortcuts />
     <SidebarDeckButton />
     <SidebarEnhancer />
+    <SlideEnhancer />
     <TextareaCounter />
     <TextareaResizer />
     <HoverSubmit />
