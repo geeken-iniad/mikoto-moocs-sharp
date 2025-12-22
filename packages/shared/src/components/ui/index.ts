@@ -4,3 +4,4 @@ export * from "./SidebarDeckView";
 export * from "./TimeDashboard";
 export * from "./HoverSubmit";
 export * from "./SlideTextEditor";
+export * from "./SlideEnhancerToggle";

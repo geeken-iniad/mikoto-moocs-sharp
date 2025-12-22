@@ -4,5 +4,6 @@ export * from "./DualViewManager";
 export * from "./TextareaCounter";
 export * from "./TextareaResizer";
 export * from "./SlideEnhancer";
+export * from "./SlideEnhancerManager";
 export * from "./CourseListEnhancer";
 export * from "./SidebarEnhancer";

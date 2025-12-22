@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSlideElementObserver } from "../../hooks";
+import { useStorageManager } from "../../storage/context";
 import { SlideTextEditor } from "../ui";
 import { createCopyButton, generateElementId } from "../../utils/slide";
 
@@ -8,7 +9,6 @@ const isGoogleSlides = () =>
   typeof window !== "undefined" &&
   window.location.hostname === "docs.google.com" &&
   window.location.pathname.startsWith("/presentation");
-
 
 const copyTextWithExecCommand = (text: string) => {
   const textarea = document.createElement("textarea");
@@ -28,10 +28,15 @@ const copyTextWithExecCommand = (text: string) => {
 };
 
 export const SlideEnhancer = () => {
+  const storageManager = useStorageManager();
   const [copiedText, setCopiedText] = useState<string | null>(null);
+  const [featureEnabled, setFeatureEnabled] = useState(false);
   const buttonMapRef = useRef<Map<Element, HTMLButtonElement>>(new Map());
 
-  const enabled = useMemo(() => isGoogleSlides(), []);
+  const enabled = useMemo(
+    () => isGoogleSlides() && featureEnabled,
+    [featureEnabled],
+  );
 
   const handleCopy = useCallback((element: Element, event: MouseEvent) => {
     const text = element.getAttribute("aria-label") ?? "";
@@ -81,6 +86,32 @@ export const SlideEnhancer = () => {
   );
 
   useSlideElementObserver(slideObserverHandlers);
+
+  useEffect(() => {
+    const loadState = async () => {
+      const state = await storageManager.getSlideEnhancerEnabled();
+      setFeatureEnabled(state);
+    };
+
+    loadState();
+
+    const unwatch = storageManager.watchSlideEnhancerEnabled((newState) => {
+      setFeatureEnabled(newState ?? false);
+    });
+
+    return () => {
+      unwatch();
+    };
+  }, [storageManager]);
+
+  useEffect(() => {
+    if (enabled) return;
+    setCopiedText(null);
+    buttonMapRef.current.forEach((button) => {
+      button.remove();
+    });
+    buttonMapRef.current.clear();
+  }, [enabled]);
 
   useEffect(() => {
     if (!enabled) return;

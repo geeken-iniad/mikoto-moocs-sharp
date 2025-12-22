@@ -7,6 +7,7 @@ import {
   SidebarDeckButton,
   SidebarEnhancer,
   SlideEnhancer,
+  SlideEnhancerManager,
   StorageProvider,
   TextareaCounter,
   TextareaResizer,
@@ -18,6 +19,7 @@ export const MikotoApp = () => (
     <ContentStyleEnhancer />
     <CourseListEnhancer />
     <DualViewManager />
+    <SlideEnhancerManager />
     <KeyboardShortcuts />
     <SidebarDeckButton />
     <SidebarEnhancer />
