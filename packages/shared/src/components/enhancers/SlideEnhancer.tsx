@@ -9,7 +9,6 @@ const isGoogleSlides = () =>
   window.location.hostname === "docs.google.com" &&
   window.location.pathname.startsWith("/presentation");
 
-const isInIframe = () => typeof window !== "undefined" && window.self !== window.top;
 
 const copyTextWithExecCommand = (text: string) => {
   const textarea = document.createElement("textarea");
@@ -32,7 +31,7 @@ export const SlideEnhancer = () => {
   const [copiedText, setCopiedText] = useState<string | null>(null);
   const buttonMapRef = useRef<Map<Element, HTMLButtonElement>>(new Map());
 
-  const enabled = useMemo(() => isGoogleSlides() && !isInIframe(), []);
+  const enabled = useMemo(() => isGoogleSlides(), []);
 
   const handleCopy = useCallback((element: Element) => {
     const text = element.getAttribute("aria-label") ?? "";
