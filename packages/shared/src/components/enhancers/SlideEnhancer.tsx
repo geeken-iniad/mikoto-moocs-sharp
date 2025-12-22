@@ -33,12 +33,12 @@ export const SlideEnhancer = () => {
 
   const enabled = useMemo(() => isGoogleSlides(), []);
 
-  const handleCopy = useCallback((element: Element) => {
+  const handleCopy = useCallback((element: Element, event: MouseEvent) => {
     const text = element.getAttribute("aria-label") ?? "";
     if (!text) return;
 
     const success = copyTextWithExecCommand(text);
-    if (success) {
+    if (success && !event.shiftKey) {
       setCopiedText(text);
     }
   }, []);

@@ -1,7 +1,7 @@
 import { generateElementId } from "./generateElementId";
 
 type CopyButtonHandlers = {
-  onCopy: (node: Element) => void;
+  onCopy: (node: Element, event: MouseEvent) => void;
   onRemove?: (node: Element) => void;
 };
 
@@ -42,8 +42,8 @@ export const createCopyButton = (node: Element, handlers: CopyButtonHandlers) =>
   copyButton.type = "button";
   copyButton.id = id;
   copyButton.classList.add("mikoto-slide-copy-button");
-  copyButton.addEventListener("click", () => {
-    handlers.onCopy(node);
+  copyButton.addEventListener("click", (event) => {
+    handlers.onCopy(node, event);
   });
 
   updateCopyButtonPosition(copyButton, rect);
