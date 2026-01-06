@@ -1,5 +1,12 @@
 import type { CampusId } from "../../types";
 import { CAMPUS_LABELS } from "../../constants";
+import {
+  section,
+  sectionTitle,
+  label,
+  select,
+  description,
+} from "../../styles/commonStyles";
 
 interface CampusSettingsProps {
   defaultCampus?: CampusId;
@@ -11,19 +18,10 @@ export const CampusSettings = ({
   onCampusChange,
 }: CampusSettingsProps) => {
   return (
-    <div style={{ padding: "20px", borderBottom: "1px solid #dcdfe6" }}>
-      <h2 style={{ marginBottom: "15px" }}>キャンパス設定</h2>
-      <div style={{ marginBottom: "10px" }}>
-        <label
-          htmlFor="default-campus"
-          style={{
-            display: "block",
-            marginBottom: "8px",
-            fontSize: "14px",
-            fontWeight: "500",
-            color: "#333",
-          }}
-        >
+    <div style={section}>
+      <h2 style={sectionTitle}>キャンパス設定</h2>
+      <div>
+        <label htmlFor="default-campus" style={label}>
           デフォルトキャンパス
         </label>
         <select
@@ -34,30 +32,16 @@ export const CampusSettings = ({
               e.target.value ? (e.target.value as CampusId) : undefined,
             )
           }
-          style={{
-            padding: "10px",
-            fontSize: "14px",
-            border: "1px solid #dcdfe6",
-            borderRadius: "7px",
-            backgroundColor: "white",
-            cursor: "pointer",
-            minWidth: "200px",
-          }}
+          style={select}
         >
           <option value="">未設定</option>
-          {Object.entries(CAMPUS_LABELS).map(([id, label]) => (
+          {Object.entries(CAMPUS_LABELS).map(([id, labelText]) => (
             <option key={id} value={id}>
-              {label}
+              {labelText}
             </option>
           ))}
         </select>
-        <p
-          style={{
-            marginTop: "8px",
-            fontSize: "12px",
-            color: "#666",
-          }}
-        >
+        <p style={description}>
           新しい教室を追加する際のデフォルトキャンパスを設定します
         </p>
       </div>

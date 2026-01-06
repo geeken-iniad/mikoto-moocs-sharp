@@ -7,136 +7,127 @@ import { useCurrentTime } from "../../hooks/useCurrentTime";
 import { isCourseUsed } from "../../utils/schedule";
 import { getCurrentAndNextClass } from "../../utils/currentClass";
 import { CourseFormModal } from "./CourseFormModal";
+import {
+  section,
+  sectionTitle,
+  buttonPrimary,
+  colors,
+  spacing,
+  fontSize,
+  fontWeight,
+  borderRadius,
+} from "../../styles/commonStyles";
 
 const styles: Record<string, CSSProperties> = {
-  container: {
-    width: "100%",
-  },
-  header: {
+  headerRow: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "1rem",
-  },
-  title: {
-    fontSize: "1.5rem",
-    fontWeight: 700,
-    color: "#1f2937",
-  },
-  button: {
-    padding: "0.5rem 1rem",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    cursor: "pointer",
-    border: "none",
-    backgroundColor: "#3b82f6",
-    color: "#ffffff",
-    display: "inline-flex",
-    alignItems: "center",
-    gap: "0.5rem",
+    marginBottom: spacing.md,
   },
   searchBox: {
-    marginBottom: "1rem",
+    marginBottom: spacing.md,
   },
   searchInput: {
     width: "100%",
-    padding: "0.5rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
+    padding: "10px",
+    border: `1px solid ${colors.border}`,
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.sm,
     boxSizing: "border-box" as const,
+    backgroundColor: colors.bgWhite,
   },
   list: {
     display: "flex",
     flexDirection: "column" as const,
-    gap: "0.5rem",
+    gap: spacing.sm,
   },
   courseCard: {
-    backgroundColor: "#ffffff",
-    border: "1px solid #e5e7eb",
-    borderRadius: "0.5rem",
-    padding: "1rem",
+    backgroundColor: colors.bgWhite,
+    border: `1px solid ${colors.borderLight}`,
+    borderRadius: borderRadius.xl,
+    padding: spacing.md,
     cursor: "pointer",
     transition: "all 0.2s",
   },
   courseCardHover: {
-    backgroundColor: "#f9fafb",
-    border: "1px solid #3b82f6",
+    backgroundColor: colors.bgLight,
+    border: `1px solid ${colors.primary}`,
   },
   courseName: {
-    fontSize: "1.125rem",
-    fontWeight: 600,
-    color: "#1f2937",
-    marginBottom: "0.25rem",
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    color: colors.textDark,
+    marginBottom: spacing.xs,
   },
   courseInstructors: {
-    fontSize: "0.875rem",
-    color: "#6b7280",
-    marginBottom: "0.25rem",
+    fontSize: fontSize.base,
+    color: colors.textLight,
+    marginBottom: spacing.xs,
   },
   courseCode: {
-    fontSize: "0.75rem",
-    color: "#9ca3af",
+    fontSize: fontSize.sm,
+    color: colors.textMuted,
   },
   courseActions: {
     display: "flex",
-    gap: "0.5rem",
-    marginTop: "0.5rem",
+    gap: spacing.sm,
+    marginTop: spacing.sm,
   },
   actionButton: {
-    padding: "0.25rem 0.75rem",
-    borderRadius: "0.25rem",
-    fontSize: "0.75rem",
-    fontWeight: 500,
+    padding: "6px 12px",
+    borderRadius: borderRadius.md,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.medium,
     cursor: "pointer",
     border: "none",
     display: "inline-flex",
     alignItems: "center",
-    gap: "0.375rem",
+    gap: spacing.xs,
   },
   editButton: {
-    backgroundColor: "#3b82f6",
-    color: "#ffffff",
+    backgroundColor: colors.primary,
+    color: colors.bgWhite,
   },
   deleteButton: {
-    backgroundColor: "#ef4444",
-    color: "#ffffff",
+    backgroundColor: colors.danger,
+    color: colors.bgWhite,
   },
   emptyState: {
     textAlign: "center" as const,
     padding: "3rem",
-    color: "#6b7280",
-    backgroundColor: "#f9fafb",
-    borderRadius: "0.5rem",
-    border: "1px solid #e5e7eb",
+    color: colors.textLight,
+    backgroundColor: colors.bgLight,
+    borderRadius: borderRadius.xl,
+    border: `1px solid ${colors.borderLight}`,
+    fontSize: fontSize.base,
   },
   currentClassCard: {
-    backgroundColor: "#eff6ff",
-    border: "2px solid #3b82f6",
+    backgroundColor: colors.bgBlueLight,
+    border: `2px solid ${colors.primary}`,
     boxShadow: "0 4px 12px rgba(59, 130, 246, 0.3)",
   },
   nextClassCard: {
-    backgroundColor: "#f0fdf4",
-    border: "2px solid #22c55e",
+    backgroundColor: colors.bgGreenLight,
+    border: `2px solid ${colors.success}`,
     boxShadow: "0 2px 8px rgba(34, 197, 94, 0.2)",
   },
   classBadge: {
     position: "absolute" as const,
-    top: "0.5rem",
-    right: "0.5rem",
-    padding: "0.25rem 0.5rem",
-    borderRadius: "0.25rem",
-    fontSize: "0.75rem",
-    fontWeight: 600,
+    top: spacing.sm,
+    right: spacing.sm,
+    padding: "6px 12px",
+    borderRadius: borderRadius.md,
+    fontSize: fontSize.sm,
+    fontWeight: fontWeight.semibold,
   },
   currentBadge: {
-    backgroundColor: "#3b82f6",
-    color: "#ffffff",
+    backgroundColor: colors.primary,
+    color: colors.bgWhite,
   },
   nextBadge: {
-    backgroundColor: "#22c55e",
-    color: "#ffffff",
+    backgroundColor: colors.success,
+    color: colors.bgWhite,
   },
   courseCardWrapper: {
     position: "relative" as const,
@@ -219,12 +210,12 @@ export const CourseList = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <h2 style={styles.title}>コース管理</h2>
+    <div style={section}>
+      <div style={styles.headerRow}>
+        <h2 style={sectionTitle}>コース管理</h2>
         <button
           type="button"
-          style={styles.button}
+          style={buttonPrimary}
           onClick={() => setIsCreating(true)}
         >
           <Plus size={16} aria-hidden="true" />
