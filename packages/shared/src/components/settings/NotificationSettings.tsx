@@ -3,9 +3,7 @@ import { Bell, Plus, Trash2 } from "lucide-react";
 import type { NotificationSettings as NotificationSettingsType } from "../../types";
 import {
   section,
-  sectionTitle,
   description,
-  input,
   buttonPrimary,
   colors,
   spacing,
