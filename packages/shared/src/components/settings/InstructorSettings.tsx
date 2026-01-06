@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, X } from "lucide-react";
+import { settingsStyles } from "./settingsStyles";
 
 interface InstructorSettingsProps {
   instructors: string[];
@@ -25,8 +26,8 @@ export const InstructorSettings = ({
   };
 
   return (
-    <div style={{ padding: "20px", borderBottom: "1px solid #dcdfe6" }}>
-      <h2 style={{ marginBottom: "15px" }}>教員名リスト管理</h2>
+    <div style={settingsStyles.section}>
+      <h2 style={settingsStyles.sectionTitle}>教員名リスト管理</h2>
 
       <div style={{ marginBottom: "15px" }}>
         <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
@@ -41,39 +42,16 @@ export const InstructorSettings = ({
             }}
             placeholder="教員名を入力"
             style={{
+              ...settingsStyles.input,
               flex: 1,
-              padding: "10px",
-              fontSize: "14px",
-              border: "1px solid #dcdfe6",
-              borderRadius: "7px",
             }}
           />
-          <button
-            onClick={handleAddInstructor}
-            style={{
-              padding: "10px 20px",
-              fontSize: "14px",
-              fontWeight: "500",
-              backgroundColor: "#3471eb",
-              color: "white",
-              border: "none",
-              borderRadius: "7px",
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
+          <button onClick={handleAddInstructor} style={settingsStyles.primaryButton}>
             <Plus size={16} aria-hidden="true" />
             追加
           </button>
         </div>
-        <p
-          style={{
-            fontSize: "12px",
-            color: "#666",
-          }}
-        >
+        <p style={settingsStyles.description}>
           登録した教員名はコース作成時にドロップダウンから選択できます
         </p>
       </div>

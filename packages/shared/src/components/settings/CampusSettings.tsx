@@ -1,5 +1,6 @@
 import type { CampusId } from "../../types";
 import { CAMPUS_LABELS } from "../../constants";
+import { settingsStyles } from "./settingsStyles";
 
 interface CampusSettingsProps {
   defaultCampus?: CampusId;
@@ -11,19 +12,10 @@ export const CampusSettings = ({
   onCampusChange,
 }: CampusSettingsProps) => {
   return (
-    <div style={{ padding: "20px", borderBottom: "1px solid #dcdfe6" }}>
-      <h2 style={{ marginBottom: "15px" }}>キャンパス設定</h2>
+    <div style={settingsStyles.section}>
+      <h2 style={settingsStyles.sectionTitle}>キャンパス設定</h2>
       <div style={{ marginBottom: "10px" }}>
-        <label
-          htmlFor="default-campus"
-          style={{
-            display: "block",
-            marginBottom: "8px",
-            fontSize: "14px",
-            fontWeight: "500",
-            color: "#333",
-          }}
-        >
+        <label htmlFor="default-campus" style={settingsStyles.label}>
           デフォルトキャンパス
         </label>
         <select
@@ -35,11 +27,7 @@ export const CampusSettings = ({
             )
           }
           style={{
-            padding: "10px",
-            fontSize: "14px",
-            border: "1px solid #dcdfe6",
-            borderRadius: "7px",
-            backgroundColor: "white",
+            ...settingsStyles.input,
             cursor: "pointer",
             minWidth: "200px",
           }}
@@ -51,13 +39,7 @@ export const CampusSettings = ({
             </option>
           ))}
         </select>
-        <p
-          style={{
-            marginTop: "8px",
-            fontSize: "12px",
-            color: "#666",
-          }}
-        >
+        <p style={settingsStyles.description}>
           新しい教室を追加する際のデフォルトキャンパスを設定します
         </p>
       </div>

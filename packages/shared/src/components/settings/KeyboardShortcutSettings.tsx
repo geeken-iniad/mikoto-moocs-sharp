@@ -1,5 +1,6 @@
 import type { KeyboardShortcutSettings } from "../../types";
 import { getSubmitShortcutLabel } from "../../utils/platform";
+import { settingsStyles } from "./settingsStyles";
 
 interface ShortcutSettingsProps {
   shortcuts: KeyboardShortcutSettings;
@@ -13,57 +14,33 @@ export const ShortcutSettings = ({
   const submitShortcutLabel = getSubmitShortcutLabel();
 
   return (
-    <div style={{ padding: "20px", borderBottom: "1px solid #dcdfe6" }}>
-      <h2 style={{ marginBottom: "15px" }}>キーボードショートカット</h2>
+    <div style={settingsStyles.section}>
+      <h2 style={settingsStyles.sectionTitle}>キーボードショートカット</h2>
       <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
+        <label style={settingsStyles.checkboxLabel}>
           <input
             type="checkbox"
             checked={shortcuts.submitShortcut}
             onChange={() => onShortcutToggle("submitShortcut")}
-            style={{ width: "18px", height: "18px", cursor: "pointer" }}
+            style={settingsStyles.checkbox}
           />
           <span>{submitShortcutLabel}</span>
         </label>
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
+        <label style={settingsStyles.checkboxLabel}>
           <input
             type="checkbox"
             checked={shortcuts.numberKeyShortcut}
             onChange={() => onShortcutToggle("numberKeyShortcut")}
-            style={{ width: "18px", height: "18px", cursor: "pointer" }}
+            style={settingsStyles.checkbox}
           />
           <span>数字キー (1-9) でページネーション</span>
         </label>
-        <label
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
-        >
+        <label style={settingsStyles.checkboxLabel}>
           <input
             type="checkbox"
             checked={shortcuts.arrowKeyShortcut}
             onChange={() => onShortcutToggle("arrowKeyShortcut")}
-            style={{ width: "18px", height: "18px", cursor: "pointer" }}
+            style={settingsStyles.checkbox}
           />
           <span>Shift+左右矢印 でページ移動</span>
         </label>

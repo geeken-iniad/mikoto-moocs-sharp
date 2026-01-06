@@ -1,5 +1,6 @@
 import { Moon, Sun } from "lucide-react";
 import type { Theme } from "../../types";
+import { settingsStyles } from "./settingsStyles";
 
 interface ThemeSettingsProps {
   theme: Theme;
@@ -8,8 +9,8 @@ interface ThemeSettingsProps {
 
 export const ThemeSettings = ({ theme, onThemeChange }: ThemeSettingsProps) => {
   return (
-    <div style={{ padding: "20px", borderBottom: "1px solid #dcdfe6" }}>
-      <h2 style={{ marginBottom: "15px" }}>テーマ設定</h2>
+    <div style={settingsStyles.section}>
+      <h2 style={settingsStyles.sectionTitle}>テーマ設定</h2>
       <div style={{ display: "flex", gap: "10px" }}>
         <button
           onClick={() => onThemeChange("light")}

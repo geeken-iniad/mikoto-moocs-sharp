@@ -1,6 +1,7 @@
 import { useState, type CSSProperties } from "react";
-import { Bell, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import type { NotificationSettings as NotificationSettingsType } from "../../types";
+import { settingsStyles } from "./settingsStyles";
 
 interface NotificationSettingsProps {
   settings: NotificationSettingsType;
@@ -8,36 +9,11 @@ interface NotificationSettingsProps {
 }
 
 const styles: Record<string, CSSProperties> = {
-  container: {
-    marginBottom: "2rem",
-  },
-  header: {
-    display: "flex",
-    alignItems: "center",
-    gap: "0.5rem",
-    marginBottom: "1rem",
-  },
-  title: {
-    fontSize: "1.125rem",
-    fontWeight: 600,
-    color: "#1f2937",
-    margin: 0,
-  },
-  description: {
-    fontSize: "0.875rem",
-    color: "#6b7280",
-    marginBottom: "1rem",
-  },
   toggleContainer: {
     display: "flex",
     alignItems: "center",
     gap: "0.75rem",
-    marginBottom: "1.5rem",
-  },
-  label: {
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    color: "#374151",
+    marginBottom: "0.5rem",
   },
   switch: {
     position: "relative",
@@ -167,16 +143,11 @@ export const NotificationSettings = ({
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.header}>
-        <Bell size={20} aria-hidden="true" />
-        <h3 style={styles.title}>授業前通知</h3>
-      </div>
-
-      <p style={styles.description}>次の授業の指定時刻前に通知を送信します</p>
+    <div style={settingsStyles.section}>
+      <h2 style={settingsStyles.sectionTitle}>授業前通知</h2>
 
       <div style={styles.toggleContainer}>
-        <span style={styles.label}>通知を有効にする</span>
+        <span style={settingsStyles.toggleLabel}>通知を有効にする</span>
         <button
           type="button"
           style={{
@@ -196,10 +167,11 @@ export const NotificationSettings = ({
           />
         </button>
       </div>
+      <p style={settingsStyles.description}>次の授業の指定時刻前に通知を送信します</p>
 
       {settings.enabled && (
         <div style={styles.timingsSection}>
-          <span style={styles.label}>通知タイミング</span>
+          <span style={settingsStyles.label}>通知タイミング</span>
 
           <div style={styles.timingsList}>
             {settings.timings.length === 0 ? (
