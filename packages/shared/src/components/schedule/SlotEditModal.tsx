@@ -13,6 +13,13 @@ import {
   DELIVERY_MODE_LABELS,
   ROOM_TYPE_LABELS,
 } from "../../constants";
+import {
+  colors,
+  spacing,
+  fontSize,
+  fontWeight,
+  borderRadius,
+} from "../../styles/commonStyles";
 
 interface SlotEditModalProps {
   courses: Course[];
@@ -37,9 +44,9 @@ const styles: Record<string, CSSProperties> = {
     zIndex: 1000,
   },
   modal: {
-    backgroundColor: "#ffffff",
-    borderRadius: "0.5rem",
-    padding: "1.5rem",
+    backgroundColor: colors.bgWhite,
+    borderRadius: borderRadius.xl,
+    padding: spacing.xl,
     maxWidth: "600px",
     width: "90%",
     maxHeight: "90vh",
@@ -47,93 +54,96 @@ const styles: Record<string, CSSProperties> = {
     boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1)",
   },
   header: {
-    fontSize: "1.25rem",
-    fontWeight: 600,
-    marginBottom: "1rem",
-    color: "#1f2937",
+    fontSize: fontSize.xl,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.md,
+    color: colors.textDark,
   },
   formGroup: {
-    marginBottom: "1rem",
+    marginBottom: spacing.md,
   },
   label: {
     display: "block",
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    marginBottom: "0.25rem",
-    color: "#374151",
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
+    marginBottom: spacing.sm,
+    color: colors.textMedium,
   },
   select: {
     width: "100%",
-    padding: "0.5rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
-    backgroundColor: "#ffffff",
+    padding: "10px",
+    border: `1px solid ${colors.border}`,
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.base,
+    backgroundColor: colors.bgWhite,
     boxSizing: "border-box" as const,
+    cursor: "pointer",
   },
   input: {
     width: "100%",
-    padding: "0.5rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
+    padding: "10px",
+    border: `1px solid ${colors.border}`,
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.base,
     boxSizing: "border-box" as const,
+    backgroundColor: colors.bgWhite,
   },
   textarea: {
     width: "100%",
-    padding: "0.5rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
+    padding: "10px",
+    border: `1px solid ${colors.border}`,
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.base,
     minHeight: "60px",
     resize: "vertical" as const,
     boxSizing: "border-box" as const,
+    backgroundColor: colors.bgWhite,
   },
   buttonGroup: {
     display: "flex",
-    gap: "0.5rem",
-    marginTop: "1.5rem",
+    gap: spacing.sm,
+    marginTop: spacing.lg,
     justifyContent: "flex-end",
   },
   button: {
-    padding: "0.5rem 1rem",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
-    fontWeight: 500,
+    padding: "10px 20px",
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
     cursor: "pointer",
     border: "none",
     display: "inline-flex",
     alignItems: "center",
-    gap: "0.5rem",
+    gap: spacing.sm,
   },
   primaryButton: {
-    backgroundColor: "#3b82f6",
-    color: "#ffffff",
+    backgroundColor: colors.primary,
+    color: colors.bgWhite,
   },
   secondaryButton: {
-    backgroundColor: "#6b7280",
-    color: "#ffffff",
+    backgroundColor: colors.secondary,
+    color: colors.bgWhite,
   },
   dangerButton: {
-    backgroundColor: "#ef4444",
-    color: "#ffffff",
+    backgroundColor: colors.danger,
+    color: colors.bgWhite,
   },
   roomSection: {
-    marginTop: "1rem",
-    padding: "1rem",
-    backgroundColor: "#f9fafb",
-    borderRadius: "0.375rem",
+    marginTop: spacing.md,
+    padding: spacing.md,
+    backgroundColor: colors.bgLight,
+    borderRadius: borderRadius.xl,
   },
   roomHeader: {
-    fontSize: "0.875rem",
-    fontWeight: 600,
-    marginBottom: "0.5rem",
-    color: "#374151",
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    marginBottom: spacing.sm,
+    color: colors.textMedium,
   },
   addButton: {
-    marginTop: "0.5rem",
-    fontSize: "0.75rem",
-    padding: "0.375rem 0.75rem",
+    marginTop: spacing.sm,
+    fontSize: fontSize.sm,
+    padding: "8px 16px",
   },
 };
 
@@ -252,12 +262,12 @@ export const SlotEditModal = ({
             教室（科目のデフォルト教室を上書き）
           </div>
           {rooms.map((room, index) => (
-            <div key={index} style={{ marginBottom: "0.5rem" }}>
+            <div key={index} style={{ marginBottom: spacing.sm }}>
               <div
                 style={{
                   display: "flex",
-                  gap: "0.5rem",
-                  marginBottom: "0.25rem",
+                  gap: spacing.sm,
+                  marginBottom: spacing.xs,
                 }}
               >
                 <select

@@ -1,6 +1,16 @@
 import { useState, type CSSProperties } from "react";
 import { Bell, Plus, Trash2 } from "lucide-react";
 import type { NotificationSettings as NotificationSettingsType } from "../../types";
+import {
+  section,
+  description,
+  buttonPrimary,
+  colors,
+  spacing,
+  fontSize,
+  fontWeight,
+  borderRadius,
+} from "../../styles/commonStyles";
 
 interface NotificationSettingsProps {
   settings: NotificationSettingsType;
@@ -8,42 +18,34 @@ interface NotificationSettingsProps {
 }
 
 const styles: Record<string, CSSProperties> = {
-  container: {
-    marginBottom: "2rem",
-  },
   header: {
     display: "flex",
     alignItems: "center",
-    gap: "0.5rem",
-    marginBottom: "1rem",
+    gap: spacing.sm,
+    marginBottom: spacing.md,
   },
   title: {
-    fontSize: "1.125rem",
-    fontWeight: 600,
-    color: "#1f2937",
+    fontSize: fontSize.lg,
+    fontWeight: fontWeight.semibold,
+    color: colors.textDark,
     margin: 0,
-  },
-  description: {
-    fontSize: "0.875rem",
-    color: "#6b7280",
-    marginBottom: "1rem",
   },
   toggleContainer: {
     display: "flex",
     alignItems: "center",
-    gap: "0.75rem",
-    marginBottom: "1.5rem",
+    gap: spacing.md,
+    marginBottom: spacing.lg,
   },
   label: {
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    color: "#374151",
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
+    color: colors.textMedium,
   },
   switch: {
     position: "relative",
     width: "44px",
     height: "24px",
-    backgroundColor: "#d1d5db",
+    backgroundColor: colors.borderDark,
     borderRadius: "12px",
     cursor: "pointer",
     transition: "background-color 0.2s",
@@ -51,7 +53,7 @@ const styles: Record<string, CSSProperties> = {
     padding: 0,
   },
   switchActive: {
-    backgroundColor: "#3b82f6",
+    backgroundColor: colors.primary,
   },
   switchThumb: {
     position: "absolute",
@@ -59,7 +61,7 @@ const styles: Record<string, CSSProperties> = {
     left: "2px",
     width: "20px",
     height: "20px",
-    backgroundColor: "white",
+    backgroundColor: colors.bgWhite,
     borderRadius: "50%",
     transition: "transform 0.2s",
   },
@@ -67,62 +69,50 @@ const styles: Record<string, CSSProperties> = {
     transform: "translateX(20px)",
   },
   timingsSection: {
-    marginTop: "1rem",
+    marginTop: spacing.md,
   },
   timingsList: {
     display: "flex",
     flexDirection: "column",
-    gap: "0.5rem",
-    marginBottom: "0.75rem",
+    gap: spacing.sm,
+    marginBottom: spacing.md,
   },
   timingItem: {
     display: "flex",
     alignItems: "center",
-    gap: "0.5rem",
-    padding: "0.5rem",
-    backgroundColor: "#f3f4f6",
-    borderRadius: "0.375rem",
+    gap: spacing.sm,
+    padding: spacing.sm,
+    backgroundColor: colors.bgGray,
+    borderRadius: borderRadius.xl,
   },
   timingText: {
     flex: 1,
-    fontSize: "0.875rem",
-    color: "#374151",
+    fontSize: fontSize.base,
+    color: colors.textMedium,
   },
   deleteButton: {
-    padding: "0.25rem",
+    padding: spacing.xs,
     backgroundColor: "transparent",
     border: "none",
     cursor: "pointer",
-    color: "#ef4444",
-    borderRadius: "0.25rem",
+    color: colors.danger,
+    borderRadius: borderRadius.md,
     display: "flex",
     alignItems: "center",
     transition: "background-color 0.2s",
   },
   addSection: {
     display: "flex",
-    gap: "0.5rem",
+    gap: spacing.sm,
     alignItems: "center",
   },
-  input: {
-    padding: "0.5rem",
-    fontSize: "0.875rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
+  inputNumber: {
+    padding: "10px",
+    fontSize: fontSize.base,
+    border: `1px solid ${colors.border}`,
+    borderRadius: borderRadius.xl,
     width: "100px",
-  },
-  addButton: {
-    padding: "0.5rem 1rem",
-    fontSize: "0.875rem",
-    backgroundColor: "#3b82f6",
-    color: "white",
-    border: "none",
-    borderRadius: "0.375rem",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: "0.25rem",
-    transition: "background-color 0.2s",
+    backgroundColor: colors.bgWhite,
   },
 };
 
@@ -167,13 +157,13 @@ export const NotificationSettings = ({
   };
 
   return (
-    <div style={styles.container}>
+    <div style={section}>
       <div style={styles.header}>
         <Bell size={20} aria-hidden="true" />
         <h3 style={styles.title}>授業前通知</h3>
       </div>
 
-      <p style={styles.description}>次の授業の指定時刻前に通知を送信します</p>
+      <p style={description}>次の授業の指定時刻前に通知を送信します</p>
 
       <div style={styles.toggleContainer}>
         <span style={styles.label}>通知を有効にする</span>
@@ -203,7 +193,7 @@ export const NotificationSettings = ({
 
           <div style={styles.timingsList}>
             {settings.timings.length === 0 ? (
-              <p style={{ fontSize: "0.875rem", color: "#6b7280" }}>
+              <p style={{ fontSize: fontSize.base, color: colors.textLight }}>
                 通知タイミングが設定されていません
               </p>
             ) : (
@@ -238,23 +228,23 @@ export const NotificationSettings = ({
               step="1"
               value={newTiming}
               onChange={(e) => setNewTiming(e.target.value)}
-              style={styles.input}
+              style={styles.inputNumber}
               placeholder="分"
               aria-label="通知タイミング(分)"
             />
-            <span style={{ fontSize: "0.875rem", color: "#6b7280" }}>分前</span>
+            <span style={{ fontSize: fontSize.base, color: colors.textLight }}>分前</span>
             <button
               type="button"
-              style={styles.addButton}
+              style={buttonPrimary}
               onClick={handleAddTiming}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = "#2563eb";
+                e.currentTarget.style.backgroundColor = colors.primaryHover;
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = "#3b82f6";
+                e.currentTarget.style.backgroundColor = colors.primary;
               }}
             >
-              <Plus size={16} />
+              <Plus size={16} aria-hidden="true" />
               追加
             </button>
           </div>

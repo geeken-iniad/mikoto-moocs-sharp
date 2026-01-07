@@ -3,6 +3,12 @@ import type { ScheduleStore, Schedule, Weekday, Period } from "../../types";
 import { DAYS, DAY_LABELS, PERIODS } from "../../constants";
 import { createTimeSlotKey, getSlotByTimeSlot } from "../../utils/schedule";
 import { ScheduleCell } from "./ScheduleCell";
+import {
+  colors,
+  fontSize,
+  fontWeight,
+  borderRadius,
+} from "../../styles/commonStyles";
 
 interface ScheduleGridProps {
   store: ScheduleStore;
@@ -14,9 +20,9 @@ const styles: Record<string, CSSProperties> = {
   container: {
     width: "100%",
     overflowX: "auto",
-    backgroundColor: "#ffffff",
-    borderRadius: "0.5rem",
-    border: "1px solid #e5e7eb",
+    backgroundColor: colors.bgWhite,
+    borderRadius: borderRadius.xl,
+    border: `1px solid ${colors.borderLight}`,
   },
   table: {
     width: "100%",
@@ -24,13 +30,13 @@ const styles: Record<string, CSSProperties> = {
     minWidth: "900px",
   },
   headerCell: {
-    padding: "1rem",
-    backgroundColor: "#f9fafb",
-    borderBottom: "2px solid #e5e7eb",
-    fontWeight: 600,
+    padding: "16px",
+    backgroundColor: colors.bgLight,
+    borderBottom: `2px solid ${colors.borderLight}`,
+    fontWeight: fontWeight.semibold,
     textAlign: "center",
-    color: "#374151",
-    fontSize: "1.125rem",
+    color: colors.textMedium,
+    fontSize: fontSize.lg,
   },
   periodHeader: {
     width: "120px",
@@ -39,18 +45,18 @@ const styles: Record<string, CSSProperties> = {
     minWidth: "200px",
   },
   periodCell: {
-    padding: "1rem",
-    backgroundColor: "#f9fafb",
-    borderRight: "1px solid #e5e7eb",
-    fontWeight: 500,
+    padding: "16px",
+    backgroundColor: colors.bgLight,
+    borderRight: `1px solid ${colors.borderLight}`,
+    fontWeight: fontWeight.medium,
     textAlign: "center",
-    color: "#6b7280",
-    fontSize: "1.0625rem",
+    color: colors.textLight,
+    fontSize: fontSize.base,
   },
   periodTime: {
-    fontSize: "0.9375rem",
-    color: "#9ca3af",
-    marginTop: "0.375rem",
+    fontSize: fontSize.sm,
+    color: colors.textMuted,
+    marginTop: "6px",
   },
 };
 

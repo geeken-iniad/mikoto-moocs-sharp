@@ -15,6 +15,7 @@ import { InstructorSettings } from "./InstructorSettings";
 import { NotificationSettings } from "./NotificationSettings";
 import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { CourseList } from "../schedule/CourseList";
+import { colors, spacing, fontSize, fontWeight } from "../../styles/commonStyles";
 
 interface SettingsPageProps {
   storageManager: StorageManager;
@@ -28,18 +29,18 @@ const styles: Record<string, CSSProperties> = {
   },
   tabBar: {
     display: "flex",
-    borderBottom: "2px solid #e5e7eb",
-    marginBottom: "1.5rem",
-    gap: "0.5rem",
+    borderBottom: `2px solid ${colors.borderLight}`,
+    marginBottom: spacing.lg,
+    gap: spacing.sm,
   },
   tab: {
-    padding: "0.75rem 1.5rem",
-    fontSize: "0.875rem",
-    fontWeight: 500,
+    padding: "12px 24px",
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
     cursor: "pointer",
     border: "none",
     backgroundColor: "transparent",
-    color: "#6b7280",
+    color: colors.textLight,
     borderBottomWidth: "2px",
     borderBottomStyle: "solid",
     borderBottomColor: "transparent",
@@ -47,11 +48,11 @@ const styles: Record<string, CSSProperties> = {
     transition: "all 0.2s",
     display: "inline-flex",
     alignItems: "center",
-    gap: "0.5rem",
+    gap: spacing.sm,
   },
   activeTab: {
-    color: "#3b82f6",
-    borderBottomColor: "#3b82f6",
+    color: colors.primary,
+    borderBottomColor: colors.primary,
   },
   tabContent: {
     width: "100%",
