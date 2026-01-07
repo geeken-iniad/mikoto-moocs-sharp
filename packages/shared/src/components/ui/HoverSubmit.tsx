@@ -290,31 +290,69 @@ export function initHoverSubmit(): void {
 
     // track dynamic submit additions/removals within this container
     if (typeof MutationObserver !== "undefined") {
+      const pendingAdded = new Set<Element>();
+      const pendingRemoved = new Set<Element>();
+      let innerFlushScheduled = false;
+
+      const flushInnerMutations = () => {
+        innerFlushScheduled = false;
+
+        const added = Array.from(pendingAdded);
+        const removed = Array.from(pendingRemoved);
+        pendingAdded.clear();
+        pendingRemoved.clear();
+
+        added.forEach((n) => {
+          if (!(n instanceof Element)) return;
+          if ((n as Element).matches?.(SUBMIT_SELECTOR))
+            watchSubmit(n as Element);
+          const nested = Array.from(
+            (n as Element).querySelectorAll
+              ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
+              : [],
+          );
+          nested.forEach(watchSubmit);
+        });
+
+        removed.forEach((n) => {
+          if (!(n instanceof Element)) return;
+          if ((n as Element).matches?.(SUBMIT_SELECTOR))
+            unwatchSubmit(n as Element);
+          const nested = Array.from(
+            (n as Element).querySelectorAll
+              ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
+              : [],
+          );
+          nested.forEach(unwatchSubmit);
+        });
+      };
+
+      const scheduleInnerFlush = () => {
+        if (innerFlushScheduled) return;
+        innerFlushScheduled = true;
+        const runner =
+          typeof requestAnimationFrame === "function"
+            ? requestAnimationFrame
+            : (cb: FrameRequestCallback) => window.setTimeout(cb, 16);
+        runner(() => {
+          flushInnerMutations();
+        });
+      };
+
       const innerMo = new MutationObserver((mutations) => {
         mutations.forEach((m) => {
           m.addedNodes.forEach((n) => {
             if (!(n instanceof Element)) return;
-            if ((n as Element).matches?.(SUBMIT_SELECTOR))
-              watchSubmit(n as Element);
-            const nested = Array.from(
-              (n as Element).querySelectorAll
-                ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
-                : [],
-            );
-            nested.forEach(watchSubmit);
+            pendingRemoved.delete(n);
+            pendingAdded.add(n);
           });
           m.removedNodes.forEach((n) => {
             if (!(n instanceof Element)) return;
-            if ((n as Element).matches?.(SUBMIT_SELECTOR))
-              unwatchSubmit(n as Element);
-            const nested = Array.from(
-              (n as Element).querySelectorAll
-                ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
-                : [],
-            );
-            nested.forEach(unwatchSubmit);
+            pendingAdded.delete(n);
+            pendingRemoved.add(n);
           });
         });
+        scheduleInnerFlush();
       });
       innerMo.observe(container, { childList: true, subtree: true });
 
@@ -419,7 +457,6 @@ export function initHoverSubmit(): void {
           ? requestAnimationFrame
           : (cb: FrameRequestCallback) => window.setTimeout(cb, 16);
       runner(() => {
-        flushScheduled = false;
         flushMutations();
       });
     };
