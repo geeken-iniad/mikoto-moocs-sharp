@@ -6,11 +6,13 @@ import { SlideEnhancerToggle } from "../ui/SlideEnhancerToggle";
 const SLIDE_TOGGLE_CONTAINER_CLASS = "mikoto-slide-enhancer-toggle-container";
 
 const ensureSlideToggleContainer = (): HTMLSpanElement | null => {
-  const root = document.querySelector(".content") ?? document.body;
-  const bookmarkToggle = root.querySelector("#bookmark-toggle");
-  const pullRightFromBookmark = bookmarkToggle?.closest(".pull-right");
-  const pullRight =
-    pullRightFromBookmark ?? root.querySelector(".clearfix .pull-right");
+  const content = document.querySelector(".content");
+  if (!content) return null;
+
+  const clearfix = content.querySelector(".clearfix");
+  if (!clearfix) return null;
+
+  const pullRight = clearfix.querySelector(".pull-right");
   if (!pullRight) return null;
 
   const existing = pullRight.querySelector<HTMLSpanElement>(
