@@ -18,9 +18,10 @@ function addVisibleClassToSubmits(container: Element): void {
     s.classList.add(VISIBLE_CLASS);
     // ensure invisible class state is computed/observed when visible marker applied
     try {
-  // watcher may be installed later; for now compute display (ignore floating class)
-  if (!elementLooksDisplayedIgnoringFloating(s)) s.classList.add(INVISIBLE_CLASS);
-  else s.classList.remove(INVISIBLE_CLASS);
+      // watcher may be installed later; for now compute display (ignore floating class)
+      if (!elementLooksDisplayedIgnoringFloating(s))
+        s.classList.add(INVISIBLE_CLASS);
+      else s.classList.remove(INVISIBLE_CLASS);
     } catch {
       // ignore
     }
@@ -38,7 +39,8 @@ function removeVisibleClassFromSubmits(container: Element): void {
 
 function elementLooksDisplayed(el: Element): boolean {
   const cs = window.getComputedStyle(el as Element);
-  if (cs.display === "none" || cs.visibility === "hidden" || +cs.opacity === 0) return false;
+  if (cs.display === "none" || cs.visibility === "hidden" || +cs.opacity === 0)
+    return false;
   const rect = (el as Element).getBoundingClientRect();
   return rect.width > 0 && rect.height > 0;
 }
@@ -59,7 +61,6 @@ function elementLooksDisplayedIgnoringFloating(el: Element): boolean {
 }
 
 export function initHoverSubmit(): void {
-
   if (typeof document === "undefined") return;
 
   // Avoid injecting twice
@@ -128,9 +129,9 @@ export function initHoverSubmit(): void {
   // Fallback: if IntersectionObserver is not available, fall back to checking
   // computed styles on mutation.
   const observed = new WeakSet<Element>();
-    // Track known submit elements so we can re-evaluate their on-screen state
-    // with a simple check. Use Set so we can iterate when handling scroll/resize.
-    const observedSubmit = new Set<Element>();
+  // Track known submit elements so we can re-evaluate their on-screen state
+  // with a simple check. Use Set so we can iterate when handling scroll/resize.
+  const observedSubmit = new Set<Element>();
 
   // Ensure submit elements inside a container are tracked and
   // have their invisible state computed immediately.
@@ -141,7 +142,11 @@ export function initHoverSubmit(): void {
         // track for later re-evaluation and compute initial state
         observedSubmit.add(s);
         try {
-          if (!elementLooksDisplayedIgnoringFloating(s) && s.classList.contains(VISIBLE_CLASS)) s.classList.add(INVISIBLE_CLASS);
+          if (
+            !elementLooksDisplayedIgnoringFloating(s) &&
+            s.classList.contains(VISIBLE_CLASS)
+          )
+            s.classList.add(INVISIBLE_CLASS);
           else s.classList.remove(INVISIBLE_CLASS);
         } catch {
           // ignore
@@ -155,79 +160,88 @@ export function initHoverSubmit(): void {
   let io: IntersectionObserver | null = null;
 
   if (typeof IntersectionObserver !== "undefined") {
-    io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        const container = entry.target as Element;
-        if (entry.isIntersecting && entry.intersectionRatio > 0) {
-          // Ensure submit buttons are observed and their state computed
-          ensureObservedSubmits(container);
-          addVisibleClassToSubmits(container);
-        } else {
-          removeVisibleClassFromSubmits(container);
-        }
-      });
-    }, { root: null, threshold: [0, 0.01] });
+    io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const container = entry.target as Element;
+          if (entry.isIntersecting && entry.intersectionRatio > 0) {
+            // Ensure submit buttons are observed and their state computed
+            ensureObservedSubmits(container);
+            addVisibleClassToSubmits(container);
+          } else {
+            removeVisibleClassFromSubmits(container);
+          }
+        });
+      },
+      { root: null, threshold: [0, 0.01] },
+    );
   }
 
-    // No per-button IntersectionObserver here — we'll use a simple check
-    // that tests whether the element is displayed and intersects the viewport.
+  // No per-button IntersectionObserver here — we'll use a simple check
+  // that tests whether the element is displayed and intersects the viewport.
 
-    function isElementActuallyVisible(el: Element): boolean {
-      try {
-        if (!elementLooksDisplayed(el)) return false;
-        const rect = el.getBoundingClientRect();
-        const vw = (window.innerWidth || document.documentElement.clientWidth);
-        const vh = (window.innerHeight || document.documentElement.clientHeight);
-        return rect.bottom > 0 && rect.top < vh && rect.right > 0 && rect.left < vw;
-      } catch {
-        return false;
-      }
+  function isElementActuallyVisible(el: Element): boolean {
+    try {
+      if (!elementLooksDisplayed(el)) return false;
+      const rect = el.getBoundingClientRect();
+      const vw = window.innerWidth || document.documentElement.clientWidth;
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      return (
+        rect.bottom > 0 && rect.top < vh && rect.right > 0 && rect.left < vw
+      );
+    } catch {
+      return false;
     }
+  }
 
-    function checkSubmitVisibility(el: Element) {
-      try {
-            // Measure the element's natural/original visibility while ignoring
-            // the floating helper class; otherwise applying the floating class
-            // makes the element 'visible' and we immediately remove the class,
-            // causing a flicker loop.
-            if (isElementActuallyVisibleIgnoringFloating(el)) el.classList.remove(INVISIBLE_CLASS);
-            else if (el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
-      } catch {
-        // ignore
-      }
+  function checkSubmitVisibility(el: Element) {
+    try {
+      // Measure the element's natural/original visibility while ignoring
+      // the floating helper class; otherwise applying the floating class
+      // makes the element 'visible' and we immediately remove the class,
+      // causing a flicker loop.
+      if (isElementActuallyVisibleIgnoringFloating(el))
+        el.classList.remove(INVISIBLE_CLASS);
+      else if (el.classList.contains(VISIBLE_CLASS))
+        el.classList.add(INVISIBLE_CLASS);
+    } catch {
+      // ignore
     }
+  }
 
-        // Measure visibility while temporarily removing the floating helper
-        // class so the check reflects the element's original position.
-        function isElementActuallyVisibleIgnoringFloating(el: Element): boolean {
-          try {
-            const had = el.classList.contains(INVISIBLE_CLASS);
-            if (had) el.classList.remove(INVISIBLE_CLASS);
-            const visible = isElementActuallyVisible(el);
-            if (had) el.classList.add(INVISIBLE_CLASS);
-            return visible;
-          } catch {
-            return false;
-          }
-        }
+  // Measure visibility while temporarily removing the floating helper
+  // class so the check reflects the element's original position.
+  function isElementActuallyVisibleIgnoringFloating(el: Element): boolean {
+    try {
+      const had = el.classList.contains(INVISIBLE_CLASS);
+      if (had) el.classList.remove(INVISIBLE_CLASS);
+      const visible = isElementActuallyVisible(el);
+      if (had) el.classList.add(INVISIBLE_CLASS);
+      return visible;
+    } catch {
+      return false;
+    }
+  }
 
-        
-
-    // Debounced re-evaluation triggered on scroll/resize/orientationchange
-    let scheduledReeval = false;
-    function scheduleReevaluate() {
-      if (scheduledReeval) return;
-      scheduledReeval = true;
-      requestAnimationFrame(() => {
-        scheduledReeval = false;
-        observedSubmit.forEach((el) => { checkSubmitVisibility(el); });
+  // Debounced re-evaluation triggered on scroll/resize/orientationchange
+  let scheduledReeval = false;
+  function scheduleReevaluate() {
+    if (scheduledReeval) return;
+    scheduledReeval = true;
+    requestAnimationFrame(() => {
+      scheduledReeval = false;
+      observedSubmit.forEach((el) => {
+        checkSubmitVisibility(el);
       });
-    }
-    if (typeof window !== 'undefined') {
-      window.addEventListener('scroll', scheduleReevaluate, { passive: true });
-      window.addEventListener('resize', scheduleReevaluate, { passive: true });
-      window.addEventListener('orientationchange', scheduleReevaluate, { passive: true });
-    }
+    });
+  }
+  if (typeof window !== "undefined") {
+    window.addEventListener("scroll", scheduleReevaluate, { passive: true });
+    window.addEventListener("resize", scheduleReevaluate, { passive: true });
+    window.addEventListener("orientationchange", scheduleReevaluate, {
+      passive: true,
+    });
+  }
 
   function observeContainer(container: Element) {
     if (observed.has(container)) return;
@@ -251,7 +265,11 @@ export function initHoverSubmit(): void {
       observedSubmit.add(el);
       // initial state
       try {
-        if (!elementLooksDisplayedIgnoringFloating(el) && el.classList.contains(VISIBLE_CLASS)) el.classList.add(INVISIBLE_CLASS);
+        if (
+          !elementLooksDisplayedIgnoringFloating(el) &&
+          el.classList.contains(VISIBLE_CLASS)
+        )
+          el.classList.add(INVISIBLE_CLASS);
         else el.classList.remove(INVISIBLE_CLASS);
       } catch {
         // ignore
@@ -265,33 +283,85 @@ export function initHoverSubmit(): void {
     }
 
     // watch current submits
-    const currentSubmits = Array.from(container.querySelectorAll(SUBMIT_SELECTOR));
+    const currentSubmits = Array.from(
+      container.querySelectorAll(SUBMIT_SELECTOR),
+    );
     currentSubmits.forEach(watchSubmit);
 
     // track dynamic submit additions/removals within this container
     if (typeof MutationObserver !== "undefined") {
+      const pendingAdded = new Set<Element>();
+      const pendingRemoved = new Set<Element>();
+      let innerFlushScheduled = false;
+
+      const flushInnerMutations = () => {
+        innerFlushScheduled = false;
+
+        const added = Array.from(pendingAdded);
+        const removed = Array.from(pendingRemoved);
+        pendingAdded.clear();
+        pendingRemoved.clear();
+
+        added.forEach((n) => {
+          if (!(n instanceof Element)) return;
+          if ((n as Element).matches?.(SUBMIT_SELECTOR))
+            watchSubmit(n as Element);
+          const nested = Array.from(
+            (n as Element).querySelectorAll
+              ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
+              : [],
+          );
+          nested.forEach(watchSubmit);
+        });
+
+        removed.forEach((n) => {
+          if (!(n instanceof Element)) return;
+          if ((n as Element).matches?.(SUBMIT_SELECTOR))
+            unwatchSubmit(n as Element);
+          const nested = Array.from(
+            (n as Element).querySelectorAll
+              ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
+              : [],
+          );
+          nested.forEach(unwatchSubmit);
+        });
+      };
+
+      const scheduleInnerFlush = () => {
+        if (innerFlushScheduled) return;
+        innerFlushScheduled = true;
+        const runner =
+          typeof requestAnimationFrame === "function"
+            ? requestAnimationFrame
+            : (cb: FrameRequestCallback) => window.setTimeout(cb, 16);
+        runner(() => {
+          flushInnerMutations();
+        });
+      };
+
       const innerMo = new MutationObserver((mutations) => {
         mutations.forEach((m) => {
           m.addedNodes.forEach((n) => {
             if (!(n instanceof Element)) return;
-            if ((n as Element).matches?.(SUBMIT_SELECTOR)) watchSubmit(n as Element);
-            const nested = Array.from((n as Element).querySelectorAll ? (n as Element).querySelectorAll(SUBMIT_SELECTOR) : []);
-            nested.forEach(watchSubmit);
+            pendingRemoved.delete(n);
+            pendingAdded.add(n);
           });
           m.removedNodes.forEach((n) => {
             if (!(n instanceof Element)) return;
-            if ((n as Element).matches?.(SUBMIT_SELECTOR)) unwatchSubmit(n as Element);
-            const nested = Array.from((n as Element).querySelectorAll ? (n as Element).querySelectorAll(SUBMIT_SELECTOR) : []);
-            nested.forEach(unwatchSubmit);
+            pendingAdded.delete(n);
+            pendingRemoved.add(n);
           });
         });
+        scheduleInnerFlush();
       });
       innerMo.observe(container, { childList: true, subtree: true });
 
       // store a reference so we can disconnect on unobserveContainer
       // attach to the DOM element via a property with a narrow type
       try {
-        const elWithProp = container as Element & { __mikoto_inner_mo?: MutationObserver };
+        const elWithProp = container as Element & {
+          __mikoto_inner_mo?: MutationObserver;
+        };
         elWithProp.__mikoto_inner_mo = innerMo;
       } catch {
         // ignore
@@ -309,9 +379,12 @@ export function initHoverSubmit(): void {
     removeVisibleClassFromSubmits(container);
     // disconnect any inner mutation observer
     try {
-      const elWithProp = container as Element & { __mikoto_inner_mo?: MutationObserver };
+      const elWithProp = container as Element & {
+        __mikoto_inner_mo?: MutationObserver;
+      };
       const innerMo = elWithProp.__mikoto_inner_mo;
-      if (innerMo && typeof innerMo.disconnect === 'function') innerMo.disconnect();
+      if (innerMo && typeof innerMo.disconnect === "function")
+        innerMo.disconnect();
       delete elWithProp.__mikoto_inner_mo;
     } catch {
       // ignore
@@ -329,9 +402,9 @@ export function initHoverSubmit(): void {
     // inside a container (ancestor match) as triggers.
     function matchesLoose(el: Element, selector: string): boolean {
       if (!selector) return false;
-      if (selector.startsWith('.')) {
+      if (selector.startsWith(".")) {
         const cls = selector.slice(1);
-        const cn = (el.getAttribute('class') || '');
+        const cn = el.getAttribute("class") || "";
         return cn.indexOf(cls) !== -1;
       }
       try {
@@ -341,34 +414,73 @@ export function initHoverSubmit(): void {
       }
     }
 
+    const pendingAdded = new Set<Element>();
+    const pendingRemoved = new Set<Element>();
+    let flushScheduled = false;
+
+    const flushMutations = () => {
+      flushScheduled = false;
+
+      const added = Array.from(pendingAdded);
+      const removed = Array.from(pendingRemoved);
+      pendingAdded.clear();
+      pendingRemoved.clear();
+
+      added.forEach((n) => {
+        const loose = matchesLoose(n, CONTAINER_SELECTOR);
+        if (loose) observeContainer(n);
+        const nested = Array.from(
+          n.querySelectorAll ? n.querySelectorAll(CONTAINER_SELECTOR) : [],
+        );
+        nested.forEach(observeContainer);
+        const anc = n.closest?.(CONTAINER_SELECTOR);
+        if (anc) {
+          observeContainer(anc);
+        }
+      });
+
+      removed.forEach((n) => {
+        const loose = matchesLoose(n, CONTAINER_SELECTOR);
+        if (loose) unobserveContainer(n);
+        const nested = Array.from(
+          n.querySelectorAll ? n.querySelectorAll(CONTAINER_SELECTOR) : [],
+        );
+        nested.forEach(unobserveContainer);
+      });
+    };
+
+    const scheduleFlush = () => {
+      if (flushScheduled) return;
+      flushScheduled = true;
+      const runner =
+        typeof requestAnimationFrame === "function"
+          ? requestAnimationFrame
+          : (cb: FrameRequestCallback) => window.setTimeout(cb, 16);
+      runner(() => {
+        flushMutations();
+      });
+    };
+
     const mo = new MutationObserver((mutations) => {
       mutations.forEach((m) => {
-        // log a summary for debugging
         m.addedNodes.forEach((n) => {
           if (!(n instanceof Element)) return;
-          // if the added node itself matches (loose), observe it
-          const loose = matchesLoose(n, CONTAINER_SELECTOR);
-          if (loose) observeContainer(n);
-          // nodes might contain nested containers
-          const nested = Array.from(n.querySelectorAll(CONTAINER_SELECTOR));
-          nested.forEach(observeContainer);
-          // or the added node might be inside an existing container (ancestor)
-          const anc = (n as Element).closest(CONTAINER_SELECTOR);
-          if (anc) {
-            observeContainer(anc);
-          }
+          pendingRemoved.delete(n);
+          pendingAdded.add(n);
         });
         m.removedNodes.forEach((n) => {
           if (!(n instanceof Element)) return;
-          const loose = matchesLoose(n, CONTAINER_SELECTOR);
-          if (loose) unobserveContainer(n);
-          const nested = Array.from(n.querySelectorAll(CONTAINER_SELECTOR));
-          nested.forEach(unobserveContainer);
+          pendingAdded.delete(n);
+          pendingRemoved.add(n);
         });
       });
+      scheduleFlush();
     });
 
-    mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
+    mo.observe(document.documentElement || document.body, {
+      childList: true,
+      subtree: true,
+    });
   }
 }
 
