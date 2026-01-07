@@ -7,7 +7,7 @@ type SlideElementObserverHandlers = {
   onElementRemoved?: (element: Element) => void;
 };
 
-const collectTargetElements = (node: Element) => {
+const collectTargetElements = (node: Element): Element[] => {
   if (node.tagName.toLowerCase() === "g") {
     return [node].filter(isTargetElement);
   }
@@ -46,7 +46,7 @@ export const useSlideElementObserver = (
         .filter(isTargetElement)
         .filter(isElementVisible);
 
-      const currentSet = new Set(currentElements);
+      const currentSet = new Set<Element>(currentElements);
 
       currentElements.forEach((element) => {
         if (!trackedElements.has(element)) {
