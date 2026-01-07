@@ -17,7 +17,7 @@ export default defineConfig({
         description: "MOOCsをより便利に (全機能版)",
         author: "INIAD MDX",
         icon: "https://moocs.iniad.org/favicon.ico",
-        namespace: "https://github.com/iniad-mdx",
+        namespace: "https://github.com/geeken-iniad",
         match: ["https://moocs.iniad.org/*"],
         "run-at": "document-idle",
         grant: [

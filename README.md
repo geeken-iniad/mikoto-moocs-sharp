@@ -23,7 +23,7 @@ Mikotoは、MOOCsをより便利に利用するためのツールです。ブラ
 
 ## 機能
 
-[プロジェクトボード](https://github.com/orgs/iniad-mdx/projects/2)
+[プロジェクトボード](https://github.com/orgs/geeken-iniad/projects/2)
 
 - [x] ⚠️ 出席、課題があるタブを色付けして目立たせる
 - [ ] 🕰️ 今・次の授業コマ情報の表示
