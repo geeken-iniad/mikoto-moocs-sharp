@@ -5,6 +5,11 @@ import {
   resolveInstructors,
   resolveRooms,
 } from "../../utils/schedule";
+import {
+  colors,
+  fontSize,
+  fontWeight,
+} from "../../styles/commonStyles";
 
 interface ScheduleCellProps {
   weekday: Weekday;
@@ -16,47 +21,47 @@ interface ScheduleCellProps {
 
 const styles: Record<string, CSSProperties> = {
   cell: {
-    border: "1px solid #d1d5db",
-    padding: "0.875rem",
+    border: `1px solid ${colors.borderDark}`,
+    padding: "14px",
     minHeight: "120px",
     cursor: "pointer",
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.bgWhite,
     transition: "all 0.2s",
     position: "relative",
   },
   cellHover: {
-    backgroundColor: "#f3f4f6",
+    backgroundColor: colors.bgGray,
   },
   cellEmpty: {
     backgroundColor: "#fafafa",
-    color: "#9ca3af",
+    color: colors.textMuted,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "1.5rem",
+    fontSize: fontSize["2xl"],
   },
   courseName: {
-    fontWeight: 600,
-    fontSize: "1.125rem",
-    marginBottom: "0.5rem",
-    color: "#1f2937",
+    fontWeight: fontWeight.semibold,
+    fontSize: fontSize.lg,
+    marginBottom: "8px",
+    color: colors.textDark,
     lineHeight: "1.5",
   },
   instructors: {
-    fontSize: "1rem",
-    color: "#6b7280",
-    marginBottom: "0.375rem",
+    fontSize: fontSize.base,
+    color: colors.textLight,
+    marginBottom: "6px",
     lineHeight: "1.5",
   },
   room: {
-    fontSize: "0.9375rem",
-    color: "#9ca3af",
+    fontSize: fontSize.sm,
+    color: colors.textMuted,
     lineHeight: "1.5",
   },
   memo: {
-    fontSize: "0.8125rem",
-    color: "#6b7280",
-    marginTop: "0.25rem",
+    fontSize: fontSize.sm,
+    color: colors.textLight,
+    marginTop: "4px",
     fontStyle: "italic",
   },
 };

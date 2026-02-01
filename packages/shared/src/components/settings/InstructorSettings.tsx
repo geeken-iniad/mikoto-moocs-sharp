@@ -1,5 +1,17 @@
 import { Plus, X } from "lucide-react";
 import { useState } from "react";
+import {
+  borderRadius,
+  buttonPrimary,
+  colors,
+  description,
+  fontSize,
+  fontWeight,
+  input,
+  section,
+  sectionTitle,
+  spacing,
+} from "../../styles/commonStyles";
 
 interface InstructorSettingsProps {
   instructors: string[];
@@ -25,11 +37,11 @@ export const InstructorSettings = ({
   };
 
   return (
-    <div style={{ padding: "20px", borderBottom: "1px solid #dcdfe6" }}>
-      <h2 style={{ marginBottom: "15px" }}>教員名リスト管理</h2>
+    <div style={section}>
+      <h2 style={sectionTitle}>教員名リスト管理</h2>
 
-      <div style={{ marginBottom: "15px" }}>
-        <div style={{ display: "flex", gap: "10px", marginBottom: "10px" }}>
+      <div style={{ marginBottom: spacing.lg }}>
+        <div style={{ display: "flex", gap: spacing.sm, marginBottom: spacing.sm }}>
           <input
             type="text"
             value={newInstructor}
@@ -40,40 +52,18 @@ export const InstructorSettings = ({
               }
             }}
             placeholder="教員名を入力"
-            style={{
-              flex: 1,
-              padding: "10px",
-              fontSize: "14px",
-              border: "1px solid #dcdfe6",
-              borderRadius: "7px",
-            }}
+            style={{ ...input, flex: 1 }}
           />
           <button
+            type="button"
             onClick={handleAddInstructor}
-            style={{
-              padding: "10px 20px",
-              fontSize: "14px",
-              fontWeight: "500",
-              backgroundColor: "#3471eb",
-              color: "white",
-              border: "none",
-              borderRadius: "7px",
-              cursor: "pointer",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
+            style={buttonPrimary}
           >
             <Plus size={16} aria-hidden="true" />
             追加
           </button>
         </div>
-        <p
-          style={{
-            fontSize: "12px",
-            color: "#666",
-          }}
-        >
+        <p style={description}>
           登録した教員名はコース作成時にドロップダウンから選択できます
         </p>
       </div>
@@ -82,10 +72,10 @@ export const InstructorSettings = ({
         <div>
           <h3
             style={{
-              fontSize: "14px",
-              fontWeight: "600",
-              marginBottom: "10px",
-              color: "#333",
+              fontSize: fontSize.base,
+              fontWeight: fontWeight.semibold,
+              marginBottom: spacing.sm,
+              color: colors.textMedium,
             }}
           >
             登録済み教員名 ({instructors.length})
@@ -94,7 +84,7 @@ export const InstructorSettings = ({
             style={{
               display: "flex",
               flexWrap: "wrap",
-              gap: "8px",
+              gap: spacing.sm,
             }}
           >
             {instructors.map((instructor) => (
@@ -103,27 +93,26 @@ export const InstructorSettings = ({
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "8px",
+                  gap: spacing.sm,
                   padding: "8px 12px",
-                  backgroundColor: "#f3f4f6",
-                  borderRadius: "7px",
-                  fontSize: "14px",
+                  backgroundColor: colors.bgGray,
+                  borderRadius: borderRadius.xl,
+                  fontSize: fontSize.base,
                 }}
               >
                 <span>{instructor}</span>
                 <button
+                  type="button"
                   onClick={() => handleRemoveInstructor(instructor)}
                   style={{
                     border: "none",
                     background: "none",
                     cursor: "pointer",
                     padding: "0",
-                    color: "#6b7280",
-                    fontSize: "18px",
-                    lineHeight: 1,
+                    color: colors.textLight,
                     display: "inline-flex",
                   }}
-                  title="削除"
+                  aria-label="削除"
                 >
                   <X size={16} aria-hidden="true" />
                 </button>

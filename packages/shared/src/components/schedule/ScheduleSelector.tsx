@@ -9,6 +9,13 @@ import {
   MAX_ACADEMIC_YEAR,
   MIN_ACADEMIC_YEAR,
 } from "../../utils/schedule";
+import {
+  colors,
+  spacing,
+  fontSize,
+  fontWeight,
+  borderRadius,
+} from "../../styles/commonStyles";
 
 interface ScheduleSelectorProps {
   schedules: Schedule[];
@@ -21,112 +28,114 @@ interface ScheduleSelectorProps {
 
 const styles: Record<string, CSSProperties> = {
   container: {
-    marginBottom: "1.5rem",
-    padding: "1rem",
-    backgroundColor: "#f9fafb",
-    borderRadius: "0.5rem",
-    border: "1px solid #e5e7eb",
+    marginBottom: spacing.lg,
+    padding: spacing.md,
+    backgroundColor: colors.bgLight,
+    borderRadius: borderRadius.xl,
+    border: `1px solid ${colors.borderLight}`,
   },
   header: {
-    fontSize: "1rem",
-    fontWeight: 600,
-    marginBottom: "0.75rem",
-    color: "#374151",
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.semibold,
+    marginBottom: "12px",
+    color: colors.textMedium,
   },
   selectGroup: {
     display: "flex",
-    gap: "0.5rem",
+    gap: spacing.sm,
     alignItems: "center",
     flexWrap: "wrap" as const,
   },
   select: {
-    padding: "0.5rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
-    backgroundColor: "#ffffff",
+    padding: "10px",
+    border: `1px solid ${colors.border}`,
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.base,
+    backgroundColor: colors.bgWhite,
     minWidth: "150px",
+    cursor: "pointer",
   },
   button: {
-    padding: "0.5rem 1rem",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
-    fontWeight: 500,
+    padding: "10px 20px",
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
     cursor: "pointer",
     border: "none",
-    backgroundColor: "#3b82f6",
-    color: "#ffffff",
+    backgroundColor: colors.primary,
+    color: colors.bgWhite,
     display: "inline-flex",
     alignItems: "center",
-    gap: "0.5rem",
+    gap: spacing.sm,
   },
   createSection: {
-    marginTop: "1rem",
-    paddingTop: "1rem",
-    borderTop: "1px solid #e5e7eb",
+    marginTop: spacing.md,
+    paddingTop: spacing.md,
+    borderTop: `1px solid ${colors.borderLight}`,
   },
   createLabel: {
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    marginBottom: "0.5rem",
-    color: "#374151",
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
+    marginBottom: spacing.sm,
+    color: colors.textMedium,
   },
   inputGroup: {
     display: "flex",
-    gap: "0.5rem",
+    gap: spacing.sm,
     alignItems: "flex-end",
     flexWrap: "wrap" as const,
   },
   inputWrapper: {
     display: "flex",
     flexDirection: "column" as const,
-    gap: "0.25rem",
+    gap: spacing.xs,
   },
   label: {
-    fontSize: "0.75rem",
-    color: "#6b7280",
+    fontSize: fontSize.sm,
+    color: colors.textLight,
   },
   input: {
-    padding: "0.5rem",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
-    fontSize: "0.875rem",
+    padding: "10px",
+    border: `1px solid ${colors.border}`,
+    borderRadius: borderRadius.xl,
+    fontSize: fontSize.base,
     width: "100px",
+    backgroundColor: colors.bgWhite,
   },
   scheduleList: {
     display: "flex",
     flexDirection: "column" as const,
-    gap: "0.5rem",
+    gap: spacing.sm,
   },
   scheduleItem: {
     display: "flex",
     alignItems: "center",
-    gap: "0.75rem",
-    padding: "0.75rem",
-    backgroundColor: "#ffffff",
-    border: "1px solid #d1d5db",
-    borderRadius: "0.375rem",
+    gap: "12px",
+    padding: "12px",
+    backgroundColor: colors.bgWhite,
+    border: `1px solid ${colors.borderDark}`,
+    borderRadius: borderRadius.xl,
     cursor: "pointer",
     transition: "all 0.2s",
   },
   scheduleItemSelected: {
-    borderColor: "#3b82f6",
-    backgroundColor: "#eff6ff",
+    borderColor: colors.primary,
+    backgroundColor: colors.bgBlueLight,
   },
   scheduleItemContent: {
     flex: 1,
-    fontSize: "0.875rem",
-    fontWeight: 500,
-    color: "#374151",
+    fontSize: fontSize.base,
+    fontWeight: fontWeight.medium,
+    color: colors.textMedium,
   },
   starButton: {
-    padding: "0.25rem",
+    padding: spacing.xs,
     border: "none",
     background: "transparent",
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
-    borderRadius: "0.25rem",
+    borderRadius: borderRadius.sm,
     transition: "background-color 0.2s",
   },
   starIcon: {
@@ -139,7 +148,7 @@ const styles: Record<string, CSSProperties> = {
   },
   starInactive: {
     fill: "none",
-    color: "#d1d5db",
+    color: colors.borderDark,
   },
 };
 
@@ -207,9 +216,9 @@ export const ScheduleSelector = ({
                   {isActive && (
                     <span
                       style={{
-                        marginLeft: "0.5rem",
-                        fontSize: "0.75rem",
-                        color: "#6b7280",
+                        marginLeft: spacing.sm,
+                        fontSize: fontSize.sm,
+                        color: colors.textLight,
                       }}
                     >
                       (通知対象)
@@ -243,7 +252,7 @@ export const ScheduleSelector = ({
             );
           })
         ) : (
-          <div style={{ fontSize: "0.875rem", color: "#6b7280" }}>
+          <div style={{ fontSize: fontSize.base, color: colors.textLight }}>
             時間割がありません。新規作成してください。
           </div>
         )}

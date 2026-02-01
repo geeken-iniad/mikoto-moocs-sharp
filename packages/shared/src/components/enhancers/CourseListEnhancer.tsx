@@ -140,8 +140,18 @@ export const CourseListEnhancer = () => {
     window.addEventListener("pageshow", handlePageShow);
 
     // MutationObserverで要素の追加・変更を監視
+    let scheduled = false;
+    const scheduleProcessWells = () => {
+      if (scheduled) return;
+      scheduled = true;
+      requestAnimationFrame(() => {
+        scheduled = false;
+        processWells();
+      });
+    };
+
     const observer = new MutationObserver(() => {
-      processWells();
+      scheduleProcessWells();
     });
 
     observer.observe(document.body, {

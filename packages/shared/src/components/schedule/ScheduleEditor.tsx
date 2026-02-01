@@ -1,6 +1,12 @@
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useStorageManager } from "../../storage/context";
+import {
+  borderRadius,
+  colors,
+  fontSize,
+  fontWeight,
+} from "../../styles/commonStyles";
 import type {
   Course,
   Period,
@@ -18,23 +24,25 @@ const styles: Record<string, CSSProperties> = {
     width: "100%",
   },
   header: {
-    fontSize: "1.5rem",
-    fontWeight: 700,
-    marginBottom: "1rem",
-    color: "#1f2937",
+    fontSize: fontSize["2xl"],
+    fontWeight: fontWeight.bold,
+    marginBottom: "16px",
+    color: colors.textDark,
   },
   loading: {
-    padding: "2rem",
+    padding: "32px",
     textAlign: "center" as const,
-    color: "#6b7280",
+    color: colors.textLight,
+    fontSize: fontSize.base,
   },
   noSchedule: {
-    padding: "2rem",
+    padding: "32px",
     textAlign: "center" as const,
-    color: "#6b7280",
-    backgroundColor: "#f9fafb",
-    borderRadius: "0.5rem",
-    border: "1px solid #e5e7eb",
+    color: colors.textLight,
+    backgroundColor: colors.bgLight,
+    borderRadius: borderRadius.xl,
+    border: `1px solid ${colors.borderLight}`,
+    fontSize: fontSize.base,
   },
 };
 
