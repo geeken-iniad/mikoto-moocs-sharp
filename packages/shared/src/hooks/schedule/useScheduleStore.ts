@@ -1,30 +1,30 @@
 import { useEffect, useState } from "react";
-import type {
-  ScheduleStore,
-  Course,
-  ScheduleSlot,
-  Schedule,
-  TimeSlotKey,
-  ExceptionEntry,
-} from "../../types";
 import { useStorageManager } from "../../storage/context";
 import type { StorageManager } from "../../storage/manager";
+import type {
+  Course,
+  ExceptionEntry,
+  Schedule,
+  ScheduleSlot,
+  ScheduleStore,
+  TimeSlotKey,
+} from "../../types";
 import {
   addCourse,
-  updateCourse,
-  deleteCourse,
+  addException,
   addSchedule,
-  updateSchedule,
+  addSlot,
+  createScheduleStore,
+  deleteCourse,
   deleteSchedule,
   duplicateSchedule,
-  addSlot,
   moveSlot,
-  updateSlot,
-  removeSlot,
-  addException,
-  updateException,
   removeException,
-  createScheduleStore,
+  removeSlot,
+  updateCourse,
+  updateException,
+  updateSchedule,
+  updateSlot,
   validateStore,
 } from "../../utils/schedule";
 

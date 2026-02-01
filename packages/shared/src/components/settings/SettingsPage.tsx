@@ -1,21 +1,21 @@
-import { useEffect, useState, type CSSProperties } from "react";
 import { BookOpen, Calendar, Settings as SettingsIcon } from "lucide-react";
-import type {
-  KeyboardShortcutSettings,
-  Theme,
-  CampusId,
-  NotificationSettings as NotificationSettingsType,
-} from "../../types";
-import type { StorageManager } from "../../storage/manager";
+import { type CSSProperties, useEffect, useState } from "react";
 import { StorageProvider, useStorageManager } from "../../storage/context";
-import { ThemeSettings } from "./ThemeSettings";
-import { ShortcutSettings } from "./KeyboardShortcutSettings";
+import type { StorageManager } from "../../storage/manager";
+import { colors, spacing, fontSize, fontWeight } from "../../styles/commonStyles";
+import type {
+  CampusId,
+  KeyboardShortcutSettings,
+  NotificationSettings as NotificationSettingsType,
+  Theme,
+} from "../../types";
+import { CourseList } from "../schedule/CourseList";
+import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { CampusSettings } from "./CampusSettings";
 import { InstructorSettings } from "./InstructorSettings";
+import { ShortcutSettings } from "./KeyboardShortcutSettings";
 import { NotificationSettings } from "./NotificationSettings";
-import { ScheduleEditor } from "../schedule/ScheduleEditor";
-import { CourseList } from "../schedule/CourseList";
-import { colors, spacing, fontSize, fontWeight } from "../../styles/commonStyles";
+import { ThemeSettings } from "./ThemeSettings";
 
 interface SettingsPageProps {
   storageManager: StorageManager;

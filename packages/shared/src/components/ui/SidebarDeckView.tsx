@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Z_INDEX } from "../../constants";
 import styles from "./SidebarDeckView.module.scss";

@@ -1,6 +1,6 @@
 {
   "files": {
-    "includes": ["**", "!**/.wxt/**", "!**/.output/**", "!**/dist/**"]
+    "includes": ["**", "!**/.wxt", "!**/.output", "!**/dist"]
   },
   "formatter": {
     "indentStyle": "space",

@@ -8,4 +8,4 @@ export * from "./types";
 export * from "./utils";
 
 // Explicitly re-export platform utilities for better TypeScript resolution
-export { isMacPlatform, getSubmitShortcutLabel } from "./utils/platform";
+export { getSubmitShortcutLabel, isMacPlatform } from "./utils/platform";

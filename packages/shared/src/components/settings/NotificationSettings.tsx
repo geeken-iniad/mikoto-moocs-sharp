@@ -1,5 +1,5 @@
-import { useState, type CSSProperties } from "react";
 import { Bell, Plus, Trash2 } from "lucide-react";
+import { type CSSProperties, useState } from "react";
 import type { NotificationSettings as NotificationSettingsType } from "../../types";
 import {
   section,

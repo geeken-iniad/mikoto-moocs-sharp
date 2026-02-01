@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { useTextareaObserver } from "../../hooks";
-import { ensureTextareaId } from "../../utils/textarea";
 import type { ExtendedHTMLTextAreaElement } from "../../types";
+import { ensureTextareaId } from "../../utils/textarea";
 
 const ResizeToggle: React.FC<{ textarea: HTMLTextAreaElement }> = ({
   textarea,

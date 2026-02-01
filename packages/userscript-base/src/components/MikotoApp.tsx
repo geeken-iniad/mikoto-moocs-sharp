@@ -3,8 +3,8 @@ import {
   ContentStyleEnhancer,
   CourseListEnhancer,
   DualViewManager,
-  KeyboardShortcuts,
   HoverSubmit,
+  KeyboardShortcuts,
   SidebarDeckButton,
   SidebarEnhancer,
   StorageProvider,
@@ -31,7 +31,7 @@ export const MikotoApp = ({
     <SidebarEnhancer />
     <TextareaCounter />
     <TextareaResizer />
-  <HoverSubmit />
+    <HoverSubmit />
     <SettingsManager storageManager={storageManager} />
   </StorageProvider>
 );

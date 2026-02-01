@@ -1,16 +1,16 @@
-import { useState } from "react";
 import { Plus, X } from "lucide-react";
+import { useState } from "react";
 import {
-  section,
-  sectionTitle,
-  input,
+  borderRadius,
   buttonPrimary,
-  description,
   colors,
-  spacing,
+  description,
   fontSize,
   fontWeight,
-  borderRadius,
+  input,
+  section,
+  sectionTitle,
+  spacing,
 } from "../../styles/commonStyles";
 
 interface InstructorSettingsProps {

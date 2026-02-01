@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
-import type { ScheduleStore, Schedule, Weekday, Period } from "../../types";
-import { DAYS, DAY_LABELS, PERIODS } from "../../constants";
+import { DAY_LABELS, DAYS, PERIODS } from "../../constants";
+import type { Period, Schedule, ScheduleStore, Weekday } from "../../types";
 import { createTimeSlotKey, getSlotByTimeSlot } from "../../utils/schedule";
 import { ScheduleCell } from "./ScheduleCell";
 import {

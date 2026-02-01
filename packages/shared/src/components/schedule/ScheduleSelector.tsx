@@ -1,13 +1,13 @@
-import { useState, type CSSProperties } from "react";
 import { CalendarPlus, Star } from "lucide-react";
-import type { Schedule, Semester, TermDivision } from "../../types";
+import { type CSSProperties, useState } from "react";
 import { SEMESTER_LABELS, VALID_TERM_DIVISIONS } from "../../constants";
+import type { Schedule, Semester, TermDivision } from "../../types";
 import {
+  createSchedule,
   createTermInfo,
   formatTermInfo,
-  createSchedule,
-  MIN_ACADEMIC_YEAR,
   MAX_ACADEMIC_YEAR,
+  MIN_ACADEMIC_YEAR,
 } from "../../utils/schedule";
 import {
   colors,

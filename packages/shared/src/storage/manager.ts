@@ -1,8 +1,8 @@
 import type {
-  ScheduleStore,
-  KeyboardShortcutSettings,
   CampusSettings,
+  KeyboardShortcutSettings,
   NotificationSettings,
+  ScheduleStore,
 } from "../types";
 import type { IStorageAdapter } from "./interface";
 
@@ -13,6 +13,7 @@ export const STORAGE_KEYS = {
   SCHEDULE_STORE: "mikoto-schedule-store",
   SUBJECTS: "mikoto-extracted-subjects",
   DUAL_VIEW: "mikoto-dual-view",
+  SLIDE_ENHANCER: "mikoto-slide-enhancer",
   THEME: "mikoto-theme",
   KEYBOARD_SHORTCUTS: "mikoto-keyboard-shortcuts",
   CAMPUS_SETTINGS: "mikoto-campus-settings",
@@ -115,6 +116,21 @@ export class StorageManager {
 
   watchDualView(callback: (enabled: boolean | null) => void) {
     return this.adapter.watch<boolean>(STORAGE_KEYS.DUAL_VIEW, callback);
+  }
+
+  async getSlideEnhancerEnabled(): Promise<boolean> {
+    const result = await this.adapter.getItem<boolean>(
+      STORAGE_KEYS.SLIDE_ENHANCER,
+    );
+    return result || false;
+  }
+
+  async setSlideEnhancerEnabled(enabled: boolean): Promise<void> {
+    await this.adapter.setItem(STORAGE_KEYS.SLIDE_ENHANCER, enabled);
+  }
+
+  watchSlideEnhancerEnabled(callback: (enabled: boolean | null) => void) {
+    return this.adapter.watch<boolean>(STORAGE_KEYS.SLIDE_ENHANCER, callback);
   }
 
   async getTheme(): Promise<"light" | "dark"> {

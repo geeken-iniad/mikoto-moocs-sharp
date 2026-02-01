@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import type { StorageManager } from "@mikoto-moocs-sharp/shared";
 import { SettingsPage, Z_INDEX } from "@mikoto-moocs-sharp/shared";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 interface SettingsModalProps {
   storageManager: StorageManager;

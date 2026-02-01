@@ -205,6 +205,7 @@ body {
     transition: transform $transition-base ease;
   }
 
+
   #mikoto-react-root {
     display: none;
     height: 0;
@@ -413,4 +414,5 @@ body.mikoto-dark-theme {
     background-color: $dark-bg-secondary;
     border-color: $dark-bg-quaternary;
   }
+
 }

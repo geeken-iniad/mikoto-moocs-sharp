@@ -1,9 +1,9 @@
-import { useState, type CSSProperties } from "react";
-import type { ScheduleSlot, Course, Weekday, Period } from "../../types";
+import { type CSSProperties, useState } from "react";
+import type { Course, Period, ScheduleSlot, Weekday } from "../../types";
 import {
   getCampusLabel,
-  resolveRooms,
   resolveInstructors,
+  resolveRooms,
 } from "../../utils/schedule";
 import {
   colors,

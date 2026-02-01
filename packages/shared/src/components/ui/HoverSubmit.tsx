@@ -343,13 +343,25 @@ export function initHoverSubmit(): void {
         mutations.forEach((m) => {
           m.addedNodes.forEach((n) => {
             if (!(n instanceof Element)) return;
-            pendingRemoved.delete(n);
-            pendingAdded.add(n);
+            if ((n as Element).matches?.(SUBMIT_SELECTOR))
+              watchSubmit(n as Element);
+            const nested = Array.from(
+              (n as Element).querySelectorAll
+                ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
+                : [],
+            );
+            nested.forEach(watchSubmit);
           });
           m.removedNodes.forEach((n) => {
             if (!(n instanceof Element)) return;
-            pendingAdded.delete(n);
-            pendingRemoved.add(n);
+            if ((n as Element).matches?.(SUBMIT_SELECTOR))
+              unwatchSubmit(n as Element);
+            const nested = Array.from(
+              (n as Element).querySelectorAll
+                ? (n as Element).querySelectorAll(SUBMIT_SELECTOR)
+                : [],
+            );
+            nested.forEach(unwatchSubmit);
           });
         });
         scheduleInnerFlush();

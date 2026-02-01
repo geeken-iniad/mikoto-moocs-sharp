@@ -1,10 +1,10 @@
-import { GM_notification } from "$";
 import type { StorageManager } from "@mikoto-moocs-sharp/shared";
 import {
+  createNotificationMessage,
   getNextClass,
   shouldNotify,
-  createNotificationMessage,
 } from "@mikoto-moocs-sharp/shared/utils/notification";
+import { GM_notification } from "$";
 
 /**
  * Userscript向け通知マネージャー

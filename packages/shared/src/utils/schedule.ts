@@ -1,27 +1,27 @@
+import {
+  CAMPUS_LABELS,
+  SEMESTER_LABELS,
+  VALID_TERM_DIVISIONS,
+} from "../constants";
 import type {
-  Course,
-  ScheduleSlot,
-  Schedule,
-  ScheduleStore,
-  Weekday,
-  Period,
-  TimeSlotKey,
-  TermInfo,
-  Semester,
-  Quarter,
-  TermDivision,
   CampusId,
+  Course,
   DeliveryMode,
-  Room,
   ExceptionEntry,
   ExceptionType,
+  Period,
+  Quarter,
+  Room,
+  Schedule,
+  ScheduleSlot,
+  ScheduleStore,
+  Semester,
+  TermDivision,
+  TermInfo,
+  TimeSlotKey,
   ValidationError,
+  Weekday,
 } from "../types";
-import {
-  VALID_TERM_DIVISIONS,
-  SEMESTER_LABELS,
-  CAMPUS_LABELS,
-} from "../constants";
 
 export const MIN_ACADEMIC_YEAR = 2000;
 export const MAX_ACADEMIC_YEAR = 2100;
@@ -239,7 +239,7 @@ export function deleteCourse(
     }
 
     // Remove slots and their grid entries
-    let newSchedule = { ...schedule };
+    const newSchedule = { ...schedule };
     for (const slotId of slotsToRemove) {
       // Remove from grid
       const newGrid = { ...newSchedule.grid };

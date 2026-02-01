@@ -1,11 +1,11 @@
-import { useState, useEffect, useMemo, type CSSProperties } from "react";
-import { Plus, Pencil, Trash2 } from "lucide-react";
-import type { Course } from "../../types";
+import { Pencil, Plus, Trash2 } from "lucide-react";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
-import { useStorageManager } from "../../storage/context";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
-import { isCourseUsed } from "../../utils/schedule";
+import { useStorageManager } from "../../storage/context";
+import type { Course } from "../../types";
 import { getCurrentAndNextClass } from "../../utils/currentClass";
+import { isCourseUsed } from "../../utils/schedule";
 import { CourseFormModal } from "./CourseFormModal";
 import {
   section,

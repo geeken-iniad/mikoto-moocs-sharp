@@ -1,12 +1,12 @@
-import type { CampusId } from "../../types";
 import { CAMPUS_LABELS } from "../../constants";
 import {
+  description,
+  label,
   section,
   sectionTitle,
-  label,
   select,
-  description,
 } from "../../styles/commonStyles";
+import type { CampusId } from "../../types";
 
 interface CampusSettingsProps {
   defaultCampus?: CampusId;

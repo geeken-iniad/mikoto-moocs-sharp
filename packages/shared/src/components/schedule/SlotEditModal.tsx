@@ -1,25 +1,25 @@
-import { useState, type CSSProperties } from "react";
-import { Plus, Trash2, XCircle, Check } from "lucide-react";
-import type {
-  Course,
-  ScheduleSlot,
-  Room,
-  RoomType,
-  DeliveryMode,
-  CampusId,
-} from "../../types";
+import { Check, Plus, Trash2, XCircle } from "lucide-react";
+import { type CSSProperties, useState } from "react";
 import {
   CAMPUS_LABELS,
   DELIVERY_MODE_LABELS,
   ROOM_TYPE_LABELS,
 } from "../../constants";
 import {
+  borderRadius,
   colors,
-  spacing,
   fontSize,
   fontWeight,
-  borderRadius,
+  spacing,
 } from "../../styles/commonStyles";
+import type {
+  CampusId,
+  Course,
+  DeliveryMode,
+  Room,
+  RoomType,
+  ScheduleSlot,
+} from "../../types";
 
 interface SlotEditModalProps {
   courses: Course[];
