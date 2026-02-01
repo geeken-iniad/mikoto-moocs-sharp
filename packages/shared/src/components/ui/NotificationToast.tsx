@@ -1,5 +1,5 @@
-import { useEffect, useState, type CSSProperties } from "react";
 import { Bell, X } from "lucide-react";
+import { type CSSProperties, useEffect, useState } from "react";
 
 export interface NotificationToastProps {
   title: string;

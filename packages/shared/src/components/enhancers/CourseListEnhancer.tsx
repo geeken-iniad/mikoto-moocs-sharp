@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-
-import { useStorageManager } from "../../storage/context";
-import { createSubjectExtractor } from "../../utils/subjectExtractor";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
+import { useStorageManager } from "../../storage/context";
 import { getClassStatusByUrl } from "../../utils/currentClass";
+import { createSubjectExtractor } from "../../utils/subjectExtractor";
 
 interface ExtendedHTMLElement extends HTMLElement {
   __mikotoCleanup?: boolean;

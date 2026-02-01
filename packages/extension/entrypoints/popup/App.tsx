@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 import {
-  type Theme,
-  type KeyboardShortcutSettings,
   getSubmitShortcutLabel,
+  type KeyboardShortcutSettings,
+  type Theme,
 } from "@mikoto-moocs-sharp/shared";
 import { storageManager } from "../utils/storage";
 

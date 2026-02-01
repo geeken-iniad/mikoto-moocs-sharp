@@ -1,17 +1,17 @@
-import { useState, useEffect, useMemo, type CSSProperties } from "react";
-import type {
-  Course,
-  ScheduleSlot,
-  Schedule,
-  Weekday,
-  Period,
-} from "../../types";
+import { type CSSProperties, useEffect, useMemo, useState } from "react";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useStorageManager } from "../../storage/context";
-import { ScheduleSelector } from "./ScheduleSelector";
-import { ScheduleGrid } from "./ScheduleGrid";
-import { SlotEditModal } from "./SlotEditModal";
+import type {
+  Course,
+  Period,
+  Schedule,
+  ScheduleSlot,
+  Weekday,
+} from "../../types";
 import { createTimeSlotKey } from "../../utils/schedule";
+import { ScheduleGrid } from "./ScheduleGrid";
+import { ScheduleSelector } from "./ScheduleSelector";
+import { SlotEditModal } from "./SlotEditModal";
 
 const styles: Record<string, CSSProperties> = {
   container: {

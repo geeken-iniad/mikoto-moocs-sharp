@@ -1,13 +1,13 @@
+import { PERIODS } from "../constants";
 import type {
-  ScheduleStore,
+  Course,
+  Period,
   Schedule,
   ScheduleSlot,
-  Course,
+  ScheduleStore,
   TimeSlotKey,
   Weekday,
-  Period,
 } from "../types";
-import { PERIODS } from "../constants";
 import { parseTimeSlotKey } from "./schedule";
 
 /**

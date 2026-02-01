@@ -1,9 +1,9 @@
-import { useState, useEffect, type CSSProperties } from "react";
-import { Plus, Trash2, X, XCircle, Check } from "lucide-react";
-import type { Course, Room, CampusId, RoomType } from "../../types";
+import { Check, Plus, Trash2, X, XCircle } from "lucide-react";
+import { type CSSProperties, useEffect, useState } from "react";
 import { CAMPUS_LABELS, ROOM_TYPE_LABELS } from "../../constants";
-import { generateUUID } from "../../utils/schedule";
 import { useStorageManager } from "../../storage/context";
+import type { CampusId, Course, Room, RoomType } from "../../types";
+import { generateUUID } from "../../utils/schedule";
 
 interface CourseFormModalProps {
   existingCourse?: Course;

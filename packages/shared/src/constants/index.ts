@@ -1,9 +1,9 @@
 import type {
-  Weekday,
-  Period,
   CampusId,
+  Period,
   Semester,
   TermDivision,
+  Weekday,
 } from "../types";
 
 // App Config

@@ -1,7 +1,7 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
-import { SidebarDeckView } from "./SidebarDeckView";
 import { useElementObserver } from "../../hooks";
+import { SidebarDeckView } from "./SidebarDeckView";
 
 export const SidebarDeckButton: React.FC = () => {
   const [isDeckOpen, setIsDeckOpen] = useState(false);

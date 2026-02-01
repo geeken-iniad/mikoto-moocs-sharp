@@ -1,8 +1,8 @@
 import type {
-  ScheduleStore,
-  KeyboardShortcutSettings,
   CampusSettings,
+  KeyboardShortcutSettings,
   NotificationSettings,
+  ScheduleStore,
 } from "../types";
 import type { IStorageAdapter } from "./interface";
 

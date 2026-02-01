@@ -4,8 +4,8 @@ import ReactDOM from "react-dom/client";
 import { GM_registerMenuCommand } from "$";
 import { MikotoApp } from "./components/MikotoApp";
 import { openSettingsModal } from "./settings/modalController";
-import { createStorageManager } from "./utils/storage";
 import { NotificationManager } from "./utils/notificationManager";
+import { createStorageManager } from "./utils/storage";
 
 /**
  * Initialize Mikoto MOOCs# application

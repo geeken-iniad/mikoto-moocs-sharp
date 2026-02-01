@@ -1,9 +1,9 @@
-import { storageManager } from "./utils/storage";
 import {
+  createNotificationMessage,
   getNextClass,
   shouldNotify,
-  createNotificationMessage,
 } from "@mikoto-moocs-sharp/shared/utils/notification";
+import { storageManager } from "./utils/storage";
 
 export default defineBackground(() => {
   const sentNotifications = new Set<string>();

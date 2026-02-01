@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { useSlideElementObserver } from "../../hooks";
 import { useStorageManager } from "../../storage/context";
-import { SlideTextEditor } from "../ui";
 import { createCopyButton, generateElementId } from "../../utils/slide";
+import { SlideTextEditor } from "../ui";
 
 const isGoogleSlides = () =>
   typeof window !== "undefined" &&

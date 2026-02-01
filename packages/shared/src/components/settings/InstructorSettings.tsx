@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { Plus, X } from "lucide-react";
+import { useState } from "react";
 
 interface InstructorSettingsProps {
   instructors: string[];
