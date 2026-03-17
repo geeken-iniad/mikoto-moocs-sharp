@@ -3,6 +3,7 @@ import {
   ContentStyleEnhancer,
   CourseListEnhancer,
   DualViewManager,
+  ErrorBoundary,
   HoverSubmit,
   KeyboardShortcuts,
   SidebarDeckButton,
@@ -23,15 +24,17 @@ export const MikotoApp = ({
   storageManager: StorageManager;
 }) => (
   <StorageProvider storageManager={storageManager}>
-    <ContentStyleEnhancer />
-    <CourseListEnhancer />
-    <DualViewManager />
-    <KeyboardShortcuts />
-    <SidebarDeckButton />
-    <SidebarEnhancer />
-    <TextareaCounter />
-    <TextareaResizer />
-    <HoverSubmit />
-    <SettingsManager storageManager={storageManager} />
+    <ErrorBoundary>
+      <ContentStyleEnhancer />
+      <CourseListEnhancer />
+      <DualViewManager />
+      <KeyboardShortcuts />
+      <SidebarDeckButton />
+      <SidebarEnhancer />
+      <TextareaCounter />
+      <TextareaResizer />
+      <HoverSubmit />
+      <SettingsManager storageManager={storageManager} />
+    </ErrorBoundary>
   </StorageProvider>
 );
