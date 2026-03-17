@@ -1,0 +1,15 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: biome check
+      glob: "*.{js,ts,jsx,tsx,json,css,scss}"
+      run: pnpm biome check --no-errors-on-unmatched {staged_files}
+
+    - name: vitest changed
+      glob: "*.{ts,tsx}"
+      run: pnpm vitest run --changed
+
+pre-push:
+  jobs:
+    - name: type check
+      run: pnpm -r compile
