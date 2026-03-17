@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { subscribeMutation } from "../../hooks/dom/observerBus";
 import { useStorageManager } from "../../storage/context";
 import { DualViewToggle } from "../ui/DualViewToggle";
 
@@ -80,13 +81,15 @@ export const DualViewManager = () => {
 
     attachToggle();
 
-    const observer = new MutationObserver(() => {
-      if (containerRef?.isConnected) {
-        return;
-      }
-      attachToggle();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    const unsubscribeMutation = subscribeMutation(
+      document.body,
+      { childList: true, subtree: true },
+      () => {
+        if (!containerRef?.isConnected) {
+          attachToggle();
+        }
+      },
+    );
 
     // 設定変更の監視
     const unwatch = storageManager.watchDualView((enabled) => {
@@ -99,7 +102,7 @@ export const DualViewManager = () => {
 
     return () => {
       unwatch();
-      observer.disconnect();
+      unsubscribeMutation();
       cleanupContainer?.();
       containerRef = null;
       setToggleContainer(null);

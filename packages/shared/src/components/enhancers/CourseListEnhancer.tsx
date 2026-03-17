@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { subscribeMutation } from "../../hooks/dom/observerBus";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
 import { useStorageManager } from "../../storage/context";
@@ -139,29 +140,16 @@ export const CourseListEnhancer = () => {
 
     window.addEventListener("pageshow", handlePageShow);
 
-    // MutationObserverで要素の追加・変更を監視
-    let scheduled = false;
-    const scheduleProcessWells = () => {
-      if (scheduled) return;
-      scheduled = true;
-      requestAnimationFrame(() => {
-        scheduled = false;
-        processWells();
-      });
-    };
-
-    const observer = new MutationObserver(() => {
-      scheduleProcessWells();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true,
-    });
+    // Subscribe to shared observer bus (RAF-batched internally)
+    const unsubscribe = subscribeMutation(
+      document.body,
+      { childList: true, subtree: true },
+      processWells,
+    );
 
     return () => {
       window.removeEventListener("pageshow", handlePageShow);
-      observer.disconnect();
+      unsubscribe();
     };
   }, [storageManager, store, activeScheduleId, currentTime]);
 

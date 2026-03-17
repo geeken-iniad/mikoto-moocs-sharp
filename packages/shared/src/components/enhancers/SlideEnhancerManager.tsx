@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { subscribeMutation } from "../../hooks/dom/observerBus";
 import { SlideEnhancerToggle } from "../ui/SlideEnhancerToggle";
 
 const SLIDE_TOGGLE_CONTAINER_CLASS = "mikoto-slide-enhancer-toggle-container";
@@ -60,16 +61,18 @@ export const SlideEnhancerManager = () => {
 
     attachToggle();
 
-    const observer = new MutationObserver(() => {
-      if (containerRef?.isConnected) {
-        return;
-      }
-      attachToggle();
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
+    const unsubscribe = subscribeMutation(
+      document.body,
+      { childList: true, subtree: true },
+      () => {
+        if (!containerRef?.isConnected) {
+          attachToggle();
+        }
+      },
+    );
 
     return () => {
-      observer.disconnect();
+      unsubscribe();
       cleanupContainer?.();
       containerRef = null;
       setToggleContainer(null);

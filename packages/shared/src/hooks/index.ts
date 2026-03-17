@@ -1,3 +1,4 @@
+export * from "./dom/observerBus";
 export * from "./dom/useElementObserver";
 export * from "./dom/useSlideElementObserver";
 export * from "./dom/useTextareaObserver";
