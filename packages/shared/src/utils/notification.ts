@@ -178,3 +178,60 @@ export function createNotificationMessage(
     body: `${nextClass.course.name}(${instructorNames})\n${periodInfo.label}(${periodInfo.start}〜${periodInfo.end})`,
   };
 }
+
+/**
+ * 通知チェックに必要なストレージ読み取りインターフェース
+ */
+export interface NotificationStorageReader {
+  getNotificationSettings(): Promise<{ enabled: boolean; timings: number[] }>;
+  getScheduleStore(): Promise<ScheduleStore>;
+  getActiveScheduleId(): Promise<string | null>;
+}
+
+/**
+ * プラットフォーム固有の通知送信関数
+ */
+export type NotificationSender = (title: string, body: string) => void;
+
+/**
+ * 共通の通知チェック＆送信ロジック
+ * userscript と extension の両方で同一ロジックを使用する。
+ */
+export async function checkAndNotify(
+  storage: NotificationStorageReader,
+  sentNotifications: Set<string>,
+  sendNotification: NotificationSender,
+): Promise<void> {
+  const notificationSettings = await storage.getNotificationSettings();
+  if (!notificationSettings.enabled) {
+    return;
+  }
+
+  const store = await storage.getScheduleStore();
+
+  let activeScheduleId = await storage.getActiveScheduleId();
+  if (!activeScheduleId) {
+    const scheduleIds = Object.keys(store.schedules);
+    if (scheduleIds.length === 0) {
+      return;
+    }
+    activeScheduleId = scheduleIds[0];
+  }
+
+  const nextClass = getNextClass(store, activeScheduleId);
+  if (!nextClass) {
+    return;
+  }
+
+  const timing = shouldNotify(
+    nextClass,
+    notificationSettings.timings,
+    new Date(),
+    sentNotifications,
+  );
+
+  if (timing !== null) {
+    const { title, body } = createNotificationMessage(nextClass, timing);
+    sendNotification(title, body);
+  }
+}

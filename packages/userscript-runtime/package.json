@@ -1,5 +1,5 @@
 {
-  "name": "@mikoto-moocs-sharp/userscript-base",
+  "name": "@mikoto-moocs-sharp/userscript-runtime",
   "private": true,
   "version": "0.0.0",
   "type": "module",

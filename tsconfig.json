@@ -3,7 +3,7 @@
   "files": [],
   "references": [
     { "path": "./packages/shared" },
-    { "path": "./packages/userscript-base" },
+    { "path": "./packages/userscript-runtime" },
     { "path": "./packages/extension" },
     { "path": "./packages/userscript-pro" },
     { "path": "./packages/userscript-lite" }

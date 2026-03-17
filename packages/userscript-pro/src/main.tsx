@@ -1,4 +1,4 @@
-import { initializeMikoto } from "@mikoto-moocs-sharp/userscript-base/main";
+import { initializeMikoto } from "@mikoto-moocs-sharp/userscript-runtime/main";
 
 // Initialize Mikoto
 initializeMikoto();

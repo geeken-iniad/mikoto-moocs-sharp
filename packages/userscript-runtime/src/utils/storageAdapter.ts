@@ -40,7 +40,12 @@ export class GMStorageAdapter implements IStorageAdapter {
   ): StorageUnwatchFunction {
     const listenerId = GM_addValueChangeListener(
       key,
-      (_name: string, _oldValue: any, newValue: any, _remote?: boolean) => {
+      (
+        _name: string,
+        _oldValue: unknown,
+        newValue: unknown,
+        _remote?: boolean,
+      ) => {
         let parsed: T | null;
         if (newValue === null || newValue === undefined) {
           parsed = null;

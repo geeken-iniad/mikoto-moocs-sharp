@@ -83,39 +83,14 @@ importers:
         specifier: ^5.9.2
         version: 5.9.3
 
-  packages/userscript-base:
-    dependencies:
-      '@mikoto-moocs-sharp/shared':
-        specifier: workspace:*
-        version: link:../shared
-      react:
-        specifier: ^19.1.1
-        version: 19.2.0
-      react-dom:
-        specifier: ^19.1.1
-        version: 19.2.0(react@19.2.0)
-    devDependencies:
-      '@types/react':
-        specifier: ^19.1.11
-        version: 19.2.2
-      '@types/react-dom':
-        specifier: ^19.1.7
-        version: 19.2.1(@types/react@19.2.2)
-      typescript:
-        specifier: ^5.9.2
-        version: 5.9.3
-      vite-plugin-monkey:
-        specifier: ^7.1.5
-        version: 7.1.5(postcss@8.5.6)(vite@7.2.6(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.93.3))
-
   packages/userscript-lite:
     dependencies:
       '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
         version: link:../shared
-      '@mikoto-moocs-sharp/userscript-base':
+      '@mikoto-moocs-sharp/userscript-runtime':
         specifier: workspace:*
-        version: link:../userscript-base
+        version: link:../userscript-runtime
       react:
         specifier: ^19.2.1
         version: 19.2.1
@@ -147,9 +122,9 @@ importers:
       '@mikoto-moocs-sharp/shared':
         specifier: workspace:*
         version: link:../shared
-      '@mikoto-moocs-sharp/userscript-base':
+      '@mikoto-moocs-sharp/userscript-runtime':
         specifier: workspace:*
-        version: link:../userscript-base
+        version: link:../userscript-runtime
       react:
         specifier: ^19.2.1
         version: 19.2.1
@@ -172,6 +147,31 @@ importers:
       vite:
         specifier: ^7.2.6
         version: 7.2.6(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.93.3)
+      vite-plugin-monkey:
+        specifier: ^7.1.5
+        version: 7.1.5(postcss@8.5.6)(vite@7.2.6(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.93.3))
+
+  packages/userscript-runtime:
+    dependencies:
+      '@mikoto-moocs-sharp/shared':
+        specifier: workspace:*
+        version: link:../shared
+      react:
+        specifier: ^19.1.1
+        version: 19.2.1
+      react-dom:
+        specifier: ^19.1.1
+        version: 19.2.0(react@19.2.1)
+    devDependencies:
+      '@types/react':
+        specifier: ^19.1.11
+        version: 19.2.7
+      '@types/react-dom':
+        specifier: ^19.1.7
+        version: 19.2.1(@types/react@19.2.7)
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
       vite-plugin-monkey:
         specifier: ^7.1.5
         version: 7.1.5(postcss@8.5.6)(vite@7.2.6(@types/node@24.7.2)(jiti@2.6.1)(sass-embedded@1.93.3)(sass@1.93.3))

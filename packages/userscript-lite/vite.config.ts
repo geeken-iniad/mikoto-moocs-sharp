@@ -1,6 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 import monkey from "vite-plugin-monkey";
 
@@ -40,17 +40,17 @@ export default defineConfig({
         "../shared/src/styles",
       ),
       "@mikoto-moocs-sharp/shared": path.resolve(__dirname, "../shared/src"),
-      "@mikoto-moocs-sharp/userscript-base/main": path.resolve(
+      "@mikoto-moocs-sharp/userscript-runtime/main": path.resolve(
         __dirname,
-        "../userscript-base/src/main.tsx",
+        "../userscript-runtime/src/main.tsx",
       ),
-      "@mikoto-moocs-sharp/userscript-base/mainLite": path.resolve(
+      "@mikoto-moocs-sharp/userscript-runtime/mainLite": path.resolve(
         __dirname,
-        "../userscript-base/src/mainLite.tsx",
+        "../userscript-runtime/src/mainLite.tsx",
       ),
-      "@mikoto-moocs-sharp/userscript-base": path.resolve(
+      "@mikoto-moocs-sharp/userscript-runtime": path.resolve(
         __dirname,
-        "../userscript-base/src",
+        "../userscript-runtime/src",
       ),
     },
   },

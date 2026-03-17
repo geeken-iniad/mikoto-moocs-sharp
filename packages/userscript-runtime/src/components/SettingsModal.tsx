@@ -50,7 +50,11 @@ export const SettingsModal = ({
 
   return createPortal(
     <div
+      role="none"
       onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") onClose();
+      }}
       style={{
         position: "fixed",
         top: 0,
@@ -67,8 +71,12 @@ export const SettingsModal = ({
       }}
     >
       <div
+        role="none"
         onClick={(event) => {
           event.stopPropagation();
+        }}
+        onKeyDown={(e) => {
+          e.stopPropagation();
         }}
         style={{
           width: "min(960px, calc(100vw - 40px))",
@@ -105,6 +113,7 @@ export const SettingsModal = ({
               Mikoto MOOCs# 設定
             </h1>
             <button
+              type="button"
               onClick={onClose}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}

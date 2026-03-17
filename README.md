@@ -61,7 +61,7 @@ pnpm install
 ```
 packages/
 ├── shared/            # 共通コンポーネント・ロジック
-├── userscript-base/   # Userscriptの基盤
+├── userscript-runtime/ # Userscriptランタイム（GM固有ブートストラップ・通知）
 ├── extension/         # ブラウザ拡張機能版 (WXT)
 ├── userscript-lite/   # Userscript Lite版 (vite-plugin-monkey)
 └── userscript-pro/    # Userscript Pro版  (vite-plugin-monkey)

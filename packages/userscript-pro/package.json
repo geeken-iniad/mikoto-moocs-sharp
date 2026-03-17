@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@mikoto-moocs-sharp/shared": "workspace:*",
-    "@mikoto-moocs-sharp/userscript-base": "workspace:*",
+    "@mikoto-moocs-sharp/userscript-runtime": "workspace:*",
     "react": "^19.2.1",
     "react-dom": "^19.1.1"
   },
