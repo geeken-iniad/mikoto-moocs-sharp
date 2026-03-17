@@ -39,6 +39,9 @@ jobs:
         run: pnpm compile
         continue-on-error: true
 
+      - name: Run tests
+        run: pnpm test
+
       - name: Build all packages
         run: pnpm build:all
 
