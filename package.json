@@ -24,10 +24,13 @@
     "build:userscript-pro": "pnpm --filter @mikoto-moocs-sharp/userscript-pro build",
     "build:userscript-lite": "pnpm --filter @mikoto-moocs-sharp/userscript-lite build",
     "build:all": "pnpm -r build",
-    "compile": "pnpm -r compile"
+    "compile": "pnpm -r compile",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.5",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vitest": "^4.0.18"
   }
 }
