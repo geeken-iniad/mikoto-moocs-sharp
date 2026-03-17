@@ -21,7 +21,8 @@
   "dependencies": {
     "lucide-react": "^0.556.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.1.1",
+    "valibot": "^1.2.0"
   },
   "devDependencies": {
     "@types/react": "^19.1.12",
