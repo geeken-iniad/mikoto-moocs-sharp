@@ -1,10 +1,13 @@
-import type {
-  CampusSettings,
-  KeyboardShortcutSettings,
-  NotificationSettings,
-  ScheduleStore,
-  Theme,
-} from "../types";
+import type { ScheduleStore } from "../types";
+
+export {
+  createDefaultCampusSettings,
+  createDefaultDualView,
+  createDefaultKeyboardShortcuts,
+  createDefaultNotificationSettings,
+  createDefaultSlideEnhancerEnabled,
+  createDefaultTheme,
+} from "../settings/defaults";
 
 export function createDefaultScheduleStore(): ScheduleStore {
   return {
@@ -17,34 +20,6 @@ export function createDefaultScheduleStore(): ScheduleStore {
 
 export function createDefaultExtractedSubjects(): string[] {
   return [];
-}
-
-export function createDefaultDualView(): boolean {
-  return false;
-}
-
-export function createDefaultSlideEnhancerEnabled(): boolean {
-  return false;
-}
-
-export function createDefaultTheme(): Theme {
-  return "light";
-}
-
-export function createDefaultKeyboardShortcuts(): KeyboardShortcutSettings {
-  return {
-    submitShortcut: false,
-    numberKeyShortcut: false,
-    arrowKeyShortcut: false,
-  };
-}
-
-export function createDefaultCampusSettings(): CampusSettings {
-  return {};
-}
-
-export function createDefaultNotificationSettings(): NotificationSettings {
-  return { enabled: false, timings: [-10] };
 }
 
 export function mergeUniqueSortedStrings(

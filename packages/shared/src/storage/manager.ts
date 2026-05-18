@@ -1,19 +1,21 @@
+import {
+  createDefaultCampusSettings,
+  createDefaultDualView,
+  createDefaultKeyboardShortcuts,
+  createDefaultNotificationSettings,
+  createDefaultSlideEnhancerEnabled,
+  createDefaultTheme,
+} from "../settings/defaults";
 import type {
   CampusSettings,
   KeyboardShortcutSettings,
   NotificationSettings,
-  ScheduleStore,
   Theme,
-} from "../types";
+} from "../settings/types";
+import type { ScheduleStore } from "../types";
 import {
-  createDefaultCampusSettings,
-  createDefaultDualView,
   createDefaultExtractedSubjects,
-  createDefaultKeyboardShortcuts,
-  createDefaultNotificationSettings,
   createDefaultScheduleStore,
-  createDefaultSlideEnhancerEnabled,
-  createDefaultTheme,
   mergeUniqueSortedStrings,
 } from "./defaults";
 import type { IStorageAdapter } from "./interface";
