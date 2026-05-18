@@ -1,13 +1,13 @@
 import { Moon, Sun } from "lucide-react";
-import type { Theme } from "../../types";
+import type { Theme } from "../../settings/types";
 import {
-  section,
-  sectionTitle,
+  borderRadius,
   colors,
-  spacing,
   fontSize,
   fontWeight,
-  borderRadius,
+  section,
+  sectionTitle,
+  spacing,
 } from "../../styles/commonStyles";
 
 interface ThemeSettingsProps {

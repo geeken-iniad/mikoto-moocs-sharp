@@ -1,4 +1,6 @@
+import { useId } from "react";
 import { CAMPUS_LABELS } from "../../constants";
+import type { CampusSettings as CampusSettingsConfig } from "../../settings/types";
 import {
   description,
   label,
@@ -6,30 +8,33 @@ import {
   sectionTitle,
   select,
 } from "../../styles/commonStyles";
-import type { CampusId } from "../../types";
+
+type DefaultCampus = CampusSettingsConfig["defaultCampus"];
 
 interface CampusSettingsProps {
-  defaultCampus?: CampusId;
-  onCampusChange: (campus: CampusId | undefined) => void;
+  defaultCampus?: DefaultCampus;
+  onCampusChange: (campus: DefaultCampus) => void;
 }
 
 export const CampusSettings = ({
   defaultCampus,
   onCampusChange,
 }: CampusSettingsProps) => {
+  const defaultCampusId = useId();
+
   return (
     <div style={section}>
       <h2 style={sectionTitle}>キャンパス設定</h2>
       <div>
-        <label htmlFor="default-campus" style={label}>
+        <label htmlFor={defaultCampusId} style={label}>
           デフォルトキャンパス
         </label>
         <select
-          id="default-campus"
+          id={defaultCampusId}
           value={defaultCampus || ""}
           onChange={(e) =>
             onCampusChange(
-              e.target.value ? (e.target.value as CampusId) : undefined,
+              e.target.value ? (e.target.value as DefaultCampus) : undefined,
             )
           }
           style={select}

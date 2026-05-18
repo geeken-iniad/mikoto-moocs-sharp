@@ -1,14 +1,25 @@
 import { BookOpen, Calendar, Settings as SettingsIcon } from "lucide-react";
 import { type CSSProperties, useEffect, useState } from "react";
-import { StorageProvider, useStorageManager } from "../../storage/context";
-import type { StorageManager } from "../../storage/manager";
-import { colors, spacing, fontSize, fontWeight } from "../../styles/commonStyles";
+import {
+  createDefaultCampusSettings,
+  createDefaultKeyboardShortcuts,
+  createDefaultNotificationSettings,
+  createDefaultTheme,
+} from "../../settings/defaults";
 import type {
-  CampusId,
+  CampusSettings as CampusSettingsConfig,
   KeyboardShortcutSettings,
   NotificationSettings as NotificationSettingsType,
   Theme,
-} from "../../types";
+} from "../../settings/types";
+import { StorageProvider, useStorageManager } from "../../storage/context";
+import type { StorageManager } from "../../storage/manager";
+import {
+  colors,
+  fontSize,
+  fontWeight,
+  spacing,
+} from "../../styles/commonStyles";
 import { CourseList } from "../schedule/CourseList";
 import { ScheduleEditor } from "../schedule/ScheduleEditor";
 import { CampusSettings } from "./CampusSettings";
@@ -22,6 +33,7 @@ interface SettingsPageProps {
 }
 
 type Tab = "general" | "courses" | "schedule";
+type DefaultCampus = CampusSettingsConfig["defaultCampus"];
 
 const styles: Record<string, CSSProperties> = {
   container: {
@@ -62,21 +74,16 @@ const styles: Record<string, CSSProperties> = {
 const SettingsPageContent = () => {
   const storageManager = useStorageManager();
   const [activeTab, setActiveTab] = useState<Tab>("general");
-  const [theme, setTheme] = useState<Theme>("light");
-  const [shortcuts, setShortcuts] = useState<KeyboardShortcutSettings>({
-    submitShortcut: false,
-    numberKeyShortcut: false,
-    arrowKeyShortcut: false,
-  });
-  const [defaultCampus, setDefaultCampus] = useState<CampusId | undefined>(
-    undefined,
+  const [theme, setTheme] = useState<Theme>(createDefaultTheme);
+  const [shortcuts, setShortcuts] = useState<KeyboardShortcutSettings>(
+    createDefaultKeyboardShortcuts,
+  );
+  const [defaultCampus, setDefaultCampus] = useState<DefaultCampus>(
+    createDefaultCampusSettings().defaultCampus,
   );
   const [instructors, setInstructors] = useState<string[]>([]);
   const [notificationSettings, setNotificationSettings] =
-    useState<NotificationSettingsType>({
-      enabled: false,
-      timings: [-10],
-    });
+    useState<NotificationSettingsType>(createDefaultNotificationSettings);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -110,7 +117,7 @@ const SettingsPageContent = () => {
     await storageManager.setKeyboardShortcuts(newShortcuts);
   };
 
-  const handleCampusChange = async (newCampus: CampusId | undefined) => {
+  const handleCampusChange = async (newCampus: DefaultCampus) => {
     setDefaultCampus(newCampus);
     await storageManager.setCampusSettings({ defaultCampus: newCampus });
   };

@@ -1,12 +1,12 @@
-import type { KeyboardShortcutSettings } from "../../types";
-import { getSubmitShortcutLabel } from "../../utils/platform";
+import type { KeyboardShortcutSettings } from "../../settings/types";
 import {
+  checkbox,
+  checkboxLabel,
   section,
   sectionTitle,
-  checkboxLabel,
-  checkbox,
   spacing,
 } from "../../styles/commonStyles";
+import { getSubmitShortcutLabel } from "../../utils/platform";
 
 interface ShortcutSettingsProps {
   shortcuts: KeyboardShortcutSettings;
@@ -22,7 +22,9 @@ export const ShortcutSettings = ({
   return (
     <div style={section}>
       <h2 style={sectionTitle}>キーボードショートカット</h2>
-      <div style={{ display: "flex", flexDirection: "column", gap: spacing.md }}>
+      <div
+        style={{ display: "flex", flexDirection: "column", gap: spacing.md }}
+      >
         <label style={checkboxLabel}>
           <input
             type="checkbox"

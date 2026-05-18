@@ -1,15 +1,15 @@
 import { Bell, Plus, Trash2 } from "lucide-react";
 import { type CSSProperties, useState } from "react";
-import type { NotificationSettings as NotificationSettingsType } from "../../types";
+import type { NotificationSettings as NotificationSettingsType } from "../../settings/types";
 import {
-  section,
-  description,
+  borderRadius,
   buttonPrimary,
   colors,
-  spacing,
+  description,
   fontSize,
   fontWeight,
-  borderRadius,
+  section,
+  spacing,
 } from "../../styles/commonStyles";
 
 interface NotificationSettingsProps {
@@ -232,7 +232,9 @@ export const NotificationSettings = ({
               placeholder="分"
               aria-label="通知タイミング(分)"
             />
-            <span style={{ fontSize: fontSize.base, color: colors.textLight }}>分前</span>
+            <span style={{ fontSize: fontSize.base, color: colors.textLight }}>
+              分前
+            </span>
             <button
               type="button"
               style={buttonPrimary}
