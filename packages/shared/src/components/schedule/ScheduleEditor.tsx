@@ -1,6 +1,6 @@
 import { type CSSProperties, useEffect, useMemo, useState } from "react";
+import { useActiveScheduleId } from "../../hooks";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
-import { useStorageManager } from "../../storage/context";
 import {
   borderRadius,
   colors,
@@ -50,12 +50,10 @@ export const ScheduleEditor = () => {
   const { store, isLoading, createSchedule, addSlot, updateSlot, removeSlot } =
     useScheduleStore();
 
-  const storageManager = useStorageManager();
-
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
     null,
   );
-  const [activeScheduleId, setActiveScheduleId] = useState<string | null>(null);
+  const { activeScheduleId, setActiveScheduleId } = useActiveScheduleId();
   const [editingCell, setEditingCell] = useState<{
     weekday: Weekday;
     period: Period;
@@ -66,23 +64,6 @@ export const ScheduleEditor = () => {
     () => Object.values(store.schedules),
     [store.schedules],
   );
-
-  // Load active schedule ID on mount
-  useEffect(() => {
-    const loadActiveSchedule = async () => {
-      const activeId = await storageManager.getActiveScheduleId();
-      setActiveScheduleId(activeId);
-    };
-    loadActiveSchedule();
-  }, [storageManager]);
-
-  // Watch for changes to active schedule ID
-  useEffect(() => {
-    const unwatch = storageManager.watchActiveScheduleId((newActiveId) => {
-      setActiveScheduleId(newActiveId);
-    });
-    return unwatch;
-  }, [storageManager]);
 
   // Use useEffect to avoid infinite loop
   useEffect(() => {
@@ -102,7 +83,7 @@ export const ScheduleEditor = () => {
   };
 
   const handleSetActive = async (scheduleId: string) => {
-    await storageManager.setActiveScheduleId(scheduleId);
+    await setActiveScheduleId(scheduleId);
     // setActiveScheduleId will be called automatically by the watch callback
   };
 

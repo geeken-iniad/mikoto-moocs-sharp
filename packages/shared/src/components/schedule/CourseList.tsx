@@ -1,22 +1,22 @@
 import { Pencil, Plus, Trash2 } from "lucide-react";
-import { type CSSProperties, useEffect, useMemo, useState } from "react";
+import { type CSSProperties, useMemo, useState } from "react";
+import { useActiveScheduleId } from "../../hooks";
 import { useScheduleStore } from "../../hooks/schedule/useScheduleStore";
 import { useCurrentTime } from "../../hooks/useCurrentTime";
-import { useStorageManager } from "../../storage/context";
+import {
+  borderRadius,
+  buttonPrimary,
+  colors,
+  fontSize,
+  fontWeight,
+  section,
+  sectionTitle,
+  spacing,
+} from "../../styles/commonStyles";
 import type { Course } from "../../types";
 import { getCurrentAndNextClass } from "../../utils/currentClass";
 import { isCourseUsed } from "../../utils/schedule";
 import { CourseFormModal } from "./CourseFormModal";
-import {
-  section,
-  sectionTitle,
-  buttonPrimary,
-  colors,
-  spacing,
-  fontSize,
-  fontWeight,
-  borderRadius,
-} from "../../styles/commonStyles";
 
 const styles: Record<string, CSSProperties> = {
   headerRow: {
@@ -137,31 +137,12 @@ const styles: Record<string, CSSProperties> = {
 export const CourseList = () => {
   const { store, createCourse, updateCourse, deleteCourse } =
     useScheduleStore();
-  const storageManager = useStorageManager();
+  const { activeScheduleId } = useActiveScheduleId();
   const currentTime = useCurrentTime();
   const [searchQuery, setSearchQuery] = useState("");
   const [editingCourse, setEditingCourse] = useState<Course | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
-  const [activeScheduleId, setActiveScheduleId] = useState<string | null>(null);
-
-  // Load active schedule ID on mount
-  useEffect(() => {
-    const loadActiveSchedule = async () => {
-      const activeId = await storageManager.getActiveScheduleId();
-      setActiveScheduleId(activeId);
-    };
-    loadActiveSchedule();
-  }, [storageManager]);
-
-  // Watch for changes to active schedule ID
-  useEffect(() => {
-    const unwatch = storageManager.watchActiveScheduleId((newActiveId) => {
-      setActiveScheduleId(newActiveId);
-    });
-    return unwatch;
-  }, [storageManager]);
-
   const courses = Object.values(store.courses);
 
   // Filter courses based on search query
@@ -170,7 +151,7 @@ export const CourseList = () => {
     return (
       course.name.toLowerCase().includes(query) ||
       course.instructors.some((i) => i.toLowerCase().includes(query)) ||
-      (course.code && course.code.toLowerCase().includes(query))
+      course.code?.toLowerCase().includes(query)
     );
   });
 
@@ -258,6 +239,7 @@ export const CourseList = () => {
 
             return (
               <div key={course.id} style={styles.courseCardWrapper}>
+                {/* biome-ignore lint/a11y/noStaticElementInteractions: Hover handlers only apply visual highlight state. */}
                 <div
                   style={{
                     ...styles.courseCard,
