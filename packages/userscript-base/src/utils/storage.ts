@@ -1,4 +1,4 @@
-import { StorageManager } from "@mikoto-moocs-sharp/shared";
+import { StorageManager } from "@mikoto-moocs-sharp/shared/storage";
 import { GMStorageAdapter } from "./storageAdapter";
 
 /**

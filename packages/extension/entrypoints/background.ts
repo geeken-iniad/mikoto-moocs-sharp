@@ -2,7 +2,7 @@ import {
   createNotificationMessage,
   getNextClass,
   shouldNotify,
-} from "@mikoto-moocs-sharp/shared/utils/notification";
+} from "@mikoto-moocs-sharp/shared/notification";
 import { storageManager } from "./utils/storage";
 
 export default defineBackground(() => {

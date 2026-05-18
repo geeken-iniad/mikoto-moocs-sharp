@@ -1,6 +1,6 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import react from "@vitejs/plugin-react-swc";
-import path from "path";
-import { fileURLToPath } from "url";
 import { defineConfig } from "vite";
 import monkey from "vite-plugin-monkey";
 
@@ -39,7 +39,6 @@ export default defineConfig({
         __dirname,
         "../shared/src/styles",
       ),
-      "@mikoto-moocs-sharp/shared": path.resolve(__dirname, "../shared/src"),
       "@mikoto-moocs-sharp/userscript-base/main": path.resolve(
         __dirname,
         "../userscript-base/src/main.tsx",

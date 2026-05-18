@@ -1,5 +1,5 @@
-import type { StorageManager } from "@mikoto-moocs-sharp/shared";
-import { SettingsPage, Z_INDEX } from "@mikoto-moocs-sharp/shared";
+import { SettingsPage, Z_INDEX } from "@mikoto-moocs-sharp/shared/settings";
+import type { StorageManager } from "@mikoto-moocs-sharp/shared/storage";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -49,8 +49,16 @@ export const SettingsModal = ({
   }
 
   return createPortal(
+    // biome-ignore lint/a11y/useSemanticElements: The overlay contains the dialog and cannot be a button element.
     <div
       onClick={onClose}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          onClose();
+        }
+      }}
+      role="button"
+      tabIndex={0}
       style={{
         position: "fixed",
         top: 0,
@@ -66,10 +74,15 @@ export const SettingsModal = ({
         padding: "40px 0",
       }}
     >
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: This wrapper only prevents overlay click propagation. */}
       <div
         onClick={(event) => {
           event.stopPropagation();
         }}
+        onKeyDown={(event) => {
+          event.stopPropagation();
+        }}
+        role="presentation"
         style={{
           width: "min(960px, calc(100vw - 40px))",
           maxHeight: "calc(100vh - 80px)",
@@ -105,6 +118,7 @@ export const SettingsModal = ({
               Mikoto MOOCs# 設定
             </h1>
             <button
+              type="button"
               onClick={onClose}
               onMouseEnter={() => setIsHovered(true)}
               onMouseLeave={() => setIsHovered(false)}

@@ -11,7 +11,7 @@ const TARGET_URL_PATTERNS = [
   "https://docs.google.com/presentation/*",
 ];
 
-export type { Theme } from "@mikoto-moocs-sharp/shared";
+export type { Theme } from "@mikoto-moocs-sharp/shared/types";
 
 /**
  * Reactアプリケーション用のコンテナ要素を作成

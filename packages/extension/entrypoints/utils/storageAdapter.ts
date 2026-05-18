@@ -2,7 +2,7 @@ import type {
   IStorageAdapter,
   StorageUnwatchFunction,
   StorageWatchCallback,
-} from "@mikoto-moocs-sharp/shared";
+} from "@mikoto-moocs-sharp/shared/storage";
 
 /**
  * WXT Storage APIアダプター

@@ -1,4 +1,4 @@
-import type { StorageManager } from "@mikoto-moocs-sharp/shared";
+import type { StorageManager } from "@mikoto-moocs-sharp/shared/storage";
 import { useCallback, useEffect, useState } from "react";
 import { registerSettingsModalHandler } from "../settings/modalController";
 import { SettingsModal } from "./SettingsModal";

@@ -1,4 +1,5 @@
-import type { StorageManager } from "@mikoto-moocs-sharp/shared";
+import type { StorageManager } from "@mikoto-moocs-sharp/shared/storage";
+import { StorageProvider } from "@mikoto-moocs-sharp/shared/storage";
 import {
   ContentStyleEnhancer,
   CourseListEnhancer,
@@ -7,10 +8,9 @@ import {
   KeyboardShortcuts,
   SidebarDeckButton,
   SidebarEnhancer,
-  StorageProvider,
   TextareaCounter,
   TextareaResizer,
-} from "@mikoto-moocs-sharp/shared";
+} from "@mikoto-moocs-sharp/shared/ui";
 import { SettingsManager } from "./SettingsManager";
 
 /**

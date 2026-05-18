@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import "./App.css";
-import {
-  getSubmitShortcutLabel,
-  type KeyboardShortcutSettings,
-  type Theme,
-} from "@mikoto-moocs-sharp/shared";
+import type {
+  KeyboardShortcutSettings,
+  Theme,
+} from "@mikoto-moocs-sharp/shared/types";
+import { getSubmitShortcutLabel } from "@mikoto-moocs-sharp/shared/ui";
 import { storageManager } from "../utils/storage";
 
 function App() {
@@ -16,6 +16,11 @@ function App() {
     arrowKeyShortcut: false,
   });
   const submitShortcutLabel = getSubmitShortcutLabel();
+  const dualViewToggleId = useId();
+  const themeToggleId = useId();
+  const submitShortcutToggleId = useId();
+  const numberShortcutToggleId = useId();
+  const arrowShortcutToggleId = useId();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -52,49 +57,49 @@ function App() {
       <h1>Mikoto (MOOCs#)</h1>
       <div className="settings">
         <div className="setting-item">
-          <label htmlFor="dual-view-toggle">スライド横並び表示</label>
+          <label htmlFor={dualViewToggleId}>スライド横並び表示</label>
           <input
-            id="dual-view-toggle"
+            id={dualViewToggleId}
             type="checkbox"
             checked={dualViewEnabled}
             onChange={handleDualViewToggle}
           />
         </div>
         <div className="setting-item">
-          <label htmlFor="theme-toggle">ダークテーマ</label>
+          <label htmlFor={themeToggleId}>ダークテーマ</label>
           <input
-            id="theme-toggle"
+            id={themeToggleId}
             type="checkbox"
             checked={theme === "dark"}
             onChange={handleThemeToggle}
           />
         </div>
         <div className="setting-item">
-          <label htmlFor="submit-shortcut-toggle">{submitShortcutLabel}</label>
+          <label htmlFor={submitShortcutToggleId}>{submitShortcutLabel}</label>
           <input
-            id="submit-shortcut-toggle"
+            id={submitShortcutToggleId}
             type="checkbox"
             checked={shortcuts.submitShortcut}
             onChange={() => handleShortcutToggle("submitShortcut")}
           />
         </div>
         <div className="setting-item">
-          <label htmlFor="number-shortcut-toggle">
+          <label htmlFor={numberShortcutToggleId}>
             数字キー (1-9) でページネーション
           </label>
           <input
-            id="number-shortcut-toggle"
+            id={numberShortcutToggleId}
             type="checkbox"
             checked={shortcuts.numberKeyShortcut}
             onChange={() => handleShortcutToggle("numberKeyShortcut")}
           />
         </div>
         <div className="setting-item">
-          <label htmlFor="arrow-shortcut-toggle">
+          <label htmlFor={arrowShortcutToggleId}>
             Shift+左右矢印 でページ移動
           </label>
           <input
-            id="arrow-shortcut-toggle"
+            id={arrowShortcutToggleId}
             type="checkbox"
             checked={shortcuts.arrowKeyShortcut}
             onChange={() => handleShortcutToggle("arrowKeyShortcut")}

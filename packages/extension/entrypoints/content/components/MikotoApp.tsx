@@ -1,3 +1,4 @@
+import { StorageProvider } from "@mikoto-moocs-sharp/shared/storage";
 import {
   ContentStyleEnhancer,
   CourseListEnhancer,
@@ -8,10 +9,9 @@ import {
   SidebarEnhancer,
   SlideEnhancer,
   SlideEnhancerManager,
-  StorageProvider,
   TextareaCounter,
   TextareaResizer,
-} from "@mikoto-moocs-sharp/shared";
+} from "@mikoto-moocs-sharp/shared/ui";
 import { storageManager } from "../../utils/storage";
 
 export const MikotoApp = () => (

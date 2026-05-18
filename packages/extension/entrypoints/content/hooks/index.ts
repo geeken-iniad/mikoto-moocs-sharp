@@ -1,4 +1,4 @@
 export {
   useElementObserver,
   useTextareaObserver,
-} from "@mikoto-moocs-sharp/shared";
+} from "@mikoto-moocs-sharp/shared/ui";

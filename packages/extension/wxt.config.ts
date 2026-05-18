@@ -1,5 +1,5 @@
-import path from "path";
-import { fileURLToPath } from "url";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { defineConfig } from "wxt";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -18,7 +18,6 @@ export default defineConfig({
           __dirname,
           "../shared/src/styles",
         ),
-        "@mikoto-moocs-sharp/shared": path.resolve(__dirname, "../shared/src"),
       },
     },
   }),

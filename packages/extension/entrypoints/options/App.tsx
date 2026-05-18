@@ -1,4 +1,4 @@
-import { SettingsPage } from "@mikoto-moocs-sharp/shared";
+import { SettingsPage } from "@mikoto-moocs-sharp/shared/settings";
 import { storageManager } from "../utils/storage";
 
 function App() {

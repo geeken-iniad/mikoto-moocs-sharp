@@ -19,7 +19,19 @@
     "baseUrl": ".",
     "paths": {
       "@mikoto-moocs-sharp/shared": ["../shared/src/index.ts"],
-      "@mikoto-moocs-sharp/shared/*": ["../shared/src/*"]
+      "@mikoto-moocs-sharp/shared/notification": [
+        "../shared/src/notification/index.ts"
+      ],
+      "@mikoto-moocs-sharp/shared/schedule": [
+        "../shared/src/schedule/index.ts"
+      ],
+      "@mikoto-moocs-sharp/shared/settings": [
+        "../shared/src/settings/index.ts"
+      ],
+      "@mikoto-moocs-sharp/shared/storage": ["../shared/src/storage/index.ts"],
+      "@mikoto-moocs-sharp/shared/styles/*": ["../shared/src/styles/*"],
+      "@mikoto-moocs-sharp/shared/types": ["../shared/src/types/index.ts"],
+      "@mikoto-moocs-sharp/shared/ui": ["../shared/src/ui/index.ts"]
     },
 
     /* Linting */
