@@ -3,23 +3,23 @@ import type {
   KeyboardShortcutSettings,
   NotificationSettings,
   ScheduleStore,
+  Theme,
 } from "../types";
+import {
+  createDefaultCampusSettings,
+  createDefaultDualView,
+  createDefaultExtractedSubjects,
+  createDefaultKeyboardShortcuts,
+  createDefaultNotificationSettings,
+  createDefaultScheduleStore,
+  createDefaultSlideEnhancerEnabled,
+  createDefaultTheme,
+  mergeUniqueSortedStrings,
+} from "./defaults";
 import type { IStorageAdapter } from "./interface";
+import { STORAGE_KEYS } from "./keys";
 
-/**
- * ストレージキー定数
- */
-export const STORAGE_KEYS = {
-  SCHEDULE_STORE: "mikoto-schedule-store",
-  SUBJECTS: "mikoto-extracted-subjects",
-  DUAL_VIEW: "mikoto-dual-view",
-  SLIDE_ENHANCER: "mikoto-slide-enhancer",
-  THEME: "mikoto-theme",
-  KEYBOARD_SHORTCUTS: "mikoto-keyboard-shortcuts",
-  CAMPUS_SETTINGS: "mikoto-campus-settings",
-  NOTIFICATION_SETTINGS: "mikoto-notification-settings",
-  ACTIVE_SCHEDULE_ID: "mikoto-active-schedule-id",
-} as const;
+export { STORAGE_KEYS } from "./keys";
 
 /**
  * ストレージ管理クラス
@@ -36,14 +36,7 @@ export class StorageManager {
     const result = await this.adapter.getItem<ScheduleStore>(
       STORAGE_KEYS.SCHEDULE_STORE,
     );
-    return (
-      result || {
-        schemaVersion: 1,
-        courses: {},
-        schedules: {},
-        instructors: [],
-      }
-    );
+    return result || createDefaultScheduleStore();
   }
 
   async saveScheduleStore(store: ScheduleStore): Promise<void> {
@@ -63,9 +56,10 @@ export class StorageManager {
 
   async addInstructors(newInstructors: string[]): Promise<void> {
     const existingInstructors = await this.getInstructors();
-    const mergedInstructors = [
-      ...new Set([...existingInstructors, ...newInstructors]),
-    ].sort();
+    const mergedInstructors = mergeUniqueSortedStrings(
+      existingInstructors,
+      newInstructors,
+    );
     await this.saveInstructors(mergedInstructors);
   }
 
@@ -82,7 +76,7 @@ export class StorageManager {
 
   async getExtractedSubjects(): Promise<string[]> {
     const result = await this.adapter.getItem<string[]>(STORAGE_KEYS.SUBJECTS);
-    return result || [];
+    return result || createDefaultExtractedSubjects();
   }
 
   async saveExtractedSubjects(subjects: string[]): Promise<void> {
@@ -91,9 +85,10 @@ export class StorageManager {
 
   async addExtractedSubjects(newSubjects: string[]): Promise<void> {
     const existingSubjects = await this.getExtractedSubjects();
-    const mergedSubjects = [
-      ...new Set([...existingSubjects, ...newSubjects]),
-    ].sort();
+    const mergedSubjects = mergeUniqueSortedStrings(
+      existingSubjects,
+      newSubjects,
+    );
     await this.saveExtractedSubjects(mergedSubjects);
   }
 
@@ -107,7 +102,7 @@ export class StorageManager {
 
   async getDualView(): Promise<boolean> {
     const result = await this.adapter.getItem<boolean>(STORAGE_KEYS.DUAL_VIEW);
-    return result || false;
+    return result || createDefaultDualView();
   }
 
   async setDualView(enabled: boolean): Promise<void> {
@@ -122,7 +117,7 @@ export class StorageManager {
     const result = await this.adapter.getItem<boolean>(
       STORAGE_KEYS.SLIDE_ENHANCER,
     );
-    return result || false;
+    return result || createDefaultSlideEnhancerEnabled();
   }
 
   async setSlideEnhancerEnabled(enabled: boolean): Promise<void> {
@@ -133,32 +128,24 @@ export class StorageManager {
     return this.adapter.watch<boolean>(STORAGE_KEYS.SLIDE_ENHANCER, callback);
   }
 
-  async getTheme(): Promise<"light" | "dark"> {
-    const result = await this.adapter.getItem<"light" | "dark">(
-      STORAGE_KEYS.THEME,
-    );
-    return result || "light";
+  async getTheme(): Promise<Theme> {
+    const result = await this.adapter.getItem<Theme>(STORAGE_KEYS.THEME);
+    return result || createDefaultTheme();
   }
 
-  async setTheme(theme: "light" | "dark"): Promise<void> {
+  async setTheme(theme: Theme): Promise<void> {
     await this.adapter.setItem(STORAGE_KEYS.THEME, theme);
   }
 
-  watchTheme(callback: (theme: "light" | "dark" | null) => void) {
-    return this.adapter.watch<"light" | "dark">(STORAGE_KEYS.THEME, callback);
+  watchTheme(callback: (theme: Theme | null) => void) {
+    return this.adapter.watch<Theme>(STORAGE_KEYS.THEME, callback);
   }
 
   async getKeyboardShortcuts(): Promise<KeyboardShortcutSettings> {
     const result = await this.adapter.getItem<KeyboardShortcutSettings>(
       STORAGE_KEYS.KEYBOARD_SHORTCUTS,
     );
-    return (
-      result || {
-        submitShortcut: false,
-        numberKeyShortcut: false,
-        arrowKeyShortcut: false,
-      }
-    );
+    return result || createDefaultKeyboardShortcuts();
   }
 
   async setKeyboardShortcuts(
@@ -180,7 +167,7 @@ export class StorageManager {
     const result = await this.adapter.getItem<CampusSettings>(
       STORAGE_KEYS.CAMPUS_SETTINGS,
     );
-    return result || {};
+    return result || createDefaultCampusSettings();
   }
 
   async setCampusSettings(settings: CampusSettings): Promise<void> {
@@ -198,7 +185,7 @@ export class StorageManager {
     const result = await this.adapter.getItem<NotificationSettings>(
       STORAGE_KEYS.NOTIFICATION_SETTINGS,
     );
-    return result || { enabled: false, timings: [-10] };
+    return result || createDefaultNotificationSettings();
   }
 
   async setNotificationSettings(settings: NotificationSettings): Promise<void> {
