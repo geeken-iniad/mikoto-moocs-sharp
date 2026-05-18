@@ -31,6 +31,7 @@
     "dev:userscript-pro": "pnpm --filter @mikoto-moocs-sharp/userscript-pro dev",
     "dev:userscript-lite": "pnpm --filter @mikoto-moocs-sharp/userscript-lite dev",
     "dev:extension:firefox": "pnpm --filter @mikoto-moocs-sharp/extension dev:firefox",
+    "check:boundaries": "depcruise --config .dependency-cruiser.cjs --output-type err packages",
     "build:extension": "pnpm --filter @mikoto-moocs-sharp/extension build",
     "build:userscript-pro": "pnpm --filter @mikoto-moocs-sharp/userscript-pro build",
     "build:userscript-lite": "pnpm --filter @mikoto-moocs-sharp/userscript-lite build",
@@ -39,6 +40,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.5",
+    "dependency-cruiser": "^17.4.0",
     "typescript": "^5.9.2"
   }
 }
