@@ -2,7 +2,7 @@ import {
   CAMPUS_LABELS,
   SEMESTER_LABELS,
   VALID_TERM_DIVISIONS,
-} from "../constants";
+} from "../schedule/constants";
 import type {
   CampusId,
   Course,
@@ -21,7 +21,7 @@ import type {
   TimeSlotKey,
   ValidationError,
   Weekday,
-} from "../types";
+} from "../schedule/types";
 
 export const MIN_ACADEMIC_YEAR = 2000;
 export const MAX_ACADEMIC_YEAR = 2100;
