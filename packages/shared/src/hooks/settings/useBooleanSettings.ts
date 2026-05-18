@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import {
   createDefaultDualView,
+  createDefaultKeyboardShortcuts,
   createDefaultSlideEnhancerEnabled,
 } from "../../settings/defaults";
+import type { KeyboardShortcutSettings } from "../../settings/types";
 import { useStorageManager } from "../../storage/context";
 
 export function useDualViewSetting() {
@@ -71,4 +73,34 @@ export function useSlideEnhancerSetting() {
   };
 
   return { enabled, toggle };
+}
+
+export function useKeyboardShortcutSettings() {
+  const storageManager = useStorageManager();
+  const [settings, setSettings] = useState<KeyboardShortcutSettings>(
+    createDefaultKeyboardShortcuts,
+  );
+
+  useEffect(() => {
+    let isActive = true;
+
+    const loadSettings = async () => {
+      const shortcuts = await storageManager.getKeyboardShortcuts();
+      if (!isActive) return;
+      setSettings(shortcuts);
+    };
+
+    loadSettings();
+
+    const unwatch = storageManager.watchKeyboardShortcuts((newSettings) => {
+      setSettings(newSettings ?? createDefaultKeyboardShortcuts());
+    });
+
+    return () => {
+      isActive = false;
+      unwatch();
+    };
+  }, [storageManager]);
+
+  return settings;
 }

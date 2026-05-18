@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { useStorageManager } from "../../storage/context";
-import type { KeyboardShortcutSettings } from "../../types";
+import { useEffect } from "react";
+import { useKeyboardShortcutSettings } from "../../hooks";
 
 interface KeyEventData {
   key: string;
@@ -134,30 +133,7 @@ const handleArrowKeyPress = (e: KeyEventData): void => {
  * - Shift + ←/→: 前のページ/次のページ
  */
 export const KeyboardShortcuts = () => {
-  const storageManager = useStorageManager();
-  const [settings, setSettings] = useState<KeyboardShortcutSettings>({
-    submitShortcut: false,
-    numberKeyShortcut: false,
-    arrowKeyShortcut: false,
-  });
-
-  useEffect(() => {
-    // 設定を読み込む
-    const loadSettings = async () => {
-      const shortcuts = await storageManager.getKeyboardShortcuts();
-      setSettings(shortcuts);
-    };
-    loadSettings();
-
-    // 設定の変更を監視
-    const unwatch = storageManager.watchKeyboardShortcuts((newSettings) => {
-      if (newSettings) {
-        setSettings(newSettings);
-      }
-    });
-
-    return unwatch;
-  }, [storageManager]);
+  const settings = useKeyboardShortcutSettings();
 
   useEffect(() => {
     const keydownHandler = (e: KeyboardEvent): void => {
