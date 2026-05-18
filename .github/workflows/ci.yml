@@ -37,7 +37,6 @@ jobs:
 
       - name: Type check
         run: pnpm compile
-        continue-on-error: true
 
       - name: Build all packages
         run: pnpm build:all

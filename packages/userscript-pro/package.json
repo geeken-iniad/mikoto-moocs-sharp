@@ -10,6 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "compile": "tsc --noEmit",
     "preview": "vite preview"
   },
   "dependencies": {
