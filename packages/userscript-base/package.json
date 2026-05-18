@@ -11,10 +11,12 @@
   "types": "./src/index.ts",
   "exports": {
     ".": "./src/index.ts",
-    "./main": "./src/main.tsx"
+    "./main": "./src/main.tsx",
+    "./mainLite": "./src/mainLite.tsx"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "compile": "pnpm --filter @mikoto-moocs-sharp/shared build && tsc --noEmit"
   },
   "dependencies": {
     "@mikoto-moocs-sharp/shared": "workspace:*",

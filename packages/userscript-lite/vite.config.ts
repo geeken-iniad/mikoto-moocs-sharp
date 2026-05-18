@@ -27,7 +27,6 @@ export default defineConfig({
           "GM_addValueChangeListener",
           "GM_removeValueChangeListener",
           "GM_registerMenuCommand",
-          "GM_notification",
         ],
       },
     }),
@@ -42,10 +41,6 @@ export default defineConfig({
       "@mikoto-moocs-sharp/userscript-base/main": path.resolve(
         __dirname,
         "../userscript-base/src/main.tsx",
-      ),
-      "@mikoto-moocs-sharp/userscript-base/mainLite": path.resolve(
-        __dirname,
-        "../userscript-base/src/mainLite.tsx",
       ),
       "@mikoto-moocs-sharp/userscript-base": path.resolve(
         __dirname,
