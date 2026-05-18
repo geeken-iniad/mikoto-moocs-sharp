@@ -1,38 +1,16 @@
-import { useEffect, useState } from "react";
+interface DualViewToggleProps {
+  enabled: boolean;
+  onToggle: () => void;
+}
 
-import { useStorageManager } from "../../storage/context";
-
-export const DualViewToggle = () => {
-  const storageManager = useStorageManager();
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    const loadState = async () => {
-      const state = await storageManager.getDualView();
-      setEnabled(state);
-    };
-
-    loadState();
-
-    const unwatch = storageManager.watchDualView((newState) => {
-      setEnabled(newState ?? false);
-    });
-
-    return () => {
-      unwatch();
-    };
-  }, [storageManager]);
-
-  const handleToggle = async () => {
-    const newEnabled = !enabled;
-    await storageManager.setDualView(newEnabled);
-    setEnabled(newEnabled);
-  };
-
+export const DualViewToggle = ({ enabled, onToggle }: DualViewToggleProps) => {
   return (
     <button
+      type="button"
+      aria-pressed={enabled}
+      aria-label="Dual view"
       className={`btn ${enabled ? "btn-warning" : "btn-default"} mikoto-dual-view-toggle`}
-      onClick={handleToggle}
+      onClick={onToggle}
       style={{ marginLeft: "10px" }}
     >
       <i className={enabled ? "fa fa-columns" : "fa fa-file-text-o"} /> Dual

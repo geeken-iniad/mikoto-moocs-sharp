@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import { useSlideEnhancerSetting } from "../../hooks";
 import { SlideEnhancerToggle } from "../ui/SlideEnhancerToggle";
 
 const SLIDE_TOGGLE_CONTAINER_CLASS = "mikoto-slide-enhancer-toggle-container";
@@ -32,6 +33,7 @@ const ensureSlideToggleContainer = (): HTMLSpanElement | null => {
  * Slide Enhancer トグルボタンを配置するコンポーネント
  */
 export const SlideEnhancerManager = () => {
+  const { enabled, toggle } = useSlideEnhancerSetting();
   const [toggleContainer, setToggleContainer] =
     useState<HTMLSpanElement | null>(null);
 
@@ -77,7 +79,10 @@ export const SlideEnhancerManager = () => {
   }, []);
 
   if (toggleContainer) {
-    return createPortal(<SlideEnhancerToggle />, toggleContainer);
+    return createPortal(
+      <SlideEnhancerToggle enabled={enabled} onToggle={toggle} />,
+      toggleContainer,
+    );
   }
 
   return null;

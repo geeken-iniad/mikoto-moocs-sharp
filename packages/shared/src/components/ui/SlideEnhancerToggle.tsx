@@ -1,38 +1,19 @@
-import { useEffect, useState } from "react";
+interface SlideEnhancerToggleProps {
+  enabled: boolean;
+  onToggle: () => void;
+}
 
-import { useStorageManager } from "../../storage/context";
-
-export const SlideEnhancerToggle = () => {
-  const storageManager = useStorageManager();
-  const [enabled, setEnabled] = useState(false);
-
-  useEffect(() => {
-    const loadState = async () => {
-      const state = await storageManager.getSlideEnhancerEnabled();
-      setEnabled(state);
-    };
-
-    loadState();
-
-    const unwatch = storageManager.watchSlideEnhancerEnabled((newState) => {
-      setEnabled(newState ?? false);
-    });
-
-    return () => {
-      unwatch();
-    };
-  }, [storageManager]);
-
-  const handleToggle = async () => {
-    const newEnabled = !enabled;
-    await storageManager.setSlideEnhancerEnabled(newEnabled);
-    setEnabled(newEnabled);
-  };
-
+export const SlideEnhancerToggle = ({
+  enabled,
+  onToggle,
+}: SlideEnhancerToggleProps) => {
   return (
     <button
+      type="button"
+      aria-pressed={enabled}
+      aria-label="Slide copy enhancer"
       className={`btn ${enabled ? "btn-warning" : "btn-default"} mikoto-slide-enhancer-toggle`}
-      onClick={handleToggle}
+      onClick={onToggle}
       style={{ marginLeft: "10px" }}
     >
       <i className={enabled ? "fa fa-copy" : "fa fa-file-text-o"} /> Slide Copy
