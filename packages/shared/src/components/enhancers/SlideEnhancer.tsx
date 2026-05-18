@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { useSlideElementObserver } from "../../hooks";
-import { useStorageManager } from "../../storage/context";
+import { useSlideElementObserver, useSlideEnhancerSetting } from "../../hooks";
 import { createCopyButton, generateElementId } from "../../utils/slide";
 import { SlideTextEditor } from "../ui";
 
@@ -28,9 +27,8 @@ const copyTextWithExecCommand = (text: string) => {
 };
 
 export const SlideEnhancer = () => {
-  const storageManager = useStorageManager();
+  const { enabled: featureEnabled } = useSlideEnhancerSetting();
   const [copiedText, setCopiedText] = useState<string | null>(null);
-  const [featureEnabled, setFeatureEnabled] = useState(false);
   const buttonMapRef = useRef<Map<Element, HTMLButtonElement>>(new Map());
 
   const enabled = useMemo(
@@ -86,23 +84,6 @@ export const SlideEnhancer = () => {
   );
 
   useSlideElementObserver(slideObserverHandlers);
-
-  useEffect(() => {
-    const loadState = async () => {
-      const state = await storageManager.getSlideEnhancerEnabled();
-      setFeatureEnabled(state);
-    };
-
-    loadState();
-
-    const unwatch = storageManager.watchSlideEnhancerEnabled((newState) => {
-      setFeatureEnabled(newState ?? false);
-    });
-
-    return () => {
-      unwatch();
-    };
-  }, [storageManager]);
 
   useEffect(() => {
     if (enabled) return;
