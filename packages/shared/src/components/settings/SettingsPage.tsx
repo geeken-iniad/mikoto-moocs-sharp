@@ -1,19 +1,11 @@
 import { BookOpen, Calendar, Settings as SettingsIcon } from "lucide-react";
-import { type CSSProperties, useEffect, useState } from "react";
-import {
-  createDefaultCampusSettings,
-  createDefaultKeyboardShortcuts,
-  createDefaultNotificationSettings,
-  createDefaultTheme,
-} from "../../settings/defaults";
+import { type CSSProperties, useState } from "react";
 import type {
   CampusSettings as CampusSettingsConfig,
   KeyboardShortcutSettings,
   NotificationSettings as NotificationSettingsType,
   Theme,
 } from "../../settings/types";
-import { StorageProvider, useStorageManager } from "../../storage/context";
-import type { StorageManager } from "../../storage/manager";
 import {
   colors,
   fontSize,
@@ -27,11 +19,6 @@ import { InstructorSettings } from "./InstructorSettings";
 import { ShortcutSettings } from "./KeyboardShortcutSettings";
 import { NotificationSettings } from "./NotificationSettings";
 import { ThemeSettings } from "./ThemeSettings";
-
-interface SettingsPageProps {
-  storageManager: StorageManager;
-  submitShortcutLabel: string;
-}
 
 type Tab = "general" | "courses" | "schedule";
 type DefaultCampus = CampusSettingsConfig["defaultCampus"];
@@ -72,69 +59,34 @@ const styles: Record<string, CSSProperties> = {
   },
 };
 
-interface SettingsPageContentProps {
+interface SettingsPageViewProps {
+  theme: Theme;
+  shortcuts: KeyboardShortcutSettings;
+  defaultCampus: DefaultCampus;
+  instructors: string[];
+  notificationSettings: NotificationSettingsType;
   submitShortcutLabel: string;
+  onThemeChange: (theme: Theme) => void;
+  onShortcutToggle: (key: keyof KeyboardShortcutSettings) => void;
+  onCampusChange: (campus: DefaultCampus) => void;
+  onInstructorSave: (instructors: string[]) => void;
+  onNotificationSettingsChange: (settings: NotificationSettingsType) => void;
 }
 
-const SettingsPageContent = ({
+export const SettingsPageView = ({
+  theme,
+  shortcuts,
+  defaultCampus,
+  instructors,
+  notificationSettings,
   submitShortcutLabel,
-}: SettingsPageContentProps) => {
-  const storageManager = useStorageManager();
+  onThemeChange,
+  onShortcutToggle,
+  onCampusChange,
+  onInstructorSave,
+  onNotificationSettingsChange,
+}: SettingsPageViewProps) => {
   const [activeTab, setActiveTab] = useState<Tab>("general");
-  const [theme, setTheme] = useState<Theme>(createDefaultTheme);
-  const [shortcuts, setShortcuts] = useState<KeyboardShortcutSettings>(
-    createDefaultKeyboardShortcuts,
-  );
-  const [defaultCampus, setDefaultCampus] = useState<DefaultCampus>(
-    createDefaultCampusSettings().defaultCampus,
-  );
-  const [instructors, setInstructors] = useState<string[]>([]);
-  const [notificationSettings, setNotificationSettings] =
-    useState<NotificationSettingsType>(createDefaultNotificationSettings);
-
-  useEffect(() => {
-    const loadSettings = async () => {
-      const savedTheme = await storageManager.getTheme();
-      const keyboardShortcuts = await storageManager.getKeyboardShortcuts();
-      const campusSettings = await storageManager.getCampusSettings();
-      const instructorList = await storageManager.getInstructors();
-      const notifications = await storageManager.getNotificationSettings();
-      setTheme(savedTheme);
-      setShortcuts(keyboardShortcuts);
-      setDefaultCampus(campusSettings.defaultCampus);
-      setInstructors(instructorList);
-      setNotificationSettings(notifications);
-    };
-    loadSettings();
-  }, [storageManager]);
-
-  const handleThemeChange = async (newTheme: Theme) => {
-    setTheme(newTheme);
-    await storageManager.setTheme(newTheme);
-  };
-
-  const handleInstructorSave = async (updatedInstructors: string[]) => {
-    setInstructors(updatedInstructors);
-    await storageManager.saveInstructors(updatedInstructors);
-  };
-
-  const handleShortcutToggle = async (key: keyof KeyboardShortcutSettings) => {
-    const newShortcuts = { ...shortcuts, [key]: !shortcuts[key] };
-    setShortcuts(newShortcuts);
-    await storageManager.setKeyboardShortcuts(newShortcuts);
-  };
-
-  const handleCampusChange = async (newCampus: DefaultCampus) => {
-    setDefaultCampus(newCampus);
-    await storageManager.setCampusSettings({ defaultCampus: newCampus });
-  };
-
-  const handleNotificationSettingsChange = async (
-    newSettings: NotificationSettingsType,
-  ) => {
-    setNotificationSettings(newSettings);
-    await storageManager.setNotificationSettings(newSettings);
-  };
 
   return (
     <div style={styles.container}>
@@ -177,19 +129,19 @@ const SettingsPageContent = ({
       <div style={styles.tabContent}>
         {activeTab === "general" && (
           <>
-            <ThemeSettings theme={theme} onThemeChange={handleThemeChange} />
+            <ThemeSettings theme={theme} onThemeChange={onThemeChange} />
             <CampusSettings
               defaultCampus={defaultCampus}
-              onCampusChange={handleCampusChange}
+              onCampusChange={onCampusChange}
             />
             <NotificationSettings
               settings={notificationSettings}
-              onSettingsChange={handleNotificationSettingsChange}
+              onSettingsChange={onNotificationSettingsChange}
             />
             <ShortcutSettings
               shortcuts={shortcuts}
               submitShortcutLabel={submitShortcutLabel}
-              onShortcutToggle={handleShortcutToggle}
+              onShortcutToggle={onShortcutToggle}
             />
           </>
         )}
@@ -198,7 +150,7 @@ const SettingsPageContent = ({
           <>
             <InstructorSettings
               instructors={instructors}
-              onSave={handleInstructorSave}
+              onSave={onInstructorSave}
             />
             <CourseList />
           </>
@@ -207,16 +159,5 @@ const SettingsPageContent = ({
         {activeTab === "schedule" && <ScheduleEditor />}
       </div>
     </div>
-  );
-};
-
-export const SettingsPage = ({
-  storageManager,
-  submitShortcutLabel,
-}: SettingsPageProps) => {
-  return (
-    <StorageProvider storageManager={storageManager}>
-      <SettingsPageContent submitShortcutLabel={submitShortcutLabel} />
-    </StorageProvider>
   );
 };
