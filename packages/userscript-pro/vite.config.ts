@@ -35,10 +35,6 @@ export default defineConfig({
   resolve: {
     alias: {
       $: "vite-plugin-monkey/dist/client",
-      "@mikoto-moocs-sharp/shared/styles": path.resolve(
-        __dirname,
-        "../shared/src/styles",
-      ),
       "@mikoto-moocs-sharp/userscript-base/main": path.resolve(
         __dirname,
         "../userscript-base/src/main.tsx",
