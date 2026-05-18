@@ -1,10 +1,10 @@
 import { useEffect, useId, useState } from "react";
 import "./App.css";
+import { getSubmitShortcutLabel } from "@mikoto-moocs-sharp/shared/settings";
 import type {
   KeyboardShortcutSettings,
   Theme,
 } from "@mikoto-moocs-sharp/shared/types";
-import { getSubmitShortcutLabel } from "@mikoto-moocs-sharp/shared/ui";
 import { storageManager } from "../utils/storage";
 
 function App() {

@@ -1,5 +1,7 @@
-import { SettingsPage } from "@mikoto-moocs-sharp/shared/settings";
-import { getSubmitShortcutLabel } from "@mikoto-moocs-sharp/shared/ui";
+import {
+  getSubmitShortcutLabel,
+  SettingsPage,
+} from "@mikoto-moocs-sharp/shared/settings";
 import { storageManager } from "../utils/storage";
 
 function App() {
