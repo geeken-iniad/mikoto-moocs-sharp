@@ -1,5 +1,6 @@
 import { SettingsPage, Z_INDEX } from "@mikoto-moocs-sharp/shared/settings";
 import type { StorageManager } from "@mikoto-moocs-sharp/shared/storage";
+import { getSubmitShortcutLabel } from "@mikoto-moocs-sharp/shared/ui";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -141,7 +142,10 @@ export const SettingsModal = ({
               padding: "20px",
             }}
           >
-            <SettingsPage storageManager={storageManager} />
+            <SettingsPage
+              storageManager={storageManager}
+              submitShortcutLabel={getSubmitShortcutLabel()}
+            />
           </div>
         </div>
       </div>

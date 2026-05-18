@@ -6,19 +6,18 @@ import {
   sectionTitle,
   spacing,
 } from "../../styles/commonStyles";
-import { getSubmitShortcutLabel } from "../../utils/platform";
 
 interface ShortcutSettingsProps {
   shortcuts: KeyboardShortcutSettings;
+  submitShortcutLabel: string;
   onShortcutToggle: (key: keyof KeyboardShortcutSettings) => void;
 }
 
 export const ShortcutSettings = ({
   shortcuts,
+  submitShortcutLabel,
   onShortcutToggle,
 }: ShortcutSettingsProps) => {
-  const submitShortcutLabel = getSubmitShortcutLabel();
-
   return (
     <div style={section}>
       <h2 style={sectionTitle}>キーボードショートカット</h2>

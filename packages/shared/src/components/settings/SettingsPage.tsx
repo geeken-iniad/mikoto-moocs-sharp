@@ -30,6 +30,7 @@ import { ThemeSettings } from "./ThemeSettings";
 
 interface SettingsPageProps {
   storageManager: StorageManager;
+  submitShortcutLabel: string;
 }
 
 type Tab = "general" | "courses" | "schedule";
@@ -71,7 +72,13 @@ const styles: Record<string, CSSProperties> = {
   },
 };
 
-const SettingsPageContent = () => {
+interface SettingsPageContentProps {
+  submitShortcutLabel: string;
+}
+
+const SettingsPageContent = ({
+  submitShortcutLabel,
+}: SettingsPageContentProps) => {
   const storageManager = useStorageManager();
   const [activeTab, setActiveTab] = useState<Tab>("general");
   const [theme, setTheme] = useState<Theme>(createDefaultTheme);
@@ -181,6 +188,7 @@ const SettingsPageContent = () => {
             />
             <ShortcutSettings
               shortcuts={shortcuts}
+              submitShortcutLabel={submitShortcutLabel}
               onShortcutToggle={handleShortcutToggle}
             />
           </>
@@ -202,10 +210,13 @@ const SettingsPageContent = () => {
   );
 };
 
-export const SettingsPage = ({ storageManager }: SettingsPageProps) => {
+export const SettingsPage = ({
+  storageManager,
+  submitShortcutLabel,
+}: SettingsPageProps) => {
   return (
     <StorageProvider storageManager={storageManager}>
-      <SettingsPageContent />
+      <SettingsPageContent submitShortcutLabel={submitShortcutLabel} />
     </StorageProvider>
   );
 };
