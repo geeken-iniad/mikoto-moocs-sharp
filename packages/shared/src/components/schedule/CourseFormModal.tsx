@@ -1,9 +1,7 @@
 import { Check, Plus, Trash2, X, XCircle } from "lucide-react";
-import { type CSSProperties, useEffect, useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { CAMPUS_LABELS, ROOM_TYPE_LABELS } from "../../constants";
-import { useStorageManager } from "../../storage/context";
-import type { CampusId, Course, Room, RoomType } from "../../types";
-import { generateUUID } from "../../utils/schedule";
+import { useCourseFormDefaults } from "../../hooks";
 import {
   borderRadius,
   colors,
@@ -11,6 +9,8 @@ import {
   fontWeight,
   spacing,
 } from "../../styles/commonStyles";
+import type { CampusId, Course, Room, RoomType } from "../../types";
+import { generateUUID } from "../../utils/schedule";
 
 interface CourseFormModalProps {
   existingCourse?: Course;
@@ -152,7 +152,8 @@ export const CourseFormModal = ({
   onSave,
   onClose,
 }: CourseFormModalProps) => {
-  const storageManager = useStorageManager();
+  const { defaultCampus, availableInstructors, addInstructors } =
+    useCourseFormDefaults();
   const [courseName, setCourseName] = useState(existingCourse?.name || "");
   const [code, setCode] = useState(existingCourse?.code || "");
   const [moocsUrl, setMoocsUrl] = useState(existingCourse?.urls?.moocs || "");
@@ -172,27 +173,11 @@ export const CourseFormModal = ({
   const [rooms, setRooms] = useState<Room[]>(
     initialRooms.length > 0 ? initialRooms : [{ type: "physical", number: "" }],
   );
-  const [defaultCampus, setDefaultCampus] = useState<CampusId | undefined>(
-    undefined,
-  );
-  const [availableInstructors, setAvailableInstructors] = useState<string[]>(
-    [],
-  );
   const [selectedInstructors, setSelectedInstructors] = useState<string[]>(
     existingCourse?.instructors || [],
   );
   const [customInstructor, setCustomInstructor] = useState("");
   const [selectedInstructorOption, setSelectedInstructorOption] = useState("");
-
-  useEffect(() => {
-    const loadSettings = async () => {
-      const settings = await storageManager.getCampusSettings();
-      const instructors = await storageManager.getInstructors();
-      setDefaultCampus(settings.defaultCampus);
-      setAvailableInstructors(instructors);
-    };
-    loadSettings();
-  }, [storageManager]);
 
   const handleSave = async () => {
     if (!courseName.trim()) {
@@ -218,7 +203,7 @@ export const CourseFormModal = ({
 
     // Add new instructor names to the list
     if (customInstructorList.length > 0) {
-      await storageManager.addInstructors(customInstructorList);
+      await addInstructors(customInstructorList);
     }
 
     const validRooms = rooms.filter((r) => r.number.trim());
@@ -283,13 +268,16 @@ export const CourseFormModal = ({
   };
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions lint/a11y/useKeyWithClickEvents: Overlay click closes the modal; keyboard close is handled by parent modal surfaces.
     <div style={styles.overlay} onClick={onClose}>
+      {/* biome-ignore lint/a11y/noStaticElementInteractions lint/a11y/useKeyWithClickEvents: This wrapper prevents overlay click propagation. */}
       <div style={styles.modal} onClick={(e) => e.stopPropagation()}>
         <h2 style={styles.header}>
           {existingCourse ? "コースを編集" : "コースを作成"}
         </h2>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: Existing form structure uses adjacent controls without generated IDs. */}
           <label style={styles.label}>科目名 *</label>
           <input
             type="text"
@@ -301,12 +289,14 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: This group labels multiple instructor controls. */}
           <label style={styles.label}>教員名 *</label>
 
           {/* Display selected instructors */}
           {selectedInstructors.length > 0 && (
             <div style={styles.selectedInstructorList}>
               {selectedInstructors.map((instructor, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: Duplicate instructor names are possible in existing data.
                 <div key={index} style={styles.selectedInstructorChip}>
                   <span>{instructor}</span>
                   <button
@@ -359,6 +349,7 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: Existing form structure uses adjacent controls without generated IDs. */}
           <label style={styles.label}>科目コード</label>
           <input
             type="text"
@@ -372,6 +363,7 @@ export const CourseFormModal = ({
         <div style={styles.roomSection}>
           <div style={styles.roomHeader}>デフォルト教室（任意）</div>
           {rooms.map((room, index) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: Rooms do not have stable IDs in the current form model.
             <div key={index} style={{ marginBottom: spacing.sm }}>
               <div
                 style={{
@@ -474,6 +466,7 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: Existing form structure uses adjacent controls without generated IDs. */}
           <label style={styles.label}>MOOCs URL</label>
           <input
             type="url"
@@ -485,6 +478,7 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: Existing form structure uses adjacent controls without generated IDs. */}
           <label style={styles.label}>Google Classroom URL</label>
           <input
             type="url"
@@ -496,6 +490,7 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: Existing form structure uses adjacent controls without generated IDs. */}
           <label style={styles.label}>ToyoNet-ACE URL</label>
           <input
             type="url"
@@ -507,6 +502,7 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: Existing form structure uses adjacent controls without generated IDs. */}
           <label style={styles.label}>Slack URL</label>
           <input
             type="url"
@@ -518,6 +514,7 @@ export const CourseFormModal = ({
         </div>
 
         <div style={styles.formGroup}>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: Existing form structure uses adjacent controls without generated IDs. */}
           <label style={styles.label}>シラバスURL</label>
           <input
             type="url"
