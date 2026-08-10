@@ -21,11 +21,11 @@
   "dependencies": {
     "@mikoto-moocs-sharp/shared": "workspace:*",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@types/react": "^19.1.11",
-    "@types/react-dom": "^19.1.7",
+    "@types/react-dom": "^19.2.4",
     "typescript": "^5.9.2",
     "vite-plugin-monkey": "^7.1.5"
   }
