@@ -17,11 +17,11 @@
     "@mikoto-moocs-sharp/shared": "workspace:*",
     "@mikoto-moocs-sharp/userscript-base": "workspace:*",
     "react": "^19.2.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@types/react": "^19.2.7",
-    "@types/react-dom": "^19.1.7",
+    "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react-swc": "^4.2.2",
     "typescript": "^5.9.2",
     "vite": "^7.2.6",

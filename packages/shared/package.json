@@ -28,11 +28,11 @@
   "dependencies": {
     "lucide-react": "^0.556.0",
     "react": "^19.1.1",
-    "react-dom": "^19.1.1"
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@types/react": "^19.1.12",
-    "@types/react-dom": "^19.1.7",
+    "@types/react-dom": "^19.2.4",
     "typescript": "^5.9.2"
   }
 }
